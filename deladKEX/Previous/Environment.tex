@@ -1,0 +1,13 @@
+\chapter{Environment}
+A description of the simulation environment we have created, containing how we created it, why we needed to create it and motivation of the choices we made.\\
+The environment is constructed so that it is possible to generate random environment as well as design environments by hand.
+\section{Our simulation environment}
+Our simulation environment consists of two parts, a generator of environment (see Appendix 1, EnvGen.c) and a node-network generator (appendix 1, NodeGen.c).\par
+\subsection{Generator}
+The environment generator has length, width and number of obstacles as input. Using that it creates environment that is guaranteed to be convex.\\\\
+Every environment created can be considered to be built of squares. This results in that diagonal edges will not be created, but since a diagonal can be created by a line of obstacles if the resolution is high enough, that should not be a problem.\\\\
+If the environment is guaranteed convex it is added to a output file as a array.
+\\
+\subsection{Node network}
+Our node-network generator takes a matrix as input and generates a graph network, which is to be used by our algorithms.\\
+The array can either be generated, se previous subsection, or hand-made.\\
