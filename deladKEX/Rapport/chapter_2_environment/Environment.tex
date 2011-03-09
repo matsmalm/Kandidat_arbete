@@ -1,11 +1,14 @@
 \chapter{Environment}
 The chapter gives a description of the simulation environment we have created. Presenting how we created it, why we needed to create it and motivation of the choices made.\\
-
 First we give an short overview of the parts that are in the enviroment, and a definition of in/out data. Motivating all our choices made concerning limitations in the enviroment, and also describing positive features of our enviroment.
-
+\\
+In order to attain measurable data do compare our different algorithms it is nessecary to construct a good testing enviroment. We decided to create an enviroment consisting of two separate parts. One part is called "map generator". This part creates a map, test the feasibility and prints feasible maps into an output file. The other part is called the "network generator". This part reads in an enviroment from a file, creates a graph network to the corresponding map and gives each node its relevant information. 
+\\
 \section{Generator}
-The environment generator has length, width and number of obstacles as input. By construction each subarea is convex. The generator also tests for the total area to be connected, which guarantees a feasible environment.\\\\
-Every environment created can be considered to be built of squares. This results in that diagonal edges will not be created, but since a diagonal can be created by a line of obstacles if the resolution is high enough, that should not be a loss of generality. \\\\
+The environment generator has length, width and number of obstacles as input. By construction each subarea is convex. The generator also tests for the total area to be connected, which guarantees a feasible environment.\\
+\\
+Every environment created can be considered to be built of squares. This results in that diagonal edges will not be created, but since a diagonal can be created by a line of obstacles if the resolution is high enough, that should not be a loss of generality. \\
+\\
 \\
 \section{Node network}
 Our node-network generator takes a matrix as input and generates a graph network, which is to be used by our algorithms.\\
