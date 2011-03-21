@@ -1,0 +1,45 @@
+\chapter{Simulation Environment}
+%The chapter gives a description of the simulation environment we have created. Presenting how we created it, why we needed to create it and motivation of the choices made. First we give an short overview of the parts that are in the enviroment, and a definition of in/out data. Motivating all our choices made concerning limitations in the enviroment, and also describing positive features of our enviroment.\\
+In order to attain the data needed for a comparison of our different algorithms it was nessecary to construct a good testing enviroment. We decided to create this enviroment by the use of two separate parts. One part is called the "Map generator". This part creates a map of the enviroment, tests the feasibility and prints feasible enviroments into an output file. The other part is called the "Network generator". This part reads in an enviroment from a file, creates a graph network to the corresponding map and gives each node in the network its relevant information.\\
+
+\section{Map generator}
+The Map Generator (MG) creates random feasible enviroments. A feasible enviroment is described more in detail in section 2, but in short one could say that an enviroment is feasible if it is simply connected and can be divided into a finite set of convex regions. Given the desired size and the density (percentage of obstacles per total area) as inputs, MG creates square shaped feasible enviroment with randomly placed obstacles and saves the map in an external file. For simplicity we have chosen to construct enviroments consisting only of square regions. We suggest that this does not result in a loss of generality since one can construct any feasible enviroment by a sufficiently fine meshing of squares. \\
+
+pseudo-code, Map Generator:\\
+input variables:\\
+int size; //Specifies the width and height of the square matrix  A.\\
+int NumberOfEnv; // Specifies how many feasible enviroments to create.\\
+int Obstacle; //  Specifies the number of obstacles in percents, e.g. number of obstacles per total area of A.\\
+\\
+while (created feasible enviroments is less than the variable NumberOfEnv )\\
+	Create a matrix A with all elements set to one; \\
+	in a random maner, turn elements in A to zero (corresponding to obstacles) until the desired amount of obstacles have been placed.\\
+	Test if A is connected\\
+	if A is connected write the matrix A to the file OK.out\\
+	if A is not connected write the matrix to a file NotOK.out\\
+
+
+\section{Network Generator}
+The Network Generator (NG) generates a node network from an environment matrix. Each node consists of its adjacent nodes, all the nodes visible from it and its current state. For input the NG uses an environment matrix that is either created by the MG or by hand.\\
+\\
+\noindent Pseudo-code, Node Network Generator:\\
+\indent Input: Environment matrix A, from file "ok.txt"\\
+\indent Read environment matrix from file, call it A\\
+\indent Represent each element in A with a node in a matrix B\\
+\indent For each node in B:\\
+\indent \indent Set name to its position in the matrix\\
+\indent \indent Find and store all nodes that is adjacent to the current node\\
+\indent \indent Set state of the node to 4\\
+\indent \indent Find and store all visible nodes\\
+\\
+To find all visible nodes, the following algorithm is used:\\
+\indent Add the current node to the list of visible nodes.\\
+\indent Find the maximum available nodes to the left and right from the current node.\\
+\indent Find the maximum number of nodes up and down from the current node.\\
+\indent Take a step up, add the current node to the list of visible nodes and repeat until
+\indent either no more nodes are available or the maximum nodes upwards is reached.\\
+\indent Repeat for downwards.\\
+\indent Take a step to the left, repeat the three previous steps.\\
+\indent Repeat for right.\\
+\\
+To find the visible nodes we start in the node that we wish to calculate visible nodes for. From there we step through each allowed node to the left, adding every node upwards that is allowed and at most the same number of moves upwards that the previous step allowed. By then repeating this for every node downwards, and finally repeating everything for every allowed node to the right, each node that the starting node can see is discovered. Due to the choice of using square regions, limiting the number of allowed steps upwards and downwards for each step to the left and right guarantees that the set of visible nodes will be correct.
