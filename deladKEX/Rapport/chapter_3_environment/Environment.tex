@@ -20,26 +20,13 @@ while (created feasible enviroments is less than the variable NumberOfEnv )\\
 
 
 \section{Network Generator}
-The Network Generator (NG) generates a node network from an environment matrix. Each node consists of its adjacent nodes, all the nodes visible from it and its current state. For input the NG uses an environment matrix that is either created by the MG or by hand.\\
+The Network Generator (NG) generates a node network from an environment matrix. Each node contains data of its adjacent nodes, all the nodes visible from it and its current state. For input the NG uses an environment matrix that is either created by the MG or by hand.\\
 \\
 \noindent Pseudo-code, Node Network Generator:\\
-\indent Input: Environment matrix A, from file "ok.txt"\\
-\indent Read environment matrix from file, call it A\\
+\indent Read environment matrix A\\
 \indent Represent each element in A with a node in a matrix B\\
 \indent For each node in B:\\
 \indent \indent Set name to its position in the matrix\\
 \indent \indent Find and store all nodes that is adjacent to the current node\\
-\indent \indent Set state of the node to 4\\
-\indent \indent Find and store all visible nodes\\
-\\
-To find all visible nodes, the following algorithm is used:\\
-\indent Add the current node to the list of visible nodes.\\
-\indent Find the maximum available nodes to the left and right from the current node.\\
-\indent Find the maximum number of nodes up and down from the current node.\\
-\indent Take a step up, add the current node to the list of visible nodes and repeat until
-\indent either no more nodes are available or the maximum nodes upwards is reached.\\
-\indent Repeat for downwards.\\
-\indent Take a step to the left, repeat the three previous steps.\\
-\indent Repeat for right.\\
-\\
-To find the visible nodes we start in the node that we wish to calculate visible nodes for. From there we step through each allowed node to the left, adding every node upwards that is allowed and at most the same number of moves upwards that the previous step allowed. By then repeating this for every node downwards, and finally repeating everything for every allowed node to the right, each node that the starting node can see is discovered. Due to the choice of using square regions, limiting the number of allowed steps upwards and downwards for each step to the left and right guarantees that the set of visible nodes will be correct.
+\indent \indent Find and store all visible nodes
+%%To find the visible nodes we start in the node that we wish to calculate visible nodes for. From there we step through each allowed node to the left, adding every node upwards that is %%allowed and at most the same number of moves upwards that the previous step allowed. By then repeating this for every node downwards, and finally repeating everything for every %%allowed node to the right, each node that the starting node can see is discovered. Due to the choice of using square regions, limiting the number of allowed steps upwards and %%downwards for each step to the left and right guarantees that the set of visible nodes will be correct.

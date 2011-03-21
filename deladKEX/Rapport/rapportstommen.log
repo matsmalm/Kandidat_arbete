@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.2.28)  21 MAR 2011 11:06
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.2.28)  21 MAR 2011 11:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -317,21 +317,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 23--28
 
 [1
 
-]
-Underfull \hbox (badness 10000) in paragraph at lines 36--38
+]) (./chapter_2_problem-formulation/Problem-formulation.tex
+Underfull \hbox (badness 10000) in paragraph at lines 36--1
 
  []
 
 [2]
 Chapter 2.
-) (./chapter_2_problem-formulation/Problem-formulation.tex [3
+) (./chapter_3_environment/Environment.tex [3
 
 ]
 Chapter 3.
-) (./chapter_3_environment/Environment.tex [4
-
-]
-Chapter 4.
 
 Underfull \hbox (badness 10000) in paragraph at lines 3--4
 
@@ -352,56 +348,46 @@ Underfull \hbox (badness 10000) in paragraph at lines 8--20
 
  []
 
-[5
+[4
 
 ])
 Underfull \hbox (badness 10000) in paragraph at lines 23--138
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 23--138
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 23--138
-
- []
-
-[6] [7]
+[5]
 \openout2 = `chapter_4_methods/Methods.aux'.
 
  (./chapter_4_methods/Methods.tex
-Chapter 5.
-(./chapter_4_methods/Greedy.tex) (./chapter_4_methods/Tabu.tex [8
+Chapter 4.
+(./chapter_4_methods/Greedy.tex) (./chapter_4_methods/Tabu.tex [6
 
 
 ])
-(./chapter_4_methods/Genetic.tex)) [9] (./chapter_5_results/Result.tex
-Chapter 6.
+(./chapter_4_methods/Genetic.tex)) [7] (./chapter_5_results/Result.tex
+Chapter 5.
 ) (./chapter_6_discussion/Discussion.tex
 Underfull \hbox (badness 10000) in paragraph at lines 2--1
 
  []
 
-[10
+[8
 
+
+]
+Chapter 6.
+) (./chapter_7_conclusion/Conclusion.tex [9
 
 ]
 Chapter 7.
-) (./chapter_7_conclusion/Conclusion.tex [11
-
-]
-Chapter 8.
-) [12
+) [10
 
 ]
 \openout2 = `FutureWork.aux'.
 
 
 No file FutureWork.tex.
-(./__meta_doc/References.tex) [13
+(./__meta_doc/References.tex) [11
 
 
 
@@ -425,11 +411,11 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  2671 strings out of 495061
  33422 string characters out of 1182621
- 93580 words of memory out of 3000000
+ 93579 words of memory out of 3000000
  5751 multiletter control sequences out of 15000+50000
  13911 words of font info for 35 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 27i,5n,24p,777b,264s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,4n,24p,777b,264s stack positions out of 5000i,500n,10000p,200000b,50000s
  </home/fredrik/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2488.600pk> </home
 /fredrik/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/fredrik/
 .texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1200.600pk> </home/fredrik/.texmf-va
@@ -438,9 +424,9 @@ k/ljfour/jknappen/ec/ecti1440.600pk> </home/fredrik/.texmf-var/fonts/pk/ljfour/
 jknappen/ec/ecbx1440.600pk> </home/fredrik/.texmf-var/fonts/pk/ljfour/jknappen/
 ec/ecbx1728.600pk></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy
 10.pfb>
-Output written on rapportstommen.pdf (19 pages, 141083 bytes).
+Output written on rapportstommen.pdf (17 pages, 137737 bytes).
 PDF statistics:
- 391 PDF objects out of 1000 (max. 8388607)
+ 383 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
