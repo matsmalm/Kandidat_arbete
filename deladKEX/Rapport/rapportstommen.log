@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.2.28)  21 MAR 2011 00:38
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.2.28)  21 MAR 2011 11:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**rapportstommen_1.2.tex
-(./rapportstommen_1.2.tex
+**rapportstommen.tex
+(./rapportstommen.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, loaded.
@@ -173,7 +173,7 @@ Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 \Gin@req@height=\dimen117
 \Gin@req@width=\dimen118
 )
-(./rapportstommen_1.2.aux (./chapter_3_methods/Methods.aux) (./FutureWork.aux)
+(./rapportstommen.aux (./chapter_4_methods/Methods.aux) (./FutureWork.aux)
 
 LaTeX Warning: Label `' multiply defined.
 
@@ -202,7 +202,7 @@ LaTeX Warning: Label `' multiply defined.
 LaTeX Warning: Label `' multiply defined.
 
 (./Bilaga1.aux) (./Bilaga2.aux) (./Bilaga3.aux))
-\openout1 = `rapportstommen_1.2.aux'.
+\openout1 = `rapportstommen.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 47.
 LaTeX Font Info:    ... okay on input line 47.
@@ -274,20 +274,20 @@ driver: pdftex
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 (./_abstract.inledning/Abstract.tex [1]) (./_abstract.inledning/AbstractSWE.tex
-[1]) (./rapportstommen_1.2.toc [1
+[1]) (./rapportstommen.toc [1
 
 ])
 \tf@toc=\write3
-\openout3 = `rapportstommen_1.2.toc'.
+\openout3 = `rapportstommen.toc'.
 
- [2] (./rapportstommen_1.2.lof)
+ [2] (./rapportstommen.lof)
 \tf@lof=\write4
-\openout4 = `rapportstommen_1.2.lof'.
+\openout4 = `rapportstommen.lof'.
 
  [3
 
 ]
-(./chapter_1_inledning/Introduction.tex
+(./chapter_1_introduction/Introduction.tex
 Chapter 1.
 
 Underfull \hbox (badness 10000) in paragraph at lines 2--4
@@ -324,10 +324,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 36--38
 
 [2]
 Chapter 2.
-) (./chapter_2_environment/Environment.tex [3
+) (./chapter_2_problem-formulation/Problem-formulation.tex [3
 
 ]
 Chapter 3.
+) (./chapter_3_environment/Environment.tex [4
+
+]
+Chapter 4.
 
 Underfull \hbox (badness 10000) in paragraph at lines 3--4
 
@@ -348,56 +352,56 @@ Underfull \hbox (badness 10000) in paragraph at lines 8--20
 
  []
 
-[4
+[5
 
 ])
-Underfull \hbox (badness 10000) in paragraph at lines 23--137
+Underfull \hbox (badness 10000) in paragraph at lines 23--138
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 23--137
+Underfull \hbox (badness 10000) in paragraph at lines 23--138
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 23--137
+Underfull \hbox (badness 10000) in paragraph at lines 23--138
 
  []
 
-[5] [6]
-\openout2 = `chapter_3_methods/Methods.aux'.
+[6] [7]
+\openout2 = `chapter_4_methods/Methods.aux'.
 
- (./chapter_3_methods/Methods.tex
-Chapter 4.
-(./chapter_3_methods/Greedy.tex) (./chapter_3_methods/Tabu.tex [7
-
-
-])
-(./chapter_3_methods/Genetic.tex)) [8] (./chapter_4_results/Result.tex
+ (./chapter_4_methods/Methods.tex
 Chapter 5.
-) (./chapter_5_discussion/Discussion.tex
+(./chapter_4_methods/Greedy.tex) (./chapter_4_methods/Tabu.tex [8
+
+
+])
+(./chapter_4_methods/Genetic.tex)) [9] (./chapter_5_results/Result.tex
+Chapter 6.
+) (./chapter_6_discussion/Discussion.tex
 Underfull \hbox (badness 10000) in paragraph at lines 2--1
 
  []
 
-[9
+[10
 
-
-]
-Chapter 6.
-) (./chapter_6_conclusion/Conclusion.tex [10
 
 ]
 Chapter 7.
-) [11
+) (./chapter_7_conclusion/Conclusion.tex [11
+
+]
+Chapter 8.
+) [12
 
 ]
 \openout2 = `FutureWork.aux'.
 
 
 No file FutureWork.tex.
-(./__meta_doc/References.tex) [12
+(./__meta_doc/References.tex) [13
 
 
 
@@ -412,20 +416,20 @@ No file Bilaga2.tex.
 \openout2 = `Bilaga3.aux'.
 
 No file Bilaga3.tex.
-(./rapportstommen_1.2.aux (./chapter_3_methods/Methods.aux) (./FutureWork.aux)
+(./rapportstommen.aux (./chapter_4_methods/Methods.aux) (./FutureWork.aux)
 (./Bilaga1.aux) (./Bilaga2.aux) (./Bilaga3.aux))
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 2667 strings out of 495061
- 33308 string characters out of 1182621
- 93579 words of memory out of 3000000
+ 2671 strings out of 495061
+ 33422 string characters out of 1182621
+ 93580 words of memory out of 3000000
  5751 multiletter control sequences out of 15000+50000
  13911 words of font info for 35 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 27i,4n,24p,781b,264s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,5n,24p,777b,264s stack positions out of 5000i,500n,10000p,200000b,50000s
  </home/fredrik/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2488.600pk> </home
 /fredrik/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/fredrik/
 .texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1200.600pk> </home/fredrik/.texmf-va
@@ -434,9 +438,9 @@ k/ljfour/jknappen/ec/ecti1440.600pk> </home/fredrik/.texmf-var/fonts/pk/ljfour/
 jknappen/ec/ecbx1440.600pk> </home/fredrik/.texmf-var/fonts/pk/ljfour/jknappen/
 ec/ecbx1728.600pk></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy
 10.pfb>
-Output written on rapportstommen_1.2.pdf (18 pages, 138716 bytes).
+Output written on rapportstommen.pdf (19 pages, 141083 bytes).
 PDF statistics:
- 385 PDF objects out of 1000 (max. 8388607)
+ 391 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
