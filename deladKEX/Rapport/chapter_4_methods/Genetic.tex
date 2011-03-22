@@ -1,9 +1,19 @@
 \section{Genetic}
 \subsection{Description}
-Genetic algorithms is based on the idea of evolution. Using a combination of reproduction, mutation and survival of the fittest a solution is generated.
+Genetic algorithms is based on the idea of evolution. Using a combination of reproduction, mutation and survival of the fittest a solution is generated. Genetic algorithms does not guarantee an optimal solution, however 
 \subsection{Algorithm}
-A description of the algorithm
+A description of the algorithm\\
+Selection: A combination of elitism and random selection was used. Elitism to make sure good solutions was not lost, by always keeping all feasible solutions that solved the pursuit-evasion problem, and random selection to maintain a diversity.\\
+Crossover: \\
+Mutation: To make sure that all solutions can be obtained, mutations is used. However, to make sure that it will not only be a random search, the chance of mutation was 1% at crossover and 0% in all other cases.\\
+
 \subsection{Implementation}
 A description of how the algorithm is implemented
 \subsection{ Development process}
-How the development of the algorithm have proceeded.
+How the development of the algorithm have proceeded.\\
+\\
+Parameters was set according to:\\
+Cromosome length was set to \begin{math}n^2\end{math}, to be able to cover the entire environment.\\
+Population size was set to ..., using 10.1.1.105.2431 "Optimal Population Size and the Genetic Algorithm".\\
+Instance size was set to ...\\
+Number of generations was set to ...\\
