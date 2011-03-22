@@ -1,74 +1,94 @@
 \chapter{Introduction}
-
+ 
 \section{Objektiv}
-
-SVESNKA
-
-Målet med denna forskning är att lösa ett diskret/ contenuerligt pursuit evasion problem i en två dimmentionell miljö, med hjälp av heuristiska problemlösnings metoder.
-Kortfattat är problemet att: givet en yta samt ett visst antal jagare säkerställa att en eveder inte kan finnas i ytan. Fullständig formulering av problemet finns i kapittel 2
-
-( Det direkta ) problemet i sig är löst. En algoritmen som tillhanda ger en optimal lösning finns redan. 
-Problemet som återstår är att finna en lösning inom en rimlig beräkningstid, och det är här angripningssättet med heuristiska metoder kommer in.
-
-Med stor risk för förlust av optimalitet är vårt mål att med heuristiska metoder finna en lösning med en rimlig beräkningstid.
-
-Denna rapport är därför mycket en studie i avvägningen mellan rimlig beräkningstid och förlusten av optimalitet.
-
-
-ENGELSKA
-
-the Computationl time 
-
-
+ 
+The goal of this research is to solve a pursuit evasion problems in a two dimensional environment, with the help of heuristic problem solving methods.
+In short, the problem is: given a surface with static obstacles and a number of pursuers ensure that an evader cannot exist within the area. A complete formulation of the problem can be seen in Chapter 2
+ 
+The problem itself is solved. An algorithm providing an optimal solution already exists.
+The problem yet to be solved, is the problem of finding a solution within a reasonable computational time, it is here where heuristic methods comes in to play
+ 
+With great risk for loss of optimality, our goal is to use heuristic methods to find a solution with a reasonable computational time
+ 
+This report is therefore a study of the balance between a reasonable computational time and the loss of optimality.
+ 
 \section{Organization Of the Report}
 \begin{enumerate}
-\item Chapter 2 contains the problem formulation and our way about it. KAN MAN KRIVA SA?
+\item Chapter 2 contains a detailed formulation of the problem and are approach to it.
 \item Chapter 3 explains the simulation environment we built.
 \item Chapter 4 contains a description of the algorithms we decided to use.
 \item Chapter 5 contains the results of our simulations.
 \item Chapter 6 contains a discussion of our results, comparison and conclusions.
 \end{enumerate}
-
+ 
 \section{ Related work}
-
-HANS  2 RAPPORTer
-
+ 
+Relaterat arbete bla de tre givna articklarna
+ 
 \section{Background}
-
+ 
 \subsection{What is optimization}
-
+ 
 Optimization is a mathematical discipline, for solving various types of problems. With the aim of finding the best, available, values of some objective function given a defined domain. If one wants to know more advise NAME ON LITETUR\\
-
+ 
 In the new age of computers, the field of optimization is heavily linked to the field of computer science. Needles to say the vast majority of problems is today, in one way or another, solved by a computer.
-
-((in the feeld of optimization one uses difretn…..)
-
-optimeringsläran använder sig av olika så kallade, matematisk programmerings moddeler, för att ställa upp och lösa olika konkreta problem. Linjära optimeringsproblem behandlas med hjälp av Linear Programming LP, icke-linjära optimeringsproblem med hjälp av Non-linear Programming NLP. En annan sär delning av typen av problem man behandlar kan göras genom att studera dess komplexitet. 
-
-komplexitet är i andra ordalag beräkningstid. Det finns många olika komplexitetsklasser men två av de mest fundamentala är P och NP
-
+ 
+optimization theory makes use of various so-called, mathematical programming models, to set up and solve practical problems. Linear optimization problems are treated by means of Linear Programming LP, non-linear optimization problems using Non-linear Programming NLP. And integer optimization problems with Integer Programming IP.
+A further breakdown of the type of problems one deals with may be done by studying its complexity.
+ 
+complexity is more or less computationl time. There are many different complexity classes of problems, but two of the most fundamental is the P and NP
+ 
 \subsection{P \& NP problems}
-
-P is the sett of problems which can be solved by a deterministic Turing machine using a polynomial amount of computation time.
-Cobham–Edmonds thesis holds that P is the class of computational problems which are "efficiently solvable" or "tractable"; in practice, some problems not known to be in P have practical solutions, and some that are in P do not, but this is a useful rule of thumb.
-
-NP
-
+ 
+P is the set of problems which can be solved by a deterministic Turing machine using a polynomial amount of computation time.
+Cobham–Edmonds thesis holds that P is the class of computational problems which are "efficiently solvable" or "tractable". In practice, some problems not known to be in P have practical solutions, and some that are in P do not, but this is a useful rule of thumb.
+ 
+NP refere to Nondeterministic Polynomial time. and can be intuitively described as the set of problems for which, a found solution can be verified to actually be the correct solution, using a deterministic Turing machine using a polynomial amount of computation time.
+ 
+A set of descriptions that leads one to wonder whether
+P = NP
+In what the essence is:
+Suppose that solutions to a problem can be verified quickly. Then, can the solutions themselves also be computed quickly?
+A unsolved question considered by many to be the most important problem in the feeld in computer science.
+ 
+ 
+Inom klassen NP finns en del underklasser där det svåraste problem i klassen är kallade NP-complete. Vilka är problem av typen problems, for which no polynomial-time algorithms are known. As stated above there is still an open question whether such algorithms actually exist for NP-complete problems, and by corollary, all NP problems. It is widely believed that this is not the case [referens 1]
+ 
+Within the class NP there are a few subclasses  where the hardest problems among the subclasses are called NP-complete. With are problems of the type for which no polynomial-time algorithms are known. As stated above there is still an open question whether such algorithms actually exist for NP-complete problems, and by corollary, all NP problems. It is widely believed that this is not the case [referens 1]
+ 
+This is very relevant to our problem, related work has shown that the problem in question is at least NP-hard [reference 2] wich is a set of problems said to be a class of problems That, informally are, at least as hard as the hardest Problems in NP.
+ 
+ 
+Preliminara ej fixade referenser
+REFERENS
+ 
+[1]
+William I. Gasarch (June 2002). "The P=?NP poll." (PDF). SIGACT News 33 (2): 34–47. doi:10.1145/1052796.1052804. http://www.cs.umd.edu/~gasarch/papers/poll.pdf. Retrieved 2008-12-29. 
+ 
+[2]
+Deras 3 articklar.
+ 
 \subsection{(the need for) a near optimal solution}
-
-
+ 
+Due to the fact that the problem in question is NP-hard and thus the possibilities of finding an optimal solution within reasonable computing time are/is seen to be very low. Does the logical thread has brought us to be prepared to sacrifice optimality
+This sacrifice leads us to a larger spectrum of possible approaches to the problem.
+ 
 \subsection{Heuristic methods}
-
-Explanation of what heuristic methods is.\\
-Heuristic search methods is an approximate method, for situation when a optimal solutions is not required, or is to expensive to calculate. \\Even if it does not find the best solution, it "is guaranteed to find a good solution in reasonable time." (http://www.cs.cf.ac.uk/Dave/AI2/node23.html).
-
-SVENSKA VIKIPEDIA SUPERBRA
-
-Heuristik används inom datavetenskap och matematik för att beteckna ett sätt att göra smarta gissningar som hjälper till att hitta lösningar till ett problem. Själva heuristiken garanterar inte en korrekt eller optimal lösning men den kan vara ett bra tillägg till en deterministisk algoritm.
-Det som kännetecknar en heuristik är dels att det inte finns något bevis för att den fungerar, annars skulle den vara en deterministisk algoritm, men också att det finns en metodik bakom heuristiken som förbättrar chansen att hitta den önskade lösningen. Slumpmässiga gissningar bildar alltså ingen heuristik. För att veta om en viss heuristik hjälper eller stjälper måste man testa den noga. Observera att en heuristik kan fungera olika bra för olika indata.
-Det kan finnas flera skäl till att man använder en heuristik istället för en deterministisk algoritm:
-1 punkt Det finns ingen känd algoritm för att lösa ett specifikt problem, en heuristik är det enda sättet att närma sig en lösning.
-2 punkt Vissa problem är svåra att lösa effektivt eller snabbt och en heuristik kan ge rimliga lösningar. I dessa fall föredrar man oftast att försöka hitta en lösning som är tillräckligt bra eller en lösning över huvud taget framför att hitta den optimala lösningen.
-3 punkt En bra algoritm kan vara svår att implementera och en heuristik kan ibland godtas för att den är enkel att beskriva i ett programspråk och är beprövad, dvs heuristiken är känd för att ge goda resultat.
-Det främsta skälet för att använda en heuristik i kombination med en deterministisk algoritm är att man vill hjälpa algoritmen på traven så att säga. Sofistikerade algoritmer gynnas av en heuristik om den är tillräckligt snabb och enkel i jämförelse med algoritmen. Oftast används heuristiker i sökalgoritmer för att öka chansen att hitta en bra eller optimal lösning snabbt eftersom många problem är NP-fullständiga. Dessa kan bara lösas genom uttömmande sökning vilket tar mycket lång tid redan för ganska små problem.
-En heuristik ska inte blandas ihop med begreppet approximationsalgoritm, då man visserligen ger avkall på att beräkna en optimal lösning för ett optimeringsproblem, men har garanterat hur pass bra eller dålig lösningen är.
+ 
+Heuristic methods are a bransch of methods used in computer science and mathematics to make educated guesses to help find solutions to a problem. Generally heuristic methods douse not provide correct / optimal solutions but it offers a reasonably fast computed solution. Heuristic methods are therefore often used, very powerful, in combination with deterministic methods, to speed up the process.
+ 
+The characteristics of a heuristic is partly that there is no evidence of that it works, or else it would be a deterministic method. The idea of heuristic methods is thus to improve the chances of finding the desired solution. Pure random guesses forms no heuristic method.
+ 
+There are several occasions where a heuristic method is preferable to a deterministic method.
+Here are a few:
+ 
+\begin{itemize}
+\item There is no known algorithm for solving a specific problem, a heuristic is the only way to approach a solution
+\item A good algorithm can be difficult to implement and heuristics can sometimes be accepted because it is easy to describe in a programming language and that heuristic methods are known to produce good results.
+\item The problem is too difficult to solve efficiently and quickly with deterministic methods. A heuristic method could overcome that and give an acceptable but probably not an optimal solution
+\end{itemize}
+ 
+Where the last point corresponds to the problem we are dealing with.
+ 
+Consept misunderstanding?:
+Computationl time vs computation time
