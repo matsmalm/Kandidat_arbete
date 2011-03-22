@@ -1,37 +1,74 @@
 \chapter{Introduction}
-Giving a general overview of the report.\\
-\\
 
+\section{Objektiv}
+
+SVESNKA
+
+Målet med denna forskning är att lösa ett diskret/ contenuerligt pursuit evasion problem i en två dimmentionell miljö, med hjälp av heuristiska problemlösnings metoder.
+Kortfattat är problemet att: givet en yta samt ett visst antal jagare säkerställa att en eveder inte kan finnas i ytan. Fullständig formulering av problemet finns i kapittel 2
+
+( Det direkta ) problemet i sig är löst. En algoritmen som tillhanda ger en optimal lösning finns redan. 
+Problemet som återstår är att finna en lösning inom en rimlig beräkningstid, och det är här angripningssättet med heuristiska metoder kommer in.
+
+Med stor risk för förlust av optimalitet är vårt mål att med heuristiska metoder finna en lösning med en rimlig beräkningstid.
+
+Denna rapport är därför mycket en studie i avvägningen mellan rimlig beräkningstid och förlusten av optimalitet.
+
+
+ENGELSKA
+
+the Computationl time 
 
 
 \section{Organization Of the Report}
+\begin{enumerate}
+\item Chapter 2 contains the problem formulation and our way about it. KAN MAN KRIVA SA?
+\item Chapter 3 explains the simulation environment we built.
+\item Chapter 4 contains a description of the algorithms we decided to use.
+\item Chapter 5 contains the results of our simulations.
+\item Chapter 6 contains a discussion of our results, comparison and conclusions.
+\end{enumerate}
 
-\begin{itemize}
-\item Chapter 2 explains the simulation environment we built.
-\item Chapter 3 contains a description of the algorithms we decided to use.
-\item Chapter 4 contains the results of our simulations.
-\item Chapter 5 contains a discussion of our results, comparison and conclusions.
-\end{itemize}
+\section{ Related work}
 
-
-
+HANS  2 RAPPORTer
 
 \section{Background}
-The objective of this section is to give a short theoretical
-background of optimization. Also a general description of the Pursuit and Evasion problem.
-\subsection{What is optimization}
-What is optimization?\\
-What is an optimal solution?\\
-Non-optimal solutions?\\
-Good solutions and computational time?\\
-\\
 
-\subsection{(the need for) a near optimal solution}
-Giving a very short background for the following section. 
+\subsection{What is optimization}
+
+Optimization is a mathematical discipline, for solving various types of problems. With the aim of finding the best, available, values of some objective function given a defined domain. If one wants to know more advise NAME ON LITETUR\\
+
+In the new age of computers, the field of optimization is heavily linked to the field of computer science. Needles to say the vast majority of problems is today, in one way or another, solved by a computer.
+
+((in the feeld of optimization one uses difretn…..)
+
+optimeringsläran använder sig av olika så kallade, matematisk programmerings moddeler, för att ställa upp och lösa olika konkreta problem. Linjära optimeringsproblem behandlas med hjälp av Linear Programming LP, icke-linjära optimeringsproblem med hjälp av Non-linear Programming NLP. En annan sär delning av typen av problem man behandlar kan göras genom att studera dess komplexitet. 
+
+komplexitet är i andra ordalag beräkningstid. Det finns många olika komplexitetsklasser men två av de mest fundamentala är P och NP
 
 \subsection{P \& NP problems}
-explain what P and NP-hard problems is, and what consequenses it yields. 
+
+P is the sett of problems which can be solved by a deterministic Turing machine using a polynomial amount of computation time.
+Cobham–Edmonds thesis holds that P is the class of computational problems which are "efficiently solvable" or "tractable"; in practice, some problems not known to be in P have practical solutions, and some that are in P do not, but this is a useful rule of thumb.
+
+NP
+
+\subsection{(the need for) a near optimal solution}
+
 
 \subsection{Heuristic methods}
-Explanation of what heuristic methods is, and how one sacrifices
-optimality for gain in computational time.\\
+
+Explanation of what heuristic methods is.\\
+Heuristic search methods is an approximate method, for situation when a optimal solutions is not required, or is to expensive to calculate. \\Even if it does not find the best solution, it "is guaranteed to find a good solution in reasonable time." (http://www.cs.cf.ac.uk/Dave/AI2/node23.html).
+
+SVENSKA VIKIPEDIA SUPERBRA
+
+Heuristik används inom datavetenskap och matematik för att beteckna ett sätt att göra smarta gissningar som hjälper till att hitta lösningar till ett problem. Själva heuristiken garanterar inte en korrekt eller optimal lösning men den kan vara ett bra tillägg till en deterministisk algoritm.
+Det som kännetecknar en heuristik är dels att det inte finns något bevis för att den fungerar, annars skulle den vara en deterministisk algoritm, men också att det finns en metodik bakom heuristiken som förbättrar chansen att hitta den önskade lösningen. Slumpmässiga gissningar bildar alltså ingen heuristik. För att veta om en viss heuristik hjälper eller stjälper måste man testa den noga. Observera att en heuristik kan fungera olika bra för olika indata.
+Det kan finnas flera skäl till att man använder en heuristik istället för en deterministisk algoritm:
+1 punkt Det finns ingen känd algoritm för att lösa ett specifikt problem, en heuristik är det enda sättet att närma sig en lösning.
+2 punkt Vissa problem är svåra att lösa effektivt eller snabbt och en heuristik kan ge rimliga lösningar. I dessa fall föredrar man oftast att försöka hitta en lösning som är tillräckligt bra eller en lösning över huvud taget framför att hitta den optimala lösningen.
+3 punkt En bra algoritm kan vara svår att implementera och en heuristik kan ibland godtas för att den är enkel att beskriva i ett programspråk och är beprövad, dvs heuristiken är känd för att ge goda resultat.
+Det främsta skälet för att använda en heuristik i kombination med en deterministisk algoritm är att man vill hjälpa algoritmen på traven så att säga. Sofistikerade algoritmer gynnas av en heuristik om den är tillräckligt snabb och enkel i jämförelse med algoritmen. Oftast används heuristiker i sökalgoritmer för att öka chansen att hitta en bra eller optimal lösning snabbt eftersom många problem är NP-fullständiga. Dessa kan bara lösas genom uttömmande sökning vilket tar mycket lång tid redan för ganska små problem.
+En heuristik ska inte blandas ihop med begreppet approximationsalgoritm, då man visserligen ger avkall på att beräkna en optimal lösning för ett optimeringsproblem, men har garanterat hur pass bra eller dålig lösningen är.
