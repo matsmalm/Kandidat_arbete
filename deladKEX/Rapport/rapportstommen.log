@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.2.28)  21 MAR 2011 11:31
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.2.28)  23 MAR 2011 02:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -81,8 +81,8 @@ Package: inputenc 2008/03/30 v1.1d Input encoding file
 \inpenc@prehook=\toks16
 \inpenc@posthook=\toks17
 
-(/usr/share/texmf-texlive/tex/latex/base/applemac.def
-File: applemac.def 2008/03/30 v1.1d Input encoding file
+(/usr/share/texmf-texlive/tex/latex/base/latin1.def
+File: latin1.def 2008/03/30 v1.1d Input encoding file
 ))
 (/usr/share/texmf-texlive/tex/generic/babel/babel.sty
 Package: babel 2008/07/06 v3.8l The Babel package
@@ -204,18 +204,18 @@ LaTeX Warning: Label `' multiply defined.
 (./Bilaga1.aux) (./Bilaga2.aux) (./Bilaga3.aux))
 \openout1 = `rapportstommen.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 46.
+LaTeX Font Info:    ... okay on input line 46.
 
 *geometry auto-detecting driver*
 *geometry detected driver: pdftex*
@@ -290,41 +290,23 @@ driver: pdftex
 (./chapter_1_introduction/Introduction.tex
 Chapter 1.
 
-Underfull \hbox (badness 10000) in paragraph at lines 2--4
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2--4
-
- []
-
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 10.
-(/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 10.
-
-Underfull \hbox (badness 10000) in paragraph at lines 23--28
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 23--28
+Underfull \hbox (badness 10000) in paragraph at lines 32--33
 
  []
 
 [1
 
-]) (./chapter_2_problem-formulation/Problem-formulation.tex
-Underfull \hbox (badness 10000) in paragraph at lines 36--1
-
- []
-
-[2]
+] [2]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 83.
+ (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 83.
+)
+(./chapter_2_problem-formulation/Problem-formulation.tex [3]
 Chapter 2.
-) (./chapter_3_environment/Environment.tex [3
+) (./chapter_3_environment/Environment.tex [4
 
 ]
 Chapter 3.
@@ -348,46 +330,56 @@ Underfull \hbox (badness 10000) in paragraph at lines 8--20
 
  []
 
-[4
+[5
 
 ])
-Underfull \hbox (badness 10000) in paragraph at lines 23--138
+Underfull \hbox (badness 10000) in paragraph at lines 23--137
 
  []
 
-[5]
+[6]
 \openout2 = `chapter_4_methods/Methods.aux'.
 
  (./chapter_4_methods/Methods.tex
 Chapter 4.
-(./chapter_4_methods/Greedy.tex) (./chapter_4_methods/Tabu.tex [6
+(./chapter_4_methods/Greedy.tex) (./chapter_4_methods/Tabu.tex [7
 
 
 ])
-(./chapter_4_methods/Genetic.tex)) [7] (./chapter_5_results/Result.tex
+(./chapter_4_methods/Genetic.tex
+Underfull \hbox (badness 10000) in paragraph at lines 5--9
+
+ []
+
+)
+Underfull \hbox (badness 10000) in paragraph at lines 13--9
+
+ []
+
+) [8] (./chapter_5_results/Result.tex
 Chapter 5.
 ) (./chapter_6_discussion/Discussion.tex
 Underfull \hbox (badness 10000) in paragraph at lines 2--1
 
  []
 
-[8
+[9
 
 
 ]
 Chapter 6.
-) (./chapter_7_conclusion/Conclusion.tex [9
+) (./chapter_7_conclusion/Conclusion.tex [10
 
 ]
 Chapter 7.
-) [10
+) [11
 
 ]
 \openout2 = `FutureWork.aux'.
 
 
 No file FutureWork.tex.
-(./__meta_doc/References.tex) [11
+(./__meta_doc/References.tex) [12
 
 
 
@@ -409,13 +401,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 2671 strings out of 495061
- 33422 string characters out of 1182621
- 93579 words of memory out of 3000000
- 5751 multiletter control sequences out of 15000+50000
+ 2682 strings out of 495061
+ 33571 string characters out of 1182621
+ 93470 words of memory out of 3000000
+ 5762 multiletter control sequences out of 15000+50000
  13911 words of font info for 35 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 27i,4n,24p,777b,264s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,5n,24p,777b,264s stack positions out of 5000i,500n,10000p,200000b,50000s
  </home/fredrik/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2488.600pk> </home
 /fredrik/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/fredrik/
 .texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1200.600pk> </home/fredrik/.texmf-va
@@ -424,9 +416,9 @@ k/ljfour/jknappen/ec/ecti1440.600pk> </home/fredrik/.texmf-var/fonts/pk/ljfour/
 jknappen/ec/ecbx1440.600pk> </home/fredrik/.texmf-var/fonts/pk/ljfour/jknappen/
 ec/ecbx1728.600pk></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy
 10.pfb>
-Output written on rapportstommen.pdf (17 pages, 137737 bytes).
+Output written on rapportstommen.pdf (18 pages, 143262 bytes).
 PDF statistics:
- 383 PDF objects out of 1000 (max. 8388607)
+ 388 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
