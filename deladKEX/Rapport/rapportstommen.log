@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.3.3)  24 MAR 2011 18:31
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2008.3.3)  24 MAR 2011 19:47
 entering extended mode
 \write18 enabled.
  %&-line parsing enabled.
@@ -315,12 +315,32 @@ cents, e.g. number of obstacles per total area of A.[]
 
 [5
 
-])
-Underfull \hbox (badness 10000) in paragraph at lines 36--137
+]
+Underfull \hbox (badness 10000) in paragraph at lines 36--39
 
  []
 
-[6] [7]
+
+Underfull \hbox (badness 10000) in paragraph at lines 36--39
+
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 49--50
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
+
+ []
+
+) [7]
 \openout2 = `chapter_4_methods/Methods.aux'.
 
  (./chapter_4_methods/Methods.tex
@@ -390,7 +410,7 @@ Here is how much of TeX's memory you used:
  5776 multiletter control sequences out of 10000+50000
  14224 words of font info for 36 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
- 27i,5n,24p,880b,266s stack positions out of 5000i,500n,6000p,200000b,5000s
+ 27i,5n,24p,1116b,266s stack positions out of 5000i,500n,6000p,200000b,5000s
 {/usr/local/texlive/2007/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}
 </usr/local/texlive/2007/texmf-dist/fonts/type1/bluesky/cm/cmmi12.pfb></usr/loc
 al/texlive/2007/texmf-dist/fonts/type1/bluesky/cm/cmr12.pfb></usr/local/texlive
@@ -403,7 +423,7 @@ fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2007/texmf-dist/fo
 nts/type1/public/cm-super/sfrm1440.pfb></usr/local/texlive/2007/texmf-dist/font
 s/type1/public/cm-super/sfti1440.pfb></usr/local/texlive/2007/texmf-dist/fonts/
 type1/public/cm-super/sftt1200.pfb>
-Output written on rapportstommen.pdf (19 pages, 206549 bytes).
+Output written on rapportstommen.pdf (19 pages, 210282 bytes).
 PDF statistics:
  109 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
