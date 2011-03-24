@@ -4,22 +4,33 @@ In order to attain the data needed for a comparison of our different algorithms 
 
 \section{Map generator}
 The Map Generator (MG) creates random feasible enviroments. A feasible enviroment is described more in detail in section 2, but in short one could say that an enviroment is feasible if it is simply connected and can be divided into a finite set of convex regions. Given the desired size and the density (percentage of obstacles per total area) as inputs, MG creates square shaped feasible enviroment with randomly placed obstacles and saves the map in an external file. For simplicity we have chosen to construct enviroments consisting only of square regions. We suggest that this does not result in a loss of generality since any feasible enviroment can be approximated arbitrarily good by a sufficiently fine meshing of squares. \\
-
-
-pseudo-code, Map Generator:\\
+We will now show in a more detailed maner how the MG works. First we present some pseudo code describing the algorithm and then some in depth comments to the code.\\
+pseudo-code, Map Generator:
 \begin{verbatim}
-input variables:\\
-int size; //Specifies the width and height of the square matrix  A.\\
-int NumberOfEnv; // Specifies how many feasible enviroments to create.\\
-int Obstacle; //  Specifies the number of obstacles in percents, e.g. number of obstacles per total area of A.\\
-\\
-while (created feasible enviroments is less than the variable NumberOfEnv )\\
-	Create a matrix A with all elements set to one; \\
-	in a random maner, turn elements in A to zero (corresponding to obstacles) until the desired amount of obstacles have been placed.\\
-	Test if A is connected\\
-	if A is connected write the matrix A to the file OK.out\\
-	if A is not connected write the matrix to a file NotOK.out\\
+1  input variables:
+2  int Size;  // Specifies the width and height of the square matrix  A.
+3  int NumberOfEnv; // Specifies how many feasible enviroments to create.
+4  int Obstacle; //  Specifies the number of obstacles in percents, e.g. number of obstacles per total area of A.
+5  
+6  while ( int i < NumberOfEnv ){
+7  	int A = CreateMatrix(int Size); 
+8  	PlaceObstacle(int A, int Obstacle);
+9  	if (Test(int A)=TRUE){ 
+10 		fprintf( fileOK, "\n \n");
+11 		i++;
+12 	}else{
+13 		fprintf{file NotOk, "Does not work: \n");
+14 	}
+15 }
 \end{verbatim}
+
+\begin{itemize}
+\item So, first we introduce the needed variables to define how many and what kind of enviroments to create. 
+\item The algorithm starts off by entering a while loop running until the loops content has created the desired amount of feasible enviroments. 
+\item The function CreateMatrix(int arg) creates an matrix of dimensions $(arg \times arg)$ with every element equal to one. In our map a one corresponds to a feasible square region for the pursuer or evader to thread. 
+\item Next we call the function PlaceObstacle(int A, int Obstacle). This function takes the input matrix A and using a randomizing function rand() places zeros in the matrix. The zeros corresponds to obstacles, e.g. squares that can't be seen through and can't med treaded.
+\item The function Test (int A) tests if the ones in the given matrix A are connected. If A is connected the enviroment is feasible and the function returns TRUE, if not it returns FALSE. First Test() finds the first element equal to one, starting from the upper left corner going to the right. When such element has been found its index is pushed on a stack. Next we enter a loop that runs for as long as the stack is not empty. First it pops an index from the stack and checks if this index has been accounted for (e.g. if it lies within a vector C). If not accounted for, all the neighbor elements that are equal to one has their index pushed on the stack. Lastly the poped index is put into C, since it has been accounted for. The algorithm starts over by poping a new index and rerunning the loop. 
+\end{itemize}
 
 \section{Network Generator}
 The Network Generator (NG) generates a node network from an environment matrix. Each node contains data of its adjacent nodes, all the nodes visible from it and its current state. For input the NG uses an environment matrix that is either created by the MG or by hand.\\
