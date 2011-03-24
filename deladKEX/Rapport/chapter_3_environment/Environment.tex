@@ -3,9 +3,11 @@
 In order to attain the data needed for a comparison of our different algorithms it was nessecary to construct a good testing enviroment. We decided to create this enviroment by the use of two separate parts. One part is called the "Map generator". This part creates a map of the enviroment, tests the feasibility and prints feasible enviroments into an output file. The other part is called the "Network generator". This part reads in an enviroment from a file, creates a graph network to the corresponding map and gives each node in the network its relevant information.\\
 
 \section{Map generator}
-The Map Generator (MG) creates random feasible enviroments. A feasible enviroment is described more in detail in section 2, but in short one could say that an enviroment is feasible if it is simply connected and can be divided into a finite set of convex regions. Given the desired size and the density (percentage of obstacles per total area) as inputs, MG creates square shaped feasible enviroment with randomly placed obstacles and saves the map in an external file. For simplicity we have chosen to construct enviroments consisting only of square regions. We suggest that this does not result in a loss of generality since one can construct any feasible enviroment by a sufficiently fine meshing of squares. \\
+The Map Generator (MG) creates random feasible enviroments. A feasible enviroment is described more in detail in section 2, but in short one could say that an enviroment is feasible if it is simply connected and can be divided into a finite set of convex regions. Given the desired size and the density (percentage of obstacles per total area) as inputs, MG creates square shaped feasible enviroment with randomly placed obstacles and saves the map in an external file. For simplicity we have chosen to construct enviroments consisting only of square regions. We suggest that this does not result in a loss of generality since any feasible enviroment can be approximated arbitrarily good by a sufficiently fine meshing of squares. \\
+
 
 pseudo-code, Map Generator:\\
+\begin{verbatim}
 input variables:\\
 int size; //Specifies the width and height of the square matrix  A.\\
 int NumberOfEnv; // Specifies how many feasible enviroments to create.\\
@@ -17,7 +19,7 @@ while (created feasible enviroments is less than the variable NumberOfEnv )\\
 	Test if A is connected\\
 	if A is connected write the matrix A to the file OK.out\\
 	if A is not connected write the matrix to a file NotOK.out\\
-
+\end{verbatim}
 
 \section{Network Generator}
 The Network Generator (NG) generates a node network from an environment matrix. Each node contains data of its adjacent nodes, all the nodes visible from it and its current state. For input the NG uses an environment matrix that is either created by the MG or by hand.\\
