@@ -14,7 +14,7 @@
 \contentsline {subsection}{\numberline {1.4.1}What is optimization}{2}
 \contentsline {subsection}{\numberline {1.4.2}P \& NP problems}{2}
 \contentsline {subsection}{\numberline {1.4.3}(the need for) a near optimal solution}{3}
-\contentsline {subsection}{\numberline {1.4.4}pursuit and evasion problem with multiple pursuers.}{3}
+\contentsline {subsection}{\numberline {1.4.4}Pursuit and evasion problem with multiple pursuers.}{3}
 \contentsline {subsection}{\numberline {1.4.5}Heuristic methods}{3}
 \contentsline {chapter}{\numberline {2}Problem formulation}{5}
 \contentsline {section}{\numberline {2.1}Our problem formulation}{5}
