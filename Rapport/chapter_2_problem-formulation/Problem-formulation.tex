@@ -22,7 +22,26 @@ maybe this will be incorporated with another part of the introduction
 
 
 \section{Our Approach}
-A description of our approach to the problem. Describing the overview
-of our approach. Mentioning the creation of an testing enviroment,
-choice and application of heuristics and target data to evaluate the effectiveness.
+We will now present our intended approach the problem formulated in the preceeding section. The line of work can be divided into four subtasks:
+\begin {itemize}
+\item Create an simulation enviroment.
+\item Create three fundamentaly different algorithms, using aknowledged heuristic ideas. 
+\item Run the algorithms to get comparable data. 
+\item Evaluate and present the data attained, followed by a discussion.
+\end {itemize}
+
+As outlined above the approach as a whole is heuristic, and thus the need for a testing enviroment is essential. We have decided to implement an enviroment using C, due to the computational effiency of the language and because it is more or less the standard language in computations of this type. We have two main specifications on the enviroment. First, it should be able to, in a stand alone application, create a large amount of randomly generated maps with obstacles (the rate of obstacle versus total area is here on called density) and store these in a file. Second, we want the simulation enviroment to read a map from a file, run the specified algorithms and store desired data in an output file. For further details on how the simulation enviroment is implemented read chapter 3. \\
+Given the multipursuer problem and the simulation enviroment, the next subtask is to create the algorithms and run the simulation. We have decided to implement three fundamentaly different algorithms, so that one could outline under what circumstances each one of them excels, or fails. Using ideas from acknowledged heuristic methods we have chosen the following three concepts as our guidelines when creating our algorithms: Greedy, Genetic programming and Tabu search.
+\\ \textbf{Greedy (G):} In G one creates a cost function to describe how good a specific move is. in each iteration the algorithm is supposed to use this function to determine the best possible move for each step, thus giving a local approach to the finding of an optimal solution. 
+\\ \textbf{Genetic Programming (GP):} The main idea is to generate a big population of possible (not nessecarily good) solutions called populations. in each itteration the algorithm compares the quality of the solution and takes the best 
+\\ \textbf{Tabusearch (TS):} The main idea of TS is that it keeps a dynamic list of "bad descissions". For each iteration it makes "good descitions" by comparing with the tabu list. TS is in some sens a merge of GS (global searching) and G (local searching)
+\\Further information on how the algorithms are implemented and more in depth theory is found in chapter 4. 
+\\So the three different algorithms under consideration are in their approaches fundamentaly different, in how they asses the problem. There are ofcourse many other heuristical approaches that could provide similar results, but by comparison we decided that these three are relatively easy to implement on our problem and covers a large aspect of different approaches.\\
+In order to evaluate how well the algorithms' results are we need to compare them in some sense. Given a specific enviroment, number of pursuers and density we decided to compare the following data for each excecution of the simulation:
+\begin {itemize}
+\item computational time
+\item the path length of the pursuers
+\end {itemize}
+The results are presented in chapter 5 - 6, followed by a discussion in chapter 7 
+
 
