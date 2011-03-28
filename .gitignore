@@ -1,0 +1,7 @@
+.DS_Store
+rapportstommen.synctex.gz
+*.aux
+*.log
+*.toc
+*.lof
+*.swp
