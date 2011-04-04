@@ -1,14 +1,23 @@
 \section{Genetic}
 \subsection{Description}
-Genetic algorithms is based on the idea of evolution. Using a combination of reproduction, mutation and survival of the fittest a solution is generated. %%Genetic algorithms does not guarantee an optimal solution, however 
+Genetic algorithms is based on the idea of evolution, that the most suited individuals tend to live longer and reproduce. In Genetic Algorithms a population is simulated in an artificial world using a combination of reproduction, gene crossover and mutation of the population, with a given goal to the population to achieve.\cite{GAHandbook1}\\
+It is important to know that Genetic Algorithms is not applicable to all kinds of problems, it is necessary to be able to simulate the population for it to be useful due to the fact that it will be required to do evaluations for all individuals in the population. Since the population size can be rather large and the algorithm can run for several generations the number of evaluations can be several hundred.\\
+By using Genetic algorithms an optimal solution is not guaranteed, however the population will converge towards an as good solution as possible. 
+
 \subsection{Algorithm}
-A description of the algorithm\\
+The algorithm consists of four parts, first an initial set of genes for each pursuer is generated and combined to form individuals in the population. When an initial population has been generated, the following is repeated until either a maximum number of generations has been reached or a solution has been found:\\
+\begin{itemize}
+\item Reproduction, also called crossover. By using a selection method two individuals are selected to be parents for two children. Each child gets it's genes alternating from each parent, the first child gets the first gene from the first parent, the second from the second parent, the third from the first parent and so on. The second child gets the first gene from the second parent, the second gene from the first parent, and so on. For each child, there is a chance of mutation.
+\item Mutation. To make sure there can be variations in the population, mutations are used. It is important not to use mutations to often, since that can lead to a random approach instead. For each new child that is created, there is a possibility that a gene gets manipulated during the crossover. If this happens, the gene gets cut of at a random point, and that part is replaced by a new randomly generated sequence.
+\item Selection. To make sure that the population will not grow indefinitely, a selection scheme is used. At each crossover there are four different individuals, two parents and two children. Selection is made by always keeping the two most fit individuals, which can either be children or parents.
+\end{itemize}
 %%Selection: A combination of elitism and random selection was used. Elitism to make sure good solutions was not lost, by always keeping all feasible solutions that solved the pursuit-evasion problem, and random selection to maintain a diversity.\\
 %%Crossover: \\
 %%Mutation: To make sure that all solutions can be obtained, mutations is used. However, to make sure that it will not only be a random search, the chance of mutation was 1% at crossover and 0% in all other cases.\\
 
 \subsection{Implementation}
-A description of how the algorithm is implemented
+The algorithm is implemented using C and LibGA, which is a library for genetic algorithms.
+
 \subsection{ Development process}
 How the development of the algorithm have proceeded.\\
 %%\\
