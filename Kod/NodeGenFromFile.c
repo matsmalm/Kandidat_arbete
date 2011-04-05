@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "genetic.h"
 
-#define SIZE 256 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
+#define SIZE 10 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
 int A[SIZE][SIZE]; // The matrix of the area to create a network from.
 #define LEFT 0
 #define RIGHT 1
@@ -20,16 +21,20 @@ int getUp(struct Node *b); // Fetch the number of possible steps upwards.
 int getDown(struct Node *b); // Fetch the number of possible steps downwards.
 void setVision(struct Node *b); // Calculate visible nodes.
 int numVisible(struct Node *b); // Calculate how many visible nodes there is from a node.
-FILE *fr;
-int ROWS,COLS;
+FILE *fr = NULL;
+int ROWS=0,COLS=0;
 
 struct Node{
 	int name[2]; // rowindex = 0, columnindex = 1.
 	struct Node *vision[SIZE*SIZE]; // Array with pointers to all Node visible.
 	struct Node *move[4]; // Array with pointers to all Node possible to move to.
 	int state; // States 1-4. 1 = contains pursuer, 2 = seen by pursuer, 3 = guaranteed safe, 4 = none of states 1-3.
-	int left,down,up,right; // To be removed.
+	//int left,down,up,right; // To be removed.
 }B[SIZE][SIZE];
+
+struct Path{
+	int path[10];
+};
 
 void place() {
 	int i=0, j=0;
@@ -59,31 +64,31 @@ void setMove(struct Node *b){
 	int i = (*b).name[0];
 	int j = (*b).name[1];
 	if(j>0 && A[i][j-1]==1){ //Left
-		(*b).left=1;
+		//(*b).left=1;
 		(*b).move[LEFT]=(&(*getMove(b,LEFT)));
 	}else{
-		(*b).left=0;
+		//(*b).left=0;
 		(*b).move[LEFT]=NULL;
 	}
 	if(j<4 && A[i][j+1]==1){ //Right
-		(*b).right=1;
+		//(*b).right=1;
 		(*b).move[RIGHT]=(&(*getMove(b,RIGHT)));
 	}else{
-		(*b).right=0;
+		//(*b).right=0;
 		(*b).move[RIGHT]=NULL;
 	}
 	if(i>0 && A[i-1][j]==1){ //Up
-		(*b).up=1;
+		//(*b).up=1;
 		(*b).move[UP]=(&(*getMove(b,UP)));
 	}else{
-		(*b).up=0;
+		//(*b).up=0;
 		(*b).move[UP]=NULL;
 	}
 	if(i<4 && A[i+1][j]==1){ //Down
-		(*b).down=1;
+		//(*b).down=1;
 		(*b).move[DOWN]=(&(*getMove(b,DOWN)));
 	}else{
-		(*b).down=0;
+		//(*b).down=0;
 		(*b).move[DOWN]=NULL;
 	}
 }
@@ -307,14 +312,20 @@ int resetAB() {
 	}
 }
 int main() {
+	srand(time(0)); // Resets random.
 	fr = fopen("OK.txt", "r"); // Open file once
 	int numMatrices=0;
 	while(readFromFile() != -1){
 		numMatrices++;
 		place();
+		int NUM_PUR = 3;
+		int Hunters[] = {NUM_PUR, 0, 0, 1, 2, 1,1};
+		int BREAK = 1;
+		preGenetic(&B, &Hunters, BREAK);
 		/****
 		 Here we should be able to call our algorithms, since B will contain the graph network.
 		 ****/
+		genAlg(&B, &Hunters, BREAK); // Main Genetic Algorithm program.
 	}
 	printf("There were %d matrices in input file.\n", numMatrices);
 	fclose (fr); // Close file once.
