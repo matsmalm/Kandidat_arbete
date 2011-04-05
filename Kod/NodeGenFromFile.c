@@ -316,7 +316,7 @@ int main() {
 		 ****/
 
 		preGenetic(B, Hunters, BREAK);
-		genAlg(B, Hunters, BREAK); // Main Genetic Algorithm program.
+		genAlg(); // Main Genetic Algorithm program.
 		
 		printf("start greedy: \n");
 		preGreedy(B, Hunters, BREAK);
