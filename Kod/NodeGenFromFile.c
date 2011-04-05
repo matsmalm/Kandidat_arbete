@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "genetic.h"
+#include "greedy.h"
 
 #define SIZE 10 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
 int A[SIZE][SIZE]; // The matrix of the area to create a network from.
@@ -293,7 +294,7 @@ int readFromFile() {
 			break;
 		}
 		for(i=0;i<COLS;i++){
-			line[i]=NULL;
+			line[i]=0;
 		}
 
 	}
@@ -307,7 +308,7 @@ int resetAB() {
 	int r=0,c=0;
 	for(r=0;r<SIZE;r++){
 		for(c=0;c<SIZE;c++){
-			A[r][c]=NULL;
+			A[r][c]=0;
 		}
 	}
 }
@@ -321,12 +322,19 @@ int main() {
 		int NUM_PUR = 3;
 		int Hunters[] = {NUM_PUR, 0, 0, 1, 2, 1,1};
 		int BREAK = 1;
-		preGenetic(&B, &Hunters, BREAK);
 		/****
 		 Here we should be able to call our algorithms, since B will contain the graph network.
 		 ****/
+		preGenetic(&B, &Hunters, BREAK);
 		genAlg(&B, &Hunters, BREAK); // Main Genetic Algorithm program.
-	}
+
+		preGreedy(&B, &Hunters, BREAK);
+		greedyAlg(&B, &Hunters, BREAK);
+
+
+}
+
+
 	printf("There were %d matrices in input file.\n", numMatrices);
 	fclose (fr); // Close file once.
 	printf("End main\n");

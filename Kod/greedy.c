@@ -1,10 +1,10 @@
 /*
   function call-order:
-    preGreedy()
+    void preGreedy(struct Node *NodeMat, int *Hunters, int BREAK)
        getAreas()  -- creates an array with a list of all indices of the enviroment
        getHunterpos() -- creates an array with the hunter startpositions
  
-    greedyAlg()
+    greedyAlg(struct Node *NodeMat, int *Hunters, int BREAK)
        one iteration:
 -----------------Phase One, Preparations-----------------------------
        hunterVision() - evaluates starting conditions 
@@ -37,7 +37,9 @@
          moveHunter() - moves hunters to maximum gain positions according to evalCost()
 	 uppdateEnv() - uppdate states and enviroment
 ---------------------------------------------------------------------
- 
+return: array with move strategy. 
+
+
 
 */
 
@@ -48,3 +50,11 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+struct Node;
+
+
+void preGreedy(struct Node *Map, int *Hunter, int BREAK){
+}
+
+void greedyAlg(struct Node *Map, int *Hunter, int BREAK){
+}
