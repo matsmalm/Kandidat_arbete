@@ -18,10 +18,10 @@
 
 #include "Header.h"
 /*** Definitions ***/
-#define MAX_GEN 100 // Maximum number of generations
-#define POPULATION_SIZE 100 // Population size, static.
-#define MAX_PURSUERS 50 // Maximum number of pursuers, just to allocate enough memory
-#define MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
+#define MAX_GEN 5 // Maximum number of generations
+#define POPULATION_SIZE 5 // Population size, static.
+#define MAX_PURSUERS 3 // Maximum number of pursuers, just to allocate enough memory
+#define MAX_STEPS 10 // Maximum number of steps, just to allocate enough memory
 
 /*** Pre-declarations ***/
 struct Gene;
@@ -42,11 +42,10 @@ struct Chromosome{
 struct Chromosome Population[POPULATION_SIZE];
 struct Chromosome New_Population[POPULATION_SIZE];
 struct Node *NodeMatrix; // Pointer to the Node matrix
-long STARTTIME;
 
 /*** Functions ***/
 void generatePopulation();
-void preGenetic(struct Node *NodeMat, int *Hunters, int BREAK);
+//void preGenetic(struct Node *NodeMat, int *Hunters, int BREAK);
 void getRandom(struct Gene *g);
 void calculateFitness(struct Chromosome *chrom);
 void sortPopulation(struct Chromosome *pop);
@@ -54,13 +53,17 @@ void addToNewPopulation(struct Chromosome chrom);
 void doCrossover();
 void doMutation(struct Chromosome *chrom);
 void doDecode();
-void printBest();
+void printBest(int popNr);
 
 /*** Preparations ***/
-void preGenetic(struct Node *NodeMat, int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
-	printf("NodeMat: %d\n", &NodeMat);
-	//	printf("NodeMat: %d\n", (*(&NodeMat))[0][1] );
-	STEPS = 10;
+void preGenetic(struct Node NodeMat[SIZE][SIZE], int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
+	NodeMatrix = *NodeMat;
+//	printf("Name: %d\n", (&NodeMatrix)[1][0].name[0]);
+//	NodeMatrix = &NodeMat; // Make the Node Matrix available for the genetic algorithm.
+	//printf("Name: %d\n", NodeMatrix[0][0].name[0]);
+//	printf("NodeMat: %d\n", ((&NodeMat)[1][0]).move[1]->name[0] );
+//	printf("NodeMat: (%d,%d)\n", ((&NodeMatrix)[2][0]).name[0], ((&NodeMatrix)[2][0]).name[1]);
+	STEPS = 5;
 	GENERATIONS = BREAK;
 	PURSUERS = Hunters[0];
 	int i, j, k;
@@ -73,8 +76,8 @@ void preGenetic(struct Node *NodeMat, int *Hunters, int BREAK) { // Do all pre-p
 	}
 	//printf("Pre-processing.\n");
 	////printf("Name: (%d)\n", (*NodeMat[0][0]).name[0]);
-	NodeMatrix = NodeMat; // Make the Node Matrix available for the genetic algorithm.
 	generatePopulation();
+	printBest(0);
 }
 void generatePopulation() {
 	//printf("\tGenerate population\n");
@@ -104,14 +107,15 @@ void genAlg() { // Main call function for Genetic Algorithm
 		for(currentChromosome = 0; currentChromosome < PURSUERS; currentChromosome++){
 			//printf("Current Chromosome: %d\n", currentChromosome);
 			calculateFitness(&Population[currentChromosome]);
-			sortPopulation(Population);
+			//sortPopulation(Population);
 			addToNewPopulation(Population[0]);
 			addToNewPopulation(Population[1]);
 			doCrossover();
 		}
 	}
 	doDecode();
-	printBest();
+	printf("\n\n");
+	sortPopulation(Population);
 }
 void calculateFitness(struct Chromosome *chrom){
 	//printf("\tCalculate fitness\n");
@@ -121,6 +125,10 @@ void calculateFitness(struct Chromosome *chrom){
 }
 void sortPopulation(struct Chromosome *pop){
 	//printf("\tSort population\n");
+	struct Chromosome *temp;
+	temp = &pop[1];
+	pop[1] = pop[0];
+	pop[0] = *temp;
 }
 void addToNewPopulation(struct Chromosome chrom){
 	//printf("\tAdd to new population\n");
@@ -151,13 +159,13 @@ void doMutation(struct Chromosome *chrom){
 void doDecode(){ // Decode the best chromosome and return it
 	//printf("Decode best chromosome\n");
 }
-void printBest(){
+void printBest(int popNr){
 	//printf("Print best in population:\n");
 	int i=0,j=0,k=0;
 	for(j=0;j<PURSUERS; j++){
 		printf("Gene %d:\t", j);
 		for(k=0;k<STEPS; k++){
-			printf("(%d,%d) ", Population[0].gene[j].allele[2*k], Population[0].gene[j].allele[2*k+1]);
+			printf("(%d,%d) ", Population[popNr].gene[j].allele[2*k], Population[0].gene[j].allele[2*k+1]);
 		}
 		printf("\n");
 	}
