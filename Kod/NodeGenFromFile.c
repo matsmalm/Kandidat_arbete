@@ -1,8 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include "genetic.h"
-#include "greedy.h"
+
+#include "Header.h"
 
 #define SIZE 10 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
 int A[SIZE][SIZE]; // The matrix of the area to create a network from.
@@ -11,7 +8,6 @@ int A[SIZE][SIZE]; // The matrix of the area to create a network from.
 #define UP 2
 #define DOWN 3
 
-struct Node; // Forward definition to be able to use pointers to another node in each node.
 
 void place(); // For each allowed position (a_ij=1 i A), give B values at position b_ij.
 void setMove(struct Node *b); // Give element b_ij moveable elements in B.
