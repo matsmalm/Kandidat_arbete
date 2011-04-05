@@ -6,3 +6,5 @@ rapportstommen.synctex.gz
 *.lof
 *.swp
 *.pdf
+NodeGen
+*.o
