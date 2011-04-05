@@ -1,8 +1,9 @@
 \chapter{Introduction}
 
 \section{Objektiv}
+
 The goal of this research is to solve a pursuit evasion problems in a two dimensional environment, with the help of heuristic problem solving methods.
-In short, the problem is: given a surface with static obstacles and a number of pursuers ensure that an evader cannot exist within the area. A complete formulation of the problem can be seen in Chapter 2
+In short, the problem is: given a environment with static obstacles and a number of pursuers ensure that an evader cannot exist within the environment. A complete formulation of the problem can be seen in Chapter 2
 
 The problem itself is solved. An algorithm providing an optimal solution already exists.
 The problem yet to be solved, is the problem of finding a solution within a reasonable computational time, it is here where heuristic methods comes in to play
@@ -21,8 +22,8 @@ This report is therefore a study of the balance between a reasonable computation
 \end{enumerate}
 
 \section{ Related work}
-\cite{paper1}, \cite{paper2} and \cite{paper3}.
-Related work, for instance the three given articles.
+
+Relaterat arbete bla de tre givna artiklarna 
 
 \section{Background}
 
@@ -46,42 +47,30 @@ Cobham Edmonds thesis holds that P is the class of computational problems which 
 NP refere to Nondeterministic Polynomial time. and can be intuitively described as the set of problems for which, a found solution can be verified to actually be the correct solution, using a deterministic Turing machine using a polynomial amount of computation time.
 
 A set of descriptions that leads one to wonder whether
+\begin{equation}
 P = NP
+\end{equation}
 In what the essence is:
 Suppose that solutions to a problem can be verified quickly. Then, can the solutions themselves also be computed quickly?
 Or stated differently, douse it exists such an algorithm that can calculate such a solution quickly?
 A unsolved question considered by many to be the most important problem in the feeld in computer science. 
 
-Within the class NP there are a few subclasses where, intuitively, the hardest problems among the subclasses are called NP-hard.
+ALTERNATIV 1
+Within the class NP there are a few subclasses one of them are called NP-hard 
+Related work has stated that the problem studied in this report are in fact of the class NP-hard [deras artickel].  And hens are chances of finding, an algorithm that produces, an optimal solution in polynomial time are greatly reduced. As stated above there is still an open question whether such algorithms actually exist for NP problems. 
 
-With by dffinitun are problems of the type for which no polynomial-time algorithms are known. 
-
-As stated above there is still an open question whether such algorithms actually exist for NP problems, and by corollary, all NP problems [referens 1]. It is widely believed that this is not the case 
-
-This is very relevant to our problem, related work has shown that the problem in question is at least NP-hard [reference 2] wich is a set of problems said to be a class of problems That, informally are, at least as hard as the hardest Problems in NP.
-
-
-
-
-Preliminara ej fixade referenser 
-REFERENS 
-
-[1]
-William I. Gasarch (June 2002). "The P=?NP poll." (PDF). SIGACT News 33 (2): 34-47. doi:10.1145/1052796.1052804. http://www.cs.umd.edu/~gasarch/papers/poll.pdf. Retrieved 2008-12-29.
-
-[2] 
-Deras 3 articklar.
-
+ALTERNATIV2
+A more thurol description of the different NP subclasses, definitions etc
 
 [4]
 
 Computers and Intractability: A Guide to the Theory of NP-Completeness  (Author),  M. R. Garey (Author), D. S. Johnson
 
-
 \subsection{(the need for) a near optimal solution}
 
 Due to the fact that the problem in question is NP-hard and thus the possibilities of finding an optimal solution within reasonable computing time are/is seen to be very low. Does the logical thread has brought us to be prepared to sacrifice optimality
 This sacrifice leads us to a larger spectrum of possible approaches to the problem.
+
 
  \subsection {Pursuit and evasion problem with multiple pursuers.}
 The pursuit evasion problem, also known as "Lion and man" \cite{Dumitrescu08}, is a problem where an pursuer is to find an evader in an environment. An extension to this is the multi pursuer version, which is used in \cite{paper1},\cite{paper2} and \cite{paper3}.\\
@@ -90,7 +79,7 @@ The Pursuit Evasion problem. \emph{Given an evader, a set of N pursuers and a po
 
 \subsection{Heuristic methods}
 
-Heuristic methods are a bransch of methods used in computer science and mathematics to make educated guesses to help find solutions to a problem. Generally heuristic methods douse not provide correct / optimal solutions but it offers a reasonably fast computed solution. Heuristic methods are therefore often used, very powerful, in combination with deterministic methods, to speed up the process.
+Heuristic methods are a bransch of methods used in computer science and mathematics to make educated guesses to help find solutions to a problem. Generally heuristic methods douse not provide correct / optimal solutions but it offers a reasonably fast computed solution. Heuristic methods are therefore often used, very powerful, in combination with deterministic methods[fotnot], to speed up the process.
 
 The characteristics of a heuristic is partly that there is no evidence of that it works, or else it would be a deterministic method. The idea of heuristic methods is thus to improve the chances of finding the desired solution. Pure random guesses forms no heuristic method.
 
@@ -105,6 +94,6 @@ Here are a few:
 
 Where the last point corresponds to the problem we are dealing with.
 
-Consept misunderstanding?:
-Computationl time vs computation time
+[fotnot]
+deterministic method  or deterministic algorithms are algorithms that Given a particular input always produce the same output.
 
