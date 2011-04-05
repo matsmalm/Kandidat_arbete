@@ -22,8 +22,8 @@
 /*** Definitions ***/
 #define MAX_GEN 100 // Maximum number of generations
 #define POPULATION_SIZE 100 // Population size, static.
-#define MAX_PURSUERS 20 // Maximum number of pursuers, just to allocate enough memory
-#define MAX_STEPS 50 // Maximum number of steps, just to allocate enough memory
+#define MAX_PURSUERS 50 // Maximum number of pursuers, just to allocate enough memory
+#define MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
 
 /*** Pre-declarations ***/
 struct Gene;
@@ -60,7 +60,9 @@ void printBest();
 
 /*** Preparations ***/
 void preGenetic(struct Node *NodeMat, int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
-	STEPS = 5;
+	printf("NodeMat: %d\n", &NodeMat);
+	printf("NodeMat: %d\n", (*(&NodeMat))[0][1] );
+	STEPS = 10;
 	GENERATIONS = BREAK;
 	PURSUERS = Hunters[0];
 	int i, j, k;
@@ -71,13 +73,13 @@ void preGenetic(struct Node *NodeMat, int *Hunters, int BREAK) { // Do all pre-p
 			}
 		}
 	}
-	printf("Pre-processing.\n");
-	//printf("Name: (%d)\n", (*NodeMat[0][0]).name[0]);
+	//printf("Pre-processing.\n");
+	////printf("Name: (%d)\n", (*NodeMat[0][0]).name[0]);
 	NodeMatrix = NodeMat; // Make the Node Matrix available for the genetic algorithm.
 	generatePopulation();
 }
 void generatePopulation() {
-	printf("\tGenerate population\n");
+	//printf("\tGenerate population\n");
 	int ChromNr, GeneNr;
 	for(ChromNr = 0; ChromNr < POPULATION_SIZE; ChromNr++){
 		for(GeneNr = 0; GeneNr < PURSUERS; GeneNr++){
@@ -86,7 +88,7 @@ void generatePopulation() {
 	}
 }
 void getRandom(struct Gene *g){ // Generate random step-sequence from a given node
-	//printf("\t\tGenerate random step-sequence\n");
+	////printf("\t\tGenerate random step-sequence\n");
 	int stepnr=1;
 	for(stepnr = 1; stepnr < STEPS; stepnr++){
 		(*g).allele[2*stepnr] = ((int)((double)rand() / ((double)RAND_MAX + 1)*5));
@@ -100,9 +102,9 @@ void genAlg() { // Main call function for Genetic Algorithm
 	// Set Population to New_Population
 	int currentGen, currentChromosome;
 	for(currentGen = 0; currentGen < GENERATIONS; currentGen++){
-		printf("***** Generation %d *****\n", currentGen+1);
+		//printf("***** Generation %d *****\n", currentGen+1);
 		for(currentChromosome = 0; currentChromosome < PURSUERS; currentChromosome++){
-			printf("Current Chromosome: %d\n", currentChromosome);
+			//printf("Current Chromosome: %d\n", currentChromosome);
 			calculateFitness(&Population[currentChromosome]);
 			sortPopulation(Population);
 			addToNewPopulation(Population[0]);
@@ -114,19 +116,19 @@ void genAlg() { // Main call function for Genetic Algorithm
 	printBest();
 }
 void calculateFitness(struct Chromosome *chrom){
-	printf("\tCalculate fitness\n");
+	//printf("\tCalculate fitness\n");
 	int fitness[] = {0,0};
 	(*chrom).fitnessValue[0] = fitness[0];
 	(*chrom).fitnessValue[1] = fitness[1];
 }
 void sortPopulation(struct Chromosome *pop){
-	printf("\tSort population\n");
+	//printf("\tSort population\n");
 }
 void addToNewPopulation(struct Chromosome chrom){
-	printf("\tAdd to new population\n");
+	//printf("\tAdd to new population\n");
 }
 void doCrossover(){ // Will work with Population.
-	printf("\tDo crossover\n");
+	//printf("\tDo crossover\n");
 	struct Chromosome XoverPop[4];
 	XoverPop[0] = Population[doRoulette()];
 	XoverPop[1] = Population[doRoulette()];
@@ -134,7 +136,7 @@ void doCrossover(){ // Will work with Population.
 	doMutation(&XoverPop[2]);
 	int tempPopChromosome;
 	for(tempPopChromosome = 2; tempPopChromosome < 4; tempPopChromosome++){
-		printf("\t\t");
+		//printf("\t\t");
 		calculateFitness(&XoverPop[tempPopChromosome]);
 	}
 	sortPopulation(XoverPop);
@@ -142,17 +144,17 @@ void doCrossover(){ // Will work with Population.
 	addToNewPopulation(XoverPop[1]);
 }
 int doRoulette(){ // Return position in Population for the chromosome that was selected.
-	printf("\t\tDo roulette\n");
+	//printf("\t\tDo roulette\n");
 	return 0;
 }
 void doMutation(struct Chromosome *chrom){
-	printf("\t\tDo Mutation\n");
+	//printf("\t\tDo Mutation\n");
 }
 void doDecode(){ // Decode the best chromosome and return it
-	printf("Decode best chromosome\n");
+	//printf("Decode best chromosome\n");
 }
 void printBest(){
-	printf("Print best in population:\n");
+	//printf("Print best in population:\n");
 	int i=0,j=0,k=0;
 	for(j=0;j<PURSUERS; j++){
 		printf("Gene %d:\t", j);
@@ -236,18 +238,18 @@ void printBest(){
 
 /*
 void printBest(struct Chromosome *chrom){
-	printf("Print best in population:\n");
+	//printf("Print best in population:\n");
 	int i=0,j=0,k=0;
 	for(j=0;j<MAX_PURSUERS; j++){
-		printf("\t\tGene %d:\t", j);
+		//printf("\t\tGene %d:\t", j);
 		for(k=0;k<MIN_STEPS; k++){
-			printf("%d", (*chrom).gene[j].allele[k]);
+			//printf("%d", (*chrom).gene[j].allele[k]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
-	printf("\n");
-	printf("Fitness: %d\n", (*chrom).fitnessValue[1]);
-	//printf("B[0]: %d\n", (&B[0][0]).name[0]);
+	//printf("\n");
+	//printf("Fitness: %d\n", (*chrom).fitnessValue[1]);
+	////printf("B[0]: %d\n", (&B[0][0]).name[0]);
 
 }
 */
