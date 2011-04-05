@@ -22,8 +22,8 @@
 /*** Definitions ***/
 #define MAX_GEN 100 // Maximum number of generations
 #define POPULATION_SIZE 100 // Population size, static.
-#define MAX_PURSUERS 20 // Maximum number of pursuers, just to allocate enough memory
-#define MAX_STEPS 50 // Maximum number of steps, just to allocate enough memory
+#define MAX_PURSUERS 50 // Maximum number of pursuers, just to allocate enough memory
+#define MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
 
 /*** Pre-declarations ***/
 struct Gene;
@@ -60,7 +60,9 @@ void printBest();
 
 /*** Preparations ***/
 void preGenetic(struct Node *NodeMat, int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
-	STEPS = 5;
+	printf("NodeMat: %d\n", &NodeMat);
+	printf("NodeMat: %d\n", (*(&NodeMat))[0][1] );
+	STEPS = 10;
 	GENERATIONS = BREAK;
 	PURSUERS = Hunters[0];
 	int i, j, k;
@@ -96,7 +98,7 @@ void getRandom(struct Gene *g){ // Generate random step-sequence from a given no
 
 /*** Algorithm ***/
 void genAlg() { // Main call function for Genetic Algorithm
-	//printf("The genetic library\n");
+	printf("The genetic library\n");
 	// Set Population to New_Population
 	int currentGen, currentChromosome;
 	for(currentGen = 0; currentGen < GENERATIONS; currentGen++){
@@ -155,13 +157,13 @@ void printBest(){
 	//printf("Print best in population:\n");
 	int i=0,j=0,k=0;
 	for(j=0;j<PURSUERS; j++){
-		//printf("Gene %d:\t", j);
+		printf("Gene %d:\t", j);
 		for(k=0;k<STEPS; k++){
-			//printf("(%d,%d) ", Population[0].gene[j].allele[2*k], Population[0].gene[j].allele[2*k+1]);
+			printf("(%d,%d) ", Population[0].gene[j].allele[2*k], Population[0].gene[j].allele[2*k+1]);
 		}
-		//printf("\n");
+		printf("\n");
 	}
-	//printf("\n");
+	printf("\n");
 }
 
 
