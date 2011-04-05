@@ -20,10 +20,10 @@
 #include <time.h>
 
 /*** Definitions ***/
-//#define MAX_GEN 2 // Maximum number of generations
+#define MAX_GEN 100 // Maximum number of generations
 #define POPULATION_SIZE 100 // Population size, static.
-#define MAX_PURSUERS 50 // Maximum number of pursuers, just to allocate enough memory
-#define MAX_STEPS 10 // Maximum number of steps, just to allocate enough memory
+#define MAX_PURSUERS 20 // Maximum number of pursuers, just to allocate enough memory
+#define MAX_STEPS 50 // Maximum number of steps, just to allocate enough memory
 
 /*** Pre-declarations ***/
 struct Gene;
@@ -44,6 +44,7 @@ struct Chromosome{
 struct Chromosome Population[POPULATION_SIZE];
 struct Chromosome New_Population[POPULATION_SIZE];
 struct Node *NodeMatrix; // Pointer to the Node matrix
+long STARTTIME;
 
 /*** Functions ***/
 void generatePopulation();
@@ -59,6 +60,7 @@ void printBest();
 
 /*** Preparations ***/
 void preGenetic(struct Node *NodeMat, int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
+	STEPS = 5;
 	GENERATIONS = BREAK;
 	PURSUERS = Hunters[0];
 	int i, j, k;
@@ -70,7 +72,7 @@ void preGenetic(struct Node *NodeMat, int *Hunters, int BREAK) { // Do all pre-p
 		}
 	}
 	printf("Pre-processing.\n");
-	printf("Name: (%d)\n", (*NodeMat[0][0]).name[0]);
+	//printf("Name: (%d)\n", (*NodeMat[0][0]).name[0]);
 	NodeMatrix = NodeMat; // Make the Node Matrix available for the genetic algorithm.
 	generatePopulation();
 }
@@ -85,19 +87,15 @@ void generatePopulation() {
 }
 void getRandom(struct Gene *g){ // Generate random step-sequence from a given node
 	//printf("\t\tGenerate random step-sequence\n");
-	int stepnr;
-	struct Node *current;
-	printf("\n(%d,%d)\n", (*g).allele[0],(*g).allele[1]);
-//	current = &NodeMatrix[0][0];
-//	printf("Name: (%d)\n", *(current)[0][0].name[0]);
+	int stepnr=1;
 	for(stepnr = 1; stepnr < STEPS; stepnr++){
-			(*g).allele[2*stepnr] = ((int)((double)rand() / ((double)RAND_MAX + 1)*5));
-			(*g).allele[2*stepnr+1] = ((int)((double)rand() / ((double)RAND_MAX + 1)*5));
+		(*g).allele[2*stepnr] = ((int)((double)rand() / ((double)RAND_MAX + 1)*5));
+		(*g).allele[2*stepnr+1] = ((int)((double)rand() / ((double)RAND_MAX + 1)*5));
 	}
 }
 
 /*** Algorithm ***/
-void genAlg(struct Node *NodeMat, int *Hunters, int BREAK) { // Main call function for Genetic Algorithm
+void genAlg() { // Main call function for Genetic Algorithm
 	printf("The genetic library\n");
 	// Set Population to New_Population
 	int currentGen, currentChromosome;
