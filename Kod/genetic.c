@@ -13,12 +13,10 @@
 				calculateFitness()
 				sortTempPop()
 			addToNewPopulation()
-		doDecode()						*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
+		doDecode()
+						*/
 
+#include "Header.h"
 /*** Definitions ***/
 #define MAX_GEN 100 // Maximum number of generations
 #define POPULATION_SIZE 100 // Population size, static.
@@ -28,7 +26,7 @@
 /*** Pre-declarations ***/
 struct Gene;
 struct Chromosome;
-struct Node;
+
 
 /*** Variables ***/
 int PURSUERS; // Only a temporary value.
@@ -61,7 +59,7 @@ void printBest();
 /*** Preparations ***/
 void preGenetic(struct Node *NodeMat, int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
 	printf("NodeMat: %d\n", &NodeMat);
-	printf("NodeMat: %d\n", (*(&NodeMat))[0][1] );
+	//	printf("NodeMat: %d\n", (*(&NodeMat))[0][1] );
 	STEPS = 10;
 	GENERATIONS = BREAK;
 	PURSUERS = Hunters[0];
