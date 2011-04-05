@@ -314,12 +314,13 @@ int main() {
 		/****
 		 Here we should be able to call our algorithms, since B will contain the graph network.
 		 ****/
-		preGenetic(&B, &Hunters, BREAK);
-		genAlg(&B, &Hunters, BREAK); // Main Genetic Algorithm program.
+
+		preGenetic(B, Hunters, BREAK);
+		genAlg(B, Hunters, BREAK); // Main Genetic Algorithm program.
 		
 		printf("start greedy: \n");
-		preGreedy(&B, &Hunters, BREAK);
-		greedyAlg(&B, &Hunters, BREAK);
+		preGreedy(B, Hunters, BREAK);
+		greedyAlg(B, Hunters, BREAK);
 
 
 }

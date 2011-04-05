@@ -47,38 +47,46 @@ return: array with move strategy.
 
 #include "Header.h"
 
-int *x;
-int *getAreas(struct Node B[SIZE][SIZE],int Obst){
-  int length = SIZE*SIZE - Obst;
+void getAreas(struct Node *B[SIZE][SIZE],int *point, int *index){
   int rad=0;
   int kol=0;
   int i=1;
-  int allArea[length];
-
+  printf("före while har vi,  point = %d \n", *point);
   while (rad<SIZE){
+    
     while (kol<SIZE){
-      if(B[rad][kol].vision[0] != 0){
-	allArea[i]=rad;
+      //      printf("test varv %d namn %d \n", i, B[rad][kol].name[0]);
+	*point=rad;
+	*index++;
+	*point=kol;
+	*index++;
+	printf("varv nummer %d, point = %d \n", i, *point);
 	i++;
-	allArea[i]=kol;
-	i++;
-      }
+	//}
+	kol++;
     }
+    rad++;
   }
-  x= allArea;
-  return x;
+  return;
 }
 
-void preGreedy(struct Node Map[SIZE][SIZE], int *Hunter, int BREAK){
-  int banan=SIZE*SIZE;
-  printf("fore utskrift \n");
-  int test = &getAreas(Map, 10);
-  int j =0;
+void preGreedy(struct Node *B[SIZE][SIZE], int *Hunter, int BREAK){
+  int allArea[2*SIZE*SIZE];
 
-  while (j<banan){
-    printf("%d \n",test);
+  int *p1;  //declare integer pointer
+  int *p2; //p2 as an pointer to an integer.
+  allArea[5]=100;
+  int indx;
+  p2=&indx; //points p2 to the memory allocated for the variable indx
+  *p2=0;  // sends the value 0 to the memory allocated for indx, eg. sets indx=0
+  p1= &allArea[indx];
+  printf("nukors getArea \n");
+  getAreas(B, p1, p2);
+  int j=0;
+  /* while (j<SIZE*SIZE){   
+    printf("%d \n",allArea[j]);
     j++;
-  }
+    }*/
 }
 
 void greedyAlg(struct Node *Map, int *Hunter, int BREAK){
