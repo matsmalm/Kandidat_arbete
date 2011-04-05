@@ -45,15 +45,40 @@ return: array with move strategy.
 
 
 
+#include "Header.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
-struct Node;
+int *x;
+int *getAreas(struct Node B[SIZE][SIZE],int Obst){
+  int length = SIZE*SIZE - Obst;
+  int rad=0;
+  int kol=0;
+  int i=1;
+  int allArea[length];
 
+  while (rad<SIZE){
+    while (kol<SIZE){
+      if(B[rad][kol].vision[0] != 0){
+	allArea[i]=rad;
+	i++;
+	allArea[i]=kol;
+	i++;
+      }
+    }
+  }
+  x= allArea;
+  return x;
+}
 
-void preGreedy(struct Node *Map, int *Hunter, int BREAK){
+void preGreedy(struct Node Map[SIZE][SIZE], int *Hunter, int BREAK){
+  int banan=SIZE*SIZE;
+  printf("fore utskrift \n");
+  int test = &getAreas(Map, 10);
+  int j =0;
+
+  while (j<banan){
+    printf("%d \n",test);
+    j++;
+  }
 }
 
 void greedyAlg(struct Node *Map, int *Hunter, int BREAK){

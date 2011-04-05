@@ -21,13 +21,6 @@ int numVisible(struct Node *b); // Calculate how many visible nodes there is fro
 FILE *fr = NULL;
 int ROWS=0,COLS=0;
 
-struct Node{
-	int name[2]; // rowindex = 0, columnindex = 1.
-	struct Node *vision[SIZE*SIZE]; // Array with pointers to all Node visible.
-	struct Node *move[4]; // Array with pointers to all Node possible to move to.
-	int state; // States 1-4. 1 = contains pursuer, 2 = seen by pursuer, 3 = guaranteed safe, 4 = none of states 1-3.
-	//int left,down,up,right; // To be removed.
-}B[SIZE][SIZE];
 
 struct Path{
 	int path[10];
@@ -323,7 +316,8 @@ int main() {
 		 ****/
 		preGenetic(&B, &Hunters, BREAK);
 		genAlg(&B, &Hunters, BREAK); // Main Genetic Algorithm program.
-
+		
+		printf("start greedy: \n");
 		preGreedy(&B, &Hunters, BREAK);
 		greedyAlg(&B, &Hunters, BREAK);
 
