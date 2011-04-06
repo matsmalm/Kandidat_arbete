@@ -18,10 +18,10 @@
 
 #include "Header.h"
 /*** Definitions ***/
-#define MAX_GEN 5 // Maximum number of generations
-#define POPULATION_SIZE 5 // Population size, static.
-#define MAX_PURSUERS 3 // Maximum number of pursuers, just to allocate enough memory
-#define MAX_STEPS 10 // Maximum number of steps, just to allocate enough memory
+#define MAX_GEN 10 // Maximum number of generations
+#define POPULATION_SIZE 100 // Population size, static.
+#define MAX_PURSUERS 10 // Maximum number of pursuers, just to allocate enough memory
+#define MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
 
 /*** Pre-declarations ***/
 struct Gene;
@@ -32,8 +32,9 @@ struct Chromosome;
 int PURSUERS; // Only a temporary value.
 int STEPS = MAX_STEPS;
 int GENERATIONS = 1;
-struct Gene{
-	int allele[2*MAX_STEPS];
+struct Gene{ // Gene contains two parts, start[] which is starting position and allele[] which is direction of every step, 0=stay,1=left,2=right,3=up,4=down.
+	int start[2];
+	int allele[MAX_STEPS];
 };
 struct Chromosome{
 	int fitnessValue[2]; // [0] = number of contaminated, [1] = required steps until no contamination.
@@ -41,7 +42,7 @@ struct Chromosome{
 };
 struct Chromosome Population[POPULATION_SIZE];
 struct Chromosome New_Population[POPULATION_SIZE];
-struct Node *NodeMatrix; // Pointer to the Node matrix
+
 
 /*** Functions ***/
 void generatePopulation();
@@ -55,45 +56,75 @@ void doMutation(struct Chromosome *chrom);
 void doDecode();
 void printBest(int popNr);
 
+int storlek = 10;
+struct Node **NodeMatrix;
+
 /*** Preparations ***/
-void preGenetic(struct Node NodeMat[SIZE][SIZE], int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
-	NodeMatrix = *NodeMat;
-//	printf("Name: %d\n", (&NodeMatrix)[1][0].name[0]);
-//	NodeMatrix = &NodeMat; // Make the Node Matrix available for the genetic algorithm.
-	//printf("Name: %d\n", NodeMatrix[0][0].name[0]);
-//	printf("NodeMat: %d\n", ((&NodeMat)[1][0]).move[1]->name[0] );
-//	printf("NodeMat: (%d,%d)\n", ((&NodeMatrix)[2][0]).name[0], ((&NodeMatrix)[2][0]).name[1]);
-	STEPS = 5;
+void preGenetic(struct Node (*NodeMat)[storlek], int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
+	printf("Pre-processing.\n");
+	int i,j;
+
+	NodeMatrix = malloc(storlek * sizeof(struct Node *));
+	if(NodeMatrix == NULL)
+	{
+		fprintf(stderr, "out of memory\n");
+	}
+	for(i = 0; i < storlek; i++)
+	{
+		NodeMatrix[i] = malloc(storlek * sizeof(struct Node));
+		if(NodeMatrix[i] == NULL)
+		{
+			fprintf(stderr, "out of memory\n");
+		}
+	}
+	for(i=0;i<storlek;i++){
+		for(j=0;j<storlek;j++){
+			NodeMatrix[i][j] = NodeMat[i][j];
+		}
+	}
+	STEPS = 10;
 	GENERATIONS = BREAK;
 	PURSUERS = Hunters[0];
-	int i, j, k;
-	for(i = 0; i < POPULATION_SIZE; i++){
+	int k;
+	for(i = 0; i < POPULATION_SIZE; i++){ // Set starting positions for every gene in the population.
 		for(j = 0; j < PURSUERS; j++){
 			for(k = 0; k < 2; k++){
-				Population[i].gene[j].allele[k] = Hunters[j*2+1+k];
+				Population[i].gene[j].start[k] = Hunters[1+j*2+k];
 			}
 		}
 	}
-	//printf("Pre-processing.\n");
-	////printf("Name: (%d)\n", (*NodeMat[0][0]).name[0]);
 	generatePopulation();
-	printBest(0);
+	//printBest(0);
 }
 void generatePopulation() {
 	//printf("\tGenerate population\n");
 	int ChromNr, GeneNr;
-	for(ChromNr = 0; ChromNr < POPULATION_SIZE; ChromNr++){
-		for(GeneNr = 0; GeneNr < PURSUERS; GeneNr++){
-			getRandom(&(Population[ChromNr].gene[GeneNr]));
+	for(ChromNr = 0; ChromNr < POPULATION_SIZE; ChromNr++){ // For each Chromosome
+		for(GeneNr = 0; GeneNr < PURSUERS; GeneNr++){ // For each Gene
+			getRandom(&(Population[ChromNr].gene[GeneNr])); // Generate a random step sequence
 		}
 	}
 }
 void getRandom(struct Gene *g){ // Generate random step-sequence from a given node
-	////printf("\t\tGenerate random step-sequence\n");
-	int stepnr=1;
-	for(stepnr = 1; stepnr < STEPS; stepnr++){
-		(*g).allele[2*stepnr] = ((int)((double)rand() / ((double)RAND_MAX + 1)*5));
-		(*g).allele[2*stepnr+1] = ((int)((double)rand() / ((double)RAND_MAX + 1)*5));
+	//printf("\t\tGenerate random step-sequence\n");
+	int stepnr=1, nextStep;
+	struct Node *current = &NodeMatrix[(*g).start[0]][(*g).start[1]];
+	for(stepnr = 0; stepnr < STEPS; stepnr++){
+		while(1==1){
+			nextStep = ((int)((double)rand() / ((double)RAND_MAX + 1)*5));
+			//printf("Try nextStep: %d\n", nextStep);
+			if(nextStep == 4){
+				break;
+			}
+			if((*current).move[nextStep] != 0){
+				break;
+			}
+		}
+		//printf("nextStep: %d\n", nextStep);
+		(*g).allele[stepnr] = nextStep;
+		if(nextStep != 4){
+			current = (*current).move[nextStep];
+		}
 	}
 }
 
@@ -114,8 +145,16 @@ void genAlg() { // Main call function for Genetic Algorithm
 		}
 	}
 	doDecode();
-	printf("\n\n");
-	sortPopulation(Population);
+	//printf("Decoding completed.\n");
+
+	/*** Free memory for NodeMatrix ***/
+	/*
+	int i;
+	for(i = 0; i < SIZE; i++){
+		free(NodeMatrix[i]);
+	}
+	free(NodeMatrix);
+	*/
 }
 void calculateFitness(struct Chromosome *chrom){
 	//printf("\tCalculate fitness\n");
@@ -158,14 +197,29 @@ void doMutation(struct Chromosome *chrom){
 }
 void doDecode(){ // Decode the best chromosome and return it
 	//printf("Decode best chromosome\n");
+	int stratLen = 1+2*(PURSUERS+STEPS); // Pursuers + start position + following steps
+	int i,j,k,strategy[stratLen];
+	strategy[0] = PURSUERS;
+	for(i = 0; i < PURSUERS; i++){
+		strategy[1] = Population[0].gene[i].start[0];
+		strategy[2] = Population[0].gene[i].start[1];
+	}
+	for(i = 3; i < stratLen;i){ // Start att strategy[3] for steps, increments at end of loop.
+		for(k=0;k<PURSUERS; k++){ // For each pursuer
+			strategy[i+k] = Population[0].gene[i].allele[k];
+		}
+		i+=PURSUERS; // step to next pursuer location.
+	}
+
 }
 void printBest(int popNr){
 	//printf("Print best in population:\n");
 	int i=0,j=0,k=0;
-	for(j=0;j<PURSUERS; j++){
+	for(j=0;j<PURSUERS; j++){ // For each pursuer
 		printf("Gene %d:\t", j);
-		for(k=0;k<STEPS; k++){
-			printf("(%d,%d) ", Population[popNr].gene[j].allele[2*k], Population[0].gene[j].allele[2*k+1]);
+		printf("(%d,%d): ", Population[popNr].gene[j].start[0], Population[popNr].gene[j].start[1]);
+		for(k=0;k<STEPS;k++){ // Print step sequence
+			printf("%d ", Population[popNr].gene[j].allele[k]);
 		}
 		printf("\n");
 	}
@@ -258,4 +312,16 @@ void printBest(struct Chromosome *chrom){
 	////printf("B[0]: %d\n", (&B[0][0]).name[0]);
 
 }
+*/
+
+/*
+	printf("Starting positions:\n(%d,%d)\n(%d,%d)\n(%d,%d)\n",
+	(NodeMatrix)[Population[0].gene[0].start[0]][Population[0].gene[0].start[1]].name[0],
+	(NodeMatrix)[Population[0].gene[0].start[0]][Population[0].gene[0].start[1]].name[1],
+
+	(NodeMatrix)[Population[0].gene[1].start[0]][Population[0].gene[1].start[1]].name[0],
+	(NodeMatrix)[Population[0].gene[1].start[0]][Population[0].gene[1].start[1]].name[1],
+
+	(NodeMatrix)[Population[0].gene[2].start[0]][Population[0].gene[2].start[1]].name[0],
+	(NodeMatrix)[Population[0].gene[2].start[0]][Population[0].gene[2].start[1]].name[1]);
 */

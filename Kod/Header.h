@@ -5,7 +5,7 @@
 #include "genetic.h"
 #include "greedy.h"
 
-#define SIZE 10
+#define SIZE 20 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
 
 struct Node; // Forward definition to be able to use pointers to another node in each node.
 
@@ -15,5 +15,5 @@ struct Node{
 	struct Node *move[4]; // Array with pointers to all Node possible to move to.
 	int state; // States 1-4. 1 = contains pursuer, 2 = seen by pursuer, 3 = guaranteed safe, 4 = none of states 1-3.
 	//int left,down,up,right; // To be removed.
-}B[SIZE][SIZE];
+};
 

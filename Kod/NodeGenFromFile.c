@@ -1,7 +1,7 @@
 
 #include "Header.h"
 
-#define SIZE 10 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
+//#define SIZE 10 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
 int A[SIZE][SIZE]; // The matrix of the area to create a network from.
 #define LEFT 0
 #define RIGHT 1
@@ -20,6 +20,7 @@ void setVision(struct Node *b); // Calculate visible nodes.
 int numVisible(struct Node *b); // Calculate how many visible nodes there is from a node.
 FILE *fr = NULL;
 int ROWS=0,COLS=0;
+struct Node B[SIZE][SIZE];
 
 
 struct Path{
@@ -309,15 +310,13 @@ int main() {
 		numMatrices++;
 		place();
 		int NUM_PUR = 3;
-		int Hunters[] = {NUM_PUR, 0, 0, 1, 2, 1,1};
+		int Hunters[] = {NUM_PUR, 0, 0, 4, 0, 3,4};
 		int BREAK = 1;
 		/****
 		 Here we should be able to call our algorithms, since B will contain the graph network.
 		 ****/
-
 		preGenetic(B, Hunters, BREAK);
 		genAlg(); // Main Genetic Algorithm program.
-		
 		printf("start greedy: \n");
 		preGreedy(B, Hunters, BREAK);
 		greedyAlg(B, Hunters, BREAK);
