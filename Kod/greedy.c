@@ -47,32 +47,55 @@ return: array with move strategy.
 
 #include "Header.h"
 
-void getAreas(struct Node *B[SIZE][SIZE],int *point, int *index){
+struct Node **NodeMatrix; //global deklaration av nodnätverket, området.
+int allArea[2*SIZE*SIZE]; //global array med alla områden. index jämt: rad, index udda: kolumn. 
+
+
+void getAreas(){
   int rad=0;
   int kol=0;
-  int i=1;
-  printf("före while har vi,  point = %d \n", *point);
+  int i=0;
+  //fortsätt här
   while (rad<SIZE){
-    
     while (kol<SIZE){
-      //      printf("test varv %d namn %d \n", i, B[rad][kol].name[0]);
-	*point=rad;
-	*index++;
-	*point=kol;
-	*index++;
-	printf("varv nummer %d, point = %d \n", i, *point);
+      printf("NodeMatrix[%d][%d]. vision är: %d \n", rad, kol, NodeMatrix[rad][kol].vision[0]);
+      if(NodeMatrix[rad][kol].vision[0]!=0){
+	allArea[i]=rad;
 	i++;
-	//}
-	kol++;
+	allArea[i]=kol;
+	i++;
+      }
+      kol++;
     }
     rad++;
   }
   return;
 }
 
-void preGreedy(struct Node *B[SIZE][SIZE], int *Hunter, int BREAK){
-  int allArea[2*SIZE*SIZE];
 
+
+void preGreedy(struct Node (*NodeMat)[SIZE], int *Hunter, int BREAK){
+  printf("Preprocessing greedy: \n ");
+
+  int i,j;
+  NodeMatrix = malloc(SIZE * sizeof(struct Node *));
+  if(NodeMatrix == NULL)
+    {
+      fprintf(stderr, "out of memory\n");
+    }
+  for(i = 0; i < SIZE; i++)
+    {
+      NodeMatrix[i] = malloc(SIZE * sizeof(struct Node));
+      if(NodeMatrix[i] == NULL)
+	{
+	  fprintf(stderr, "out of memory\n");
+	}
+    }
+  for(i=0;i<SIZE;i++){
+    for(j=0;j<SIZE;j++){
+      NodeMatrix[i][j] = NodeMat[i][j];
+    }
+  }
   int *p1;  //declare integer pointer
   int *p2; //p2 as an pointer to an integer.
   allArea[5]=100;
@@ -81,12 +104,8 @@ void preGreedy(struct Node *B[SIZE][SIZE], int *Hunter, int BREAK){
   *p2=0;  // sends the value 0 to the memory allocated for indx, eg. sets indx=0
   p1= &allArea[indx];
   printf("nukors getArea \n");
-  getAreas(B, p1, p2);
-  int j=0;
-  /* while (j<SIZE*SIZE){   
-    printf("%d \n",allArea[j]);
-    j++;
-    }*/
+  getAreas();
+
 }
 
 void greedyAlg(struct Node *Map, int *Hunter, int BREAK){
