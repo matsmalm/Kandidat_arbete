@@ -19,10 +19,10 @@
 #include "Header.h"
 
 /*** Definitions ***/
-#define MAX_GEN 100 // Maximum number of generations
-#define POPULATION_SIZE 9 // Population size, static.
-#define MAX_PURSUERS 100 // Maximum number of pursuers, just to allocate enough memory
-#define MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
+#define MAX_GEN 20 // Maximum number of generations
+#define POPULATION_SIZE 100 // Population size, static.
+#define MAX_PURSUERS 10 // Maximum number of pursuers, just to allocate enough memory
+#define MAX_STEPS 200 // Maximum number of steps, just to allocate enough memory
 
 /*** Pre-declarations ***/
 struct Gene;
@@ -52,11 +52,12 @@ void sortPopulation(struct Chromosome *pop, int popSize);
 void addToNewPopulation(struct Chromosome chrom);
 void doCrossover();
 void doMutation(struct Chromosome *chrom);
-void doDecode();
+void doDecode(struct Chromosome *chrom, int *returnPath, int stratLen);
 void printBest(int popNr);
 void printFitness(void);
 void doReproduce(void);
 void swapPopulations(void);
+void calculateStates(struct Chromosome *chrom);
 
 struct Node **NodeMatrix;
 typedef int (*compfn)(const void*, const void*);
@@ -167,7 +168,7 @@ void genAlg() { // Main call function for Genetic Algorithm
 	}
 	//printf("Sort population after final generation\n");
 	sortPopulation(Population, POPULATION_SIZE); // Sort the population after fitness
-	//doDecode(); //Decode best strategy to correct output, node index instead of directions
+	//doDecode(&Population[0]); //Decode best strategy to correct output, node index instead of directions
 	/*** Free memory for NodeMatrix ***/
 	int i;
 	for(i = 0; i < SIZE; i++){
@@ -179,10 +180,11 @@ void genAlg() { // Main call function for Genetic Algorithm
 void calculateFitness(struct Chromosome *chrom){
 	//printf("\tCalculate fitness\n");
 	int fitness[] = {0,0};
-	fitness[0] = ((int)((double)rand() / ((double)RAND_MAX + 1)*2));
+	fitness[0] = 0;
 	fitness[1] = ((int)((double)rand() / ((double)RAND_MAX + 1)*100));
 	(*chrom).fitnessValue[0] = fitness[0];
 	(*chrom).fitnessValue[1] = fitness[1];
+	calculateStates(chrom);
 }
 void sortPopulation(struct Chromosome *pop, int popSize){
 	//printf("\tSort population (of size %d)\n", popSize);
@@ -233,11 +235,21 @@ int doSelect(){ // Return position in Population for the chromosome that was sel
 }
 void doMutation(struct Chromosome *chrom){ // Mutate Chromosome
 	//printf("\t\tDo Mutation\n");
+	int i;
+	for(i = 0; i < 2; i++){
+		int mutationProp = 5; // probability of mutation*100
+		int randomValue = ((int)((double)rand() / ((double)RAND_MAX + 1)*100)); // Random number between 0 and 999
+		int randomGene = ((int)((double)rand() / ((double)RAND_MAX + 1)*MAX_PURSUERS)); // Random number between 0 and 999
+		if(randomValue < mutationProp){
+			//printf("Mutation!\n");
+			//getRandom(&((*chrom).gene[randomGene])); // Generate a new random path for a random gene.
+		}
+	}
 }
-void doDecode(){ // Decode the best chromosome and return it
+void doDecode(struct Chromosome *chrom, int *returnPath, int stratLen){ // Decode the best chromosome and return it
 	//printf("Decode best chromosome\n");
-	int stratLen = 1+2*(PURSUERS+MAX_STEPS); // Pursuers + start position + following steps
-	int i,j,k,strategy[stratLen];
+	/*
+	 * int i,j,k,strategy[stratLen];
 	strategy[0] = PURSUERS;
 	for(i = 1; i < 2*PURSUERS; i++){
 		for(j = 0; j < 2; j++){
@@ -251,6 +263,7 @@ void doDecode(){ // Decode the best chromosome and return it
 		}
 		i+=PURSUERS; // step to next pursuer location.
 	}
+	* */
 }
 void printBest(int popNr){ // Print the best solution
 	printf("Print best in population:\n");
@@ -297,4 +310,13 @@ void swapPopulations(){
 	for(i = 0; i < POPULATION_SIZE; i++){
 		Population[i] = New_Population[i];
 	}
+}
+void calculateStates(struct Chromosome *chrom){
+	int stratLen = 1+2*(PURSUERS+MAX_STEPS); // Pursuers + start position + following steps
+	int tempPath[stratLen];
+	doDecode(chrom, tempPath, stratLen); // Returns an array with [#Pursuers, pursuer 1 start row, pursuer 1 start column, ..., pursuer 1 move 2 row, puruser 2 move 2 column, ...]
+	int i;
+	for(i = 0; i < MAX_STEPS; i++){ // Go through every step.
+	}
+	//printf("Calculated states\n");
 }
