@@ -319,4 +319,32 @@ void calculateStates(struct Chromosome *chrom){
 	for(i = 0; i < MAX_STEPS; i++){ // Go through every step.
 	}
 	//printf("Calculated states\n");
+	
+	/* Pseudo code:
+	 * Repeat for each step:
+	 * 
+	 * int S_u[SIZE][SIZE];
+	 * Set S=1 for each pursuer position.
+	 * Set S=2 for each vision for every pursuer, IF NOT S=1
+	 * check = 1
+	 * while (check == 1){
+	 * Set S_u = 4 for all nodes
+	 * 	For each node:
+	 * 	If S==1 && S_u == 1{}
+	 * 	Else if S==2 && S_u==2{}
+	 * 	Else if S==2 && S_u==1
+	 * 		S_u = 3
+	 * 	Else{
+	 * 		check = 1
+	 * 		for m in move(){
+	 * 			if S==4
+	 * 				check = 0, break
+	 * 		if check == 1
+	 * 			S_u = 3
+	 * 	check = 0
+	 * 	For each node:
+	 * 		if S != S_u
+	 * 			check = 1
+	 * 		S = S_u
+	 * */
 }
