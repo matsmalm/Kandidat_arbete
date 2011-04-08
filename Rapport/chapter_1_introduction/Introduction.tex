@@ -1,74 +1,67 @@
 \chapter{Introduction}
 
-\section{Objektiv}
+\section{Objective}
 
-The goal of this research is to solve a pursuit evasion problems in a two dimensional environment, with the help of heuristic problem solving methods.
-In short, the problem is: given a environment with static obstacles and a number of pursuers ensure that an evader cannot exist within the environment. A complete formulation of the problem can be seen in Chapter 2
+The goal of this research is to solve pursuit \& evasion problems in a two dimensional environment, using heuristic problem solving methods.
+The problem is fully explained in section 1.4.4. In a more relaxed manor it can be formulated as "given an environment with static obstacles and a specific number of pursuers, ensure that an evader cannot exist within the environment."
 
-The problem itself is solved. An algorithm providing an optimal solution already exists.
-The problem yet to be solved, is the problem of finding a solution within a reasonable computational time, it is here where heuristic methods comes in to play
+An algorithm providing an optimal solution already exists.
+The problem yet to be solved is the problem of finding a solution within a reasonable computational time. This is here where heuristic methods could provide interesting results.
 
-With great risk for loss of optimality, our goal is to use heuristic methods to find a solution with a reasonable computational time
+With risk for loss of optimality, our goal is to use heuristic methods to find a solution within a reasonable computational time.
  
-This report is therefore a study of the balance between a reasonable computational time and the loss of optimality.
-
-\section{Organization Of the Report}
-\begin{enumerate}
+\section{Organization of the report}
+\begin{description}
 \item Chapter 2 contains a detailed formulation of the problem and are approach to it.
 \item Chapter 3 explains the simulation environment we built.
 \item Chapter 4 contains a description of the algorithms we decided to use.
 \item Chapter 5 contains the results of our simulations.
-\item Chapter 6 contains a discussion of our results, comparison and conclusions.
-\end{enumerate}
+\item Chapter 6 contains a discussion of our results and a comparison.
+\item Chapter 7 contains conclusions of our work.
+\end{description}
 
-\section{ Related work}
+\section{Related work}
 
-Relaterat arbete bla de tre givna artiklarna 
+Our work is based on the work of papers \cite{paper1}-\cite{paper3}.
 
 \section{Background}
 
 \subsection{What is optimization}
 
-Optimization is a mathematical discipline, for solving various types of problems. With the aim of finding the best, available, values of some objective function given a defined domain. If one wants to know more advise NAME ON LITETUR\\
+Optimization is a mathematical discipline for solving various types of problems. The aim is to find the best available value of some objective function, given a defined domain.
+% Refer to other literature?
 
-Optimization Theory offers a variety of solution method to a wide range of problems. For the solution process of these problems, it is important to identify what kind of problems one deals with.
-Relevant distinction can be done by studying the problem complexity.
+Optimization theory offers a variety of solution methods to a wide range of problems. To approach theses problems and find a solution, it is important to identify what kind of problem one deals with.
+Relevant distinctions can be made by studying the problem's complexity.
 
-Complexity is more or less computational time. There are many different complexity classes of problems, but two of the most fundamental is/are the P and NP
+Complexity is strongly related to the computational time. There are many different complexity classes of problems, but two of the most fundamental are the P and NP.
 
 \subsection{P \& NP problems}
 
-The distinction between these two reviles the difficulty of ore problem. I won't go in to specific detail, concerning sub classes etc, only a brief intuitive description.
-For a more detailed and interesting reed advise[sisst referens 4]
+The distinction between these two reveals the difficulty of our problem. This will only be a brief description, for a more detailed and interesting description please see \cite{NP}.
 
 P is the set of problems which can be solved by a deterministic Turing machine using a polynomial amount of computation time.
 Cobham Edmonds thesis holds that P is the class of computational problems which are "efficiently solvable" or "tractable". In practice, some problems not known to be in P have practical solutions, and some that are in P do not, but this is a useful rule of thumb.
 
-NP refere to Nondeterministic Polynomial time. and can be intuitively described as the set of problems for which, a found solution can be verified to actually be the correct solution, using a deterministic Turing machine using a polynomial amount of computation time.
+NP refers to Non-deterministic Polynomial time, and can be intuitively described as the set of problems for which, a found solution can be verified to actually be the correct solution, using a deterministic Turing machine using a polynomial amount of computation time.
 
 A set of descriptions that leads one to wonder whether
 \begin{equation}
 P = NP
 \end{equation}
+
 In what the essence is:
 Suppose that solutions to a problem can be verified quickly. Then, can the solutions themselves also be computed quickly?
-Or stated differently, douse it exists such an algorithm that can calculate such a solution quickly?
-A unsolved question considered by many to be the most important problem in the feeld in computer science. 
+Or stated differently, does it exist such an algorithm that can calculate such a solution quickly?
+An unsolved question considered by many to be the most important problem in the field of computer science. 
 
-ALTERNATIV 1
 Within the class NP there are a few subclasses one of them are called NP-hard 
-Related work has stated that the problem studied in this report are in fact of the class NP-hard [deras artickel].  And hens are chances of finding, an algorithm that produces, an optimal solution in polynomial time are greatly reduced. As stated above there is still an open question whether such algorithms actually exist for NP problems. 
+Related work has stated that the problem studied in this report are in fact of the class NP-hard \cite{paper1}, % Is it paper one?
+and hence the chances of finding an algorithm that produces an optimal solution in polynomial time are greatly reduced. As stated above it is still an open question whether such algorithms actually exist for NP problems. 
 
-ALTERNATIV2
-A more thurol description of the different NP subclasses, definitions etc
+\subsection{(the need for) A near optimal solution}
 
-[4]
-
-Computers and Intractability: A Guide to the Theory of NP-Completeness  (Author),  M. R. Garey (Author), D. S. Johnson
-
-\subsection{(the need for) a near optimal solution}
-
-Due to the fact that the problem in question is NP-hard and thus the possibilities of finding an optimal solution within reasonable computing time are/is seen to be very low. Does the logical thread has brought us to be prepared to sacrifice optimality
+Due to the fact that the problem in question is NP-hard and thus the possibilities of finding an optimal solution within reasonable computing time are/is seen to be very low. The logical thread has brought us to be prepared to sacrifice optimality.
 This sacrifice leads us to a larger spectrum of possible approaches to the problem.
 
 
@@ -79,7 +72,7 @@ The Pursuit Evasion problem. \emph{Given an evader, a set of N pursuers and a po
 
 \subsection{Heuristic methods}
 
-Heuristic methods are a bransch of methods used in computer science and mathematics to make educated guesses to help find solutions to a problem. Generally heuristic methods douse not provide correct / optimal solutions but it offers a reasonably fast computed solution. Heuristic methods are therefore often used, very powerful, in combination with deterministic methods[fotnot], to speed up the process.
+Heuristic methods are a branch of methods used in computer science and mathematics to make educated guesses to help find solutions to a problem. Generally heuristic methods does not provide optimal solutions but it offers a reasonably fast computed solution. Heuristic methods are therefore often used, and very powerful in combination with deterministic methods \footnote{deterministic method  or deterministic algorithms are algorithms that Given a particular input always produce the same output.} to speed up the process.
 
 The characteristics of a heuristic is partly that there is no evidence of that it works, or else it would be a deterministic method. The idea of heuristic methods is thus to improve the chances of finding the desired solution. Pure random guesses forms no heuristic method.
 
@@ -92,8 +85,4 @@ Here are a few:
 \item The problem is too difficult to solve efficiently and quickly with deterministic methods. A heuristic method could overcome that and give an acceptable but probably not an optimal solution
 \end{itemize}
 
-Where the last point corresponds to the problem we are dealing with.
-
-[fotnot]
-deterministic method  or deterministic algorithms are algorithms that Given a particular input always produce the same output.
-
+The last point corresponds to the problem we are dealing with.

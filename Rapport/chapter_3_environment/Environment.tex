@@ -1,41 +1,41 @@
 \chapter{Simulation Environment}
 %The chapter gives a description of the simulation environment we have created. Presenting how we created it, why we needed to create it and motivation of the choices made. First we give an short overview of the parts that are in the enviroment, and a definition of in/out data. Motivating all our choices made concerning limitations in the enviroment, and also describing positive features of our enviroment.\\
-In order to attain the data needed for a comparison of our different algorithms it was nessecary to construct a good testing enviroment. We decided to create this enviroment by the use of two separate parts. One part is called the "Map generator". This part creates a map of the enviroment, tests the feasibility and prints feasible enviroments into an output file. The other part is called the "Network generator". This part reads in an enviroment from a file, creates a graph network to the corresponding map and gives each node in the network its relevant information.\\
+In order to attain the data needed for a comparison of our different algorithms it was nessecary to construct a good testing environment. We decided to create this environment by the use of two separate parts. One part is called the "Map generator". This part creates a map of the environment, tests the feasibility and prints feasible environments into an output file. The other part is called the "Network generator". This part reads an environment from a file, creates a graph network to the corresponding map and gives each node in the network its relevant information.\\
 
 \section{Map generator}
-The Map Generator (MG) creates random feasible enviroments. A feasible enviroment is described more in detail in section 2, but in short one could say that an enviroment is feasible if it is simply connected and can be divided into a finite set of convex regions. Given the desired size and the density (percentage of obstacles per total area) as inputs, MG creates square shaped feasible enviroment with randomly placed obstacles and saves the map in an external file. For simplicity we have chosen to construct enviroments consisting only of square regions. We suggest that this does not result in a loss of generality since any feasible enviroment can be approximated arbitrarily good by a sufficiently fine meshing of squares. \\
-We will now show in a more detailed maner how the MG works. First we present some pseudo code describing the algorithm and then some in depth comments to the code.\\
-pseudo-code, Map Generator:
+The Map Generator (MG) creates random feasible environments. A feasible environment is described more in detail in section 2, but in short one could say that an environment is feasible if it is simply connected and can be divided into a finite set of convex regions. Given the desired size and the density (percentage of obstacles per total area) as inputs, the MG creates square shaped feasible environment with randomly placed obstacles and saves the map in an external file. For simplicity we have chosen to construct environments consisting only of square regions. We suggest that this does not result in a loss of generality since any feasible environment can be approximated arbitrarily good by a sufficiently fine meshing of squares. \\
+We will now show in a more detailed manner how the MG works. First we present some pseudo code describing the algorithm and then some in depth comments to the code.\\
+\noindent\emph{Pseudo-code, Map Generator:}
 \begin{verbatim}
 1  input variables:
 2  int Size;  // Specifies the width and height of the square matrix  A.
-3  int NumberOfEnv; // Specifies how many feasible enviroments to create.
-4  int Obstacle; //  Specifies the number of obstacles in percents, e.g. number of obstacles per total area of A.
-5  
-6  while ( int i < NumberOfEnv ){
-7  	int A = CreateMatrix(int Size); 
-8  	PlaceObstacle(int A, int Obstacle);
-9  	if (Test(int A)=TRUE){ 
-10 		fprintf( fileOK, "\n \n");
-11 		i++;
-12 	}else{
-13 		fprintf{file NotOk, "Does not work: \n");
-14 	}
-15 }
+3  int NumberOfEnv; // Specifies how many feasible environments to create.
+4  int Obstacle; //  Specifies the number of obstacles in percents, e.g. 
+number of obstacles per total area of A.
+5  while ( int i < NumberOfEnv ){
+6  	int A = CreateMatrix(int Size); 
+7  	PlaceObstacle(int A, int Obstacle);
+8  	if (Test(int A)=TRUE){ 
+9 		fprintf( fileOK, "\n \n");
+10 		i++;
+11	}else{
+12 		fprintf{file NotOk, "Does not work: \n");
+13 	}
+14 }
 \end{verbatim}
 
 \begin{itemize}
-\item So, first we introduce the needed variables to define how many and what kind of enviroments to create. 
-\item The algorithm starts off by entering a while loop running until the loops content has created the desired amount of feasible enviroments. 
+\item So, first we introduce the needed variables to define how many and what kind of environments to create. 
+\item The algorithm starts off by entering a while loop running until the loops content has created the desired amount of feasible environments. 
 \item The function CreateMatrix(int arg) creates an matrix of dimensions $(arg \times arg)$ with every element equal to one. In our map a one corresponds to a feasible square region for the pursuer or evader to thread. 
 \item Next we call the function PlaceObstacle(int A, int Obstacle). This function takes the input matrix A and using a randomizing function rand() places zeros in the matrix. The zeros corresponds to obstacles, e.g. squares that can't be seen through and can't med treaded.
-\item The function Test (int A) tests if the ones in the given matrix A are connected. If A is connected the enviroment is feasible and the function returns TRUE, if not it returns FALSE. First Test() finds the first element equal to one, starting from the upper left corner going to the right. When such element has been found its index is pushed on a stack. Next we enter a loop that runs for as long as the stack is not empty. First it pops an index from the stack and checks if this index has been accounted for (e.g. if it lies within a vector C). If not accounted for, all the neighbor elements that are equal to one has their index pushed on the stack. Lastly the poped index is put into C, since it has been accounted for. The algorithm starts over by poping a new index and rerunning the loop. 
+\item The function Test (int A) tests if the ones in the given matrix A are connected. If A is connected the environment is feasible and the function returns TRUE, if not it returns FALSE. First Test() finds the first element equal to one, starting from the upper left corner going to the right. When such element has been found its index is pushed on a stack. Next we enter a loop that runs for as long as the stack is not empty. First it pops an index from the stack and checks if this index has been accounted for (e.g. if it lies within a vector C). If not accounted for, all the neighbor elements that are equal to one has their index pushed on the stack. Lastly the poped index is put into C, since it has been accounted for. The algorithm starts over by poping a new index and rerunning the loop. 
 \end{itemize}
 
-\section{Network Generator}
+\section{Network generator}
 The Network Generator (NG) generates a node network from an environment matrix. Each node contains data of its adjacent nodes, all the nodes visible from it and its current state. For input the NG uses an environment matrix that is either created by the MG or by hand.\\
 \\
-\noindent Pseudo-code, Node Network Generator:\\
+\noindent \emph{Pseudo-code, Network Generator:}
 \begin{verbatim}
 1. int A = environmentFromFile();
 2. Node B = createNodeMatrix();
@@ -45,9 +45,9 @@ The Network Generator (NG) generates a node network from an environment matrix. 
     3.3. setVision();
 \end{verbatim}
 \begin{itemize}
-\item environmentFromFile() sets A to an environment matrix, consisting of zeros and ones, which is read from an input file. The file can be generated by the MG or constructed by hand.\\
-\item A Node is a datastructure that contains a name, pointers to all adjacent Nodes and pointers to all Nodes that can be seen by the actual Node.\\
-\item createNodeMatrix() sets B to a matrix of the same dimensions as A, where each element is of the datatype Node.\\
+\item environmentFromFile() sets A to an environment matrix, consisting of zeros and ones, which is read from an input file. The file can be generated by the MG or constructed by hand.
+\item A Node is a datastructure that contains a name, pointers to all adjacent Nodes and pointers to all Nodes that can be seen by the actual Node.
+\item createNodeMatrix() sets B to a matrix of the same dimensions as A, where each element is of the datatype Node.
 \item setMove() creates pointers from N to all feasible vertically and horizontally adjacent nodes.
 \item setVision() creates a list of pointers to all visible Nodes in B from the Node N. Visible Nodes is each Node that can be connected to N by a straight line without passing through a non-feasible Node. The visible nodes are decided by first calculating Umax and Dmax which is the number of columns between N and the first non-feasible Node upwards and downwards in the same row, and Lmax and Rmax which is the number of rows between N and the first non-feasible Node in the same column as N. Each Node up to Lmax columns to the left of N and Rmax columns to the right of N is visible. For each of these Nodes every Node that is feasible and in the same column, at most Umax rows above or the first non-feasible Node, whichever comes first, and at most Dmax rows below or the first non-feasible Node, is visible. Umax and Dmax is re-calculated for every column to the left and to the right of N, and is the minimum of the number of the current Nodes Umax and Umax for the previous Node in the same row, with the same applying for Dmax.
 \end{itemize}

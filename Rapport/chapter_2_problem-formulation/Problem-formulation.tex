@@ -2,46 +2,39 @@
 %The essentials of our problem formulation today is "To test
 %implementation of greedy approach, tabu search and genetic programming
 %and evaluation." The exact formulation is in progress...
-- presentera multi pursuer pursuit and evasion problem\\
-- förklara svårigheterna givet att problemet är NP-svårt. En av svårighterna som vi belyser extra är den ytterligare dimensionen av obestämt antal jagare.
-- motivera nyttan och konsekvenserna av att angripa problemet med heuristik
--  
+%- presentera multi pursuer pursuit and evasion problem\\
+-% förklara svårigheterna givet att problemet är NP-svårt. En av svårighterna som vi belyser extra är den ytterligare dimensionen av obestämt antal jagare.
+%- motivera nyttan och konsekvenserna av att angripa problemet med heuristik
 
-original problem is the multipursuer version of the pursuit evasion problem.
-we base our work on paper 1 "boolean control" to see if we can develop the idea of a discretation of the enviroment further and use heuristics to find a good solutions in a short time.
-our main purpose: test three heuristic algorithms with different conceptual basis and collect data to compare under what kind of conditions each method excels or fails.
-
-
-
+The original problem is the multi pursuer version of the pursuit evasion problem, see section 1.4.4. We base our work on "boolean control" \cite{paper1} to see if we can develop the idea of a discretization of the environment further and use heuristics to find a good solutions in a short time.
+Our main purpose is to test three heuristic algorithms with different conceptual basis and collect data to compare under what kind of conditions each method excels or fails.
 
 \section{Our problem formulation}
-the original problem, given by guidas et tal [referens!!] is known to be NP-hard. Here we have relaxed version of the problem.
+The original problem, given by guidas et tal [?] % Reference!
+is known to be NP-hard. Here we have relaxed version of the problem.
 
-the headline is self explanatory, the ide her is to discuss the P vs NP aspekt.
-maybe this will be incorporated with another part of the introduction
+The headline is self explanatory, the idea here is to discuss the P vs NP aspect.
+% Maybe this will be incorporated with another part of the introduction.
 
-
-\section{Our Approach}
-We will now present our intended approach the problem formulated in the preceeding section. The line of work can be divided into four subtasks:
+\section{Our approach}
+We will now present our intended approach the problem formulated in the preceding section. The line of work can be divided into four subtasks:
 \begin {itemize}
-\item Create an simulation enviroment.
-\item Create three fundamentaly different algorithms, using aknowledged heuristic ideas. 
+\item Create an simulation environment.
+\item Create three fundamentally different algorithms, using acknowledged heuristic ideas. 
 \item Run the algorithms to get comparable data. 
 \item Evaluate and present the data attained, followed by a discussion.
 \end {itemize}
 
-As outlined above the approach as a whole is heuristic, and thus the need for a testing enviroment is essential. We have decided to implement an enviroment using C, due to the computational effiency of the language and because it is more or less the standard language in computations of this type. We have two main specifications on the enviroment. First, it should be able to, in a stand alone application, create a large amount of randomly generated maps with obstacles (the rate of obstacle versus total area is here on called density) and store these in a file. Second, we want the simulation enviroment to read a map from a file, run the specified algorithms and store desired data in an output file. For further details on how the simulation enviroment is implemented read chapter 3. \\
-Given the multipursuer problem and the simulation enviroment, the next subtask is to create the algorithms and run the simulation. We have decided to implement three fundamentaly different algorithms, so that one could outline under what circumstances each one of them excels, or fails. Using ideas from acknowledged heuristic methods we have chosen the following three concepts as our guidelines when creating our algorithms: Greedy, Genetic programming and Tabu search.
+As outlined above the approach as a whole is heuristic, and thus the need for a testing environment is essential. We have decided to implement an environment using C, due to the computational efficiency of the language and because it is more or less the standard language in computations of this type. We have two main specifications on the environment. First, it should be able to, in a stand alone application, create a large amount of randomly generated maps with obstacles (the rate of obstacle versus total area is here on called density) and store these in a file. Second, we want the simulation environment to read a map from a file, run the specified algorithms and store desired data in an output file. For further details on how the simulation environment is implemented read chapter 3. \\
+Given the multi pursuer problem and the simulation environment, the next subtask is to create the algorithms and run the simulation. We have decided to implement three fundamentally different algorithms, so that one could outline under what circumstances each one of them excels, or fails. Using ideas from acknowledged heuristic methods we have chosen the following three concepts as our guidelines when creating our algorithms: Greedy, Genetic programming and Tabu search.
 \\ \textbf{Greedy (G):} In G one creates a cost function to describe how good a specific move is. in each iteration the algorithm is supposed to use this function to determine the best possible move for each step, thus giving a local approach to the finding of an optimal solution. 
-\\ \textbf{Genetic Programming (GP):} The main idea is to generate a big population of possible (not nessecarily good) solutions called populations. in each itteration the algorithm compares the quality of the solution and takes the best 
-\\ \textbf{Tabusearch (TS):} The main idea of TS is that it keeps a dynamic list of "bad descissions". For each iteration it makes "good descitions" by comparing with the tabu list. TS is in some sens a merge of GS (global searching) and G (local searching)
+\\ \textbf{Genetic Programming (GP):} The main idea is to generate a big population of possible (not necessarily good) solutions called populations. In each iteration the algorithm compares the quality of the solution and takes the best 
+\\ \textbf{Tabu search (TS):} The main idea of TS is that it keeps a dynamic list of "bad decisions". For each iteration it makes "good decisions" by comparing with the tabu list. TS is in some sense a merge of GS (global searching) and G (local searching)
 \\Further information on how the algorithms are implemented and more in depth theory is found in chapter 4. 
-\\So the three different algorithms under consideration are in their approaches fundamentaly different, in how they asses the problem. There are ofcourse many other heuristical approaches that could provide similar results, but by comparison we decided that these three are relatively easy to implement on our problem and covers a large aspect of different approaches.\\
-In order to evaluate how well the algorithms' results are we need to compare them in some sense. Given a specific enviroment, number of pursuers and density we decided to compare the following data for each excecution of the simulation:
+\\So the three different algorithms under consideration are in their approaches fundamentally different, in how they asses the problem. There are of course many other heuristic approaches that could provide similar results, but by comparison we decided that these three are relatively easy to implement on our problem and covers a large aspect of different approaches.\\
+In order to evaluate how well the algorithms' results are we need to compare them in some sense. Given a specific environment, number of pursuers and density we decided to compare the following data for each execution of the simulation:
 \begin {itemize}
 \item computational time
 \item the path length of the pursuers
 \end {itemize}
 The results are presented in chapter 5 - 6, followed by a discussion in chapter 7 
-
-
