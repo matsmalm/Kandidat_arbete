@@ -8,9 +8,14 @@ antag att vi har fyra områden i en yta och två rand områden till ytan. skapa en 
 //  function call-order:
 
 
-//---------------variabel definitions---------------------------  
+//---------------variabel declaration---------------------------  
 #define TRUE 1;
 #define FALSE 0;
+#define designatedirection 50;
+#define close;     //parameter for cost function. distance to boundry
+#define unique: // parameter for cost function. unique visible boundrys
+#define priority; // parameter for cost function. priorized visible boundrys
+#define big_vision;  // parameter for cost function. largest vision
 
 struct greedy{
   int tile_distance[]; //tabell med avståndet mellan alla nod-par
@@ -24,10 +29,46 @@ struct greedy{
 //-------------------end variabel definitions----------------------
 
 
-
-
-
-
+//------------------Function initialization-----------------------------
+struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int BREAK);
+void alloc_Matrix_enviroment();
+void create_tables(int *tile_distance, int *total_area);
+void get__node_distance(int tile_distance);
+void get_total_area(int *total_area);
+void greedyAlg(struct greedy *input);
+int run(struct greedy *input);
+int enviroment_cleared();
+int test_break(struct greedy *input);
+void release_alloc_Matrix_enviroment();
+void one_iteration(struct greedy *input, int *move_strat);
+void preparation();
+void get_conditions(int *team_vision, struct greedy *input);
+void get_vision(struct greedy *input);
+void get_areas(struct greedy *input);
+void subtract_vision(struct Node area, int *team_vision);
+void identify_boundry(int areaindex);
+void find_boundry(int areaindex);
+void classify_boundry(area,boundry);
+void check_boundry_priority(area, boundry);
+void set_boundry(boundry, prio);
+void get_hunter_equiv();
+void evaluation(int *next_move);
+void designate_boundry(antal_att_delegera, boundry, jagare);
+void make_distance(boundry, jagare);
+void add_directional_value(antal_att_delegera, data från make_distance);
+void solve_knappsack(antal_att_delegera, data från make_distance);
+void designate_direction(solution_from_knappsack);
+void add_geometric_value();
+void add_close_boundry_value(jagare[i]);
+void add_unique_guarding_value(jagare[i]);
+void add_priority_guarding_value(jagare[i]);
+void add_big_vision_value(jagare[i]);
+void find_best_cost();
+void move(struct greedy *input);
+void get_hunter(struct greedy *input,int i);
+struct Node get_bestmove(from); 
+void put_movestrat(int startindex,struct Node *from, struct Node *to);
+void update_states();
 
 
 //===========********======PREGREEDY========**********=============
@@ -49,7 +90,7 @@ struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int BREAK);{
 void alloc_Matrix_enviroment(){
   //allokera minne för nodmatris
 }
-void createTables(int *tile_distance, int *total_area){
+void create_tables(int *tile_distance, int *total_area){
   get_node_distance(int tile_distance);
   get_total_area(int total_area);
 }
@@ -89,6 +130,7 @@ int run(struct greedy *input){
   }else{
     return TRUE;}
  }
+
 int enviroment_cleared(){
   /*
 kolla om området är säkrat i nuläget
@@ -120,7 +162,7 @@ void one_iteration(struct greedy *input, int *move_strat){
 }
 
 /*===================one_iteration(): Phase one, Preparations================================*/
-preparation(){ //tar fram alla startdata för en iteration
+void preparation(){ //tar fram alla startdata för en iteration
  struct Area{
     int area_type;
     struct Node area_adress; //pekar på en nod inom ett ickesett område.
@@ -130,10 +172,10 @@ preparation(){ //tar fram alla startdata för en iteration
  get_conditions(int team_vision); 
  get_hunter_equiv();
 
- return ??;
+ return //skicka ut boundrys(med tillhörande prioritet), ytor, ekvivalent jagare;
 }
 
-get_conditions(int *team_vision, struct greedy *input){ //fastställ vilka områden som finns utanför synfält, namnge och definiera ränder
+void get_conditions(int *team_vision, struct greedy *input){ //fastställ vilka områden som finns utanför synfält, namnge och definiera ränder
   get_vision(*input); //skriv in gruppens sikt som states i NodeMatrix
   get_areas(*input);
   return;
@@ -153,7 +195,7 @@ loop end
   return;
 }
 
-get_areas(struct greedy *input){
+void get_areas(struct greedy *input){
   struct Node areaindex[];
   struct Node *p1;
   *p1=areaindex[0];
@@ -165,7 +207,7 @@ get_areas(struct greedy *input){
   }
 }
 
-subtract_vision(struct Node area, int *team_vision){
+void subtract_vision(struct Node area, int *team_vision){
   /*
 
 ta fram index på de områden som inte ligger inom synfältet.
@@ -178,25 +220,27 @@ förslag:
 -om inte: 
 
    */
+
+  return; //skicka tillbaka vilka områden som finns
 }
 
-identify_boundry(int areaindex){
+void identify_boundry(int areaindex){
   find_boundry(areaindex);
   classify_boundry(area, boundry);
 }
 
-find_boundry(int areaindex){
+void find_boundry(int areaindex){
   //find the boundrys to the given area
   return boundry, number of boundrys;
 }
 
-classify_boundry(area, boundry){
+void classify_boundry(area, boundry){
   int prio=check_boundry_priority(area,boundry);
   set_boundry(boundry, prio);
   return;
 }
 
-check_boundry_priority(area, boundry){
+void check_boundry_priority(area, boundry){
   /*givet en yta och tillhörande ränder:
 -är ytan är säkrad -> prio=5
 -kan man se hela ytan från alla områden på randen?
@@ -209,13 +253,13 @@ check_boundry_priority(area, boundry){
   */
 }
 
-set_boundry(boundry, prio){
+void set_boundry(boundry, prio){
   //tillskriv randen den medskickade prioriteten.
 
 }
 
 
-get_hunter_equiv(){
+void get_hunter_equiv(){
   /*
 -ta aktuell nod.
 -undersök om flyttbara noders synfält redan finns med inom aktuellt synfält från gruppen
@@ -225,13 +269,16 @@ get_hunter_equiv(){
 }
 
 /*====================one_iteration():Phase two, Evaluation=======================================*/
-evaluation(int *next_move){ //använder data från preparation och designerar värden till noder som går at flytta till
+void valuation(int *next_move){ //använder data från preparation och designerar värden till noder som går at flytta till
   /*
 vill veta från preparation:
 -antal områden
 -fullständig rand till varje område
 -karaktär på rand a,b,c,d,e
 -jagarpositioner
+
+vill veta allmänt:
+-tillgång till tabel med kortaste vägen mellan områden.
 */
 
   if (antal_jagare<=antal_områden){
@@ -246,33 +293,84 @@ vill veta från preparation:
   }
   return;
 }
-  /*handskriven pseudo:
--räkna ut avstånd för alla jagare till rand för varje område
--om antal jagare <=antal områden:
-        -välj ett område till varje jagare, så att summan av avstånden blir kortast möjliga
-	-områden av sorten a,c måste väljas i första hand
--om antal jagare >antal områden:
-        -addera värde i de riktningar som är närmast någon rand
-	-addera värde i de riktningar som man ser mest
-	-addera värde i de riktningar där jagaren fortfarande håller uppsikt över unika ränder
 
-för alla jagare:
-        -addera värde i de riktningar som är närmast någon rand
-	-addera värde i de riktningar som man ser mest
-	-addera värde i de riktningar där jagaren fortfarande håller uppsikt över unika ränder
-	-addera värde i de riktningar där jagaren ser ränder av typen a,c,e
-	-kolla vilken nod som ger bäst kostnad
-	-spara den noden som planerad att gå till
+void designate_boundry(antal_att_delegera, boundry, jagare){
+  /*
+-ta en rand
+-ta en jagare
+-ta fram avstånd mellan rand och jagare
+  */
 
-return lista med planerad flyttstrategi.
-	           
-*/
-
+  make_distance(boundry, jagare); //räkna fram kortaste väg för varje jagare till varje rand
+  add_directional_value(antal_att_delegera); // givet de val som finns från make_distance välj bästa
 }
+
+void make_distance(boundry, jagare){
+  int i=0;
+  while (i<antal_boundrys){
+    /*
+-get hunter position
+-look up distance to all boundries in table
+     */
+ }
+  return; //the distance for each hunter to each boundry
+}
+
+void add_directional_value(antal_att_delegera, data från make_distance){
+  solve_knappsack(antal_att_delegera, data från make_distance);
+  int i=0;  
+  while(i<antal_att_delegera){
+    designate_direction(solution_from_knappsack);
+    i++;
+}
+  return;
+}
+
+void solve_knappsack(antal_att_delegera, data från make_distance){
+  //solve knappsack problem? priorize boundrys of priority 1 or 3 (?)
+}
+
+void designate_direction(solution_from_knappsack){
+  //given a hunter and a path to a boundry, add the amount designatedirection to the first step in the path.
+  return;
+}
+
+void add_geometric_value(){
+  int i=0;
+  while(i<antal_jagare){
+    add_close_boundry_value(jagare[i]);
+    add_unique_guarding_value(jagare[i]);
+    add_priority_guarding_value(jagare[i]);
+    add_big_vision_value(jagare[i]);
+  }
+  return;
+}
+
+void add_close_boundry_value(jagare[i]){
+  //addera värdet close på den/de flyttbara noder med kortast avstånd till någon rand
+}
+void add_unique_guarding_value(jagare[i]){
+  //addera värdet unique på den/de flyttbara noder som ser unika rand-områden
+}
+void add_priority_guarding_value(jagare[i]){
+  //addera värdet priority på den/de flyttbara noder som ser unika prioritetsområden
+}
+void add_big_vision_value(jagare[i]){
+  //addera värdet big_vision på den/de flyttbara noder som ser mest
+}
+
+void find_best_cost(){
+  /*
+för varje jagare:
+-läs av vilken ruta som har högst värde
+   */ 
+  return; //pekare på vilken nod som har högsta värde
+}
+
 
 /*====================one_iteration(): Phase three, Movement======================================*/
 
-move(struct greedy *input){ //använder data från evaluation, flyttar till de noder med bäst kostnad, updaterar states, skickar resultat av en iteration.
+void move(struct greedy *input){ //använder data från evaluation, flyttar till de noder med bäst kostnad, updaterar states, skickar resultat av en iteration.
   int i=1;//index för jagarnummer.
   struct Node *from;
   struct Node *to;
@@ -326,39 +424,3 @@ void update_states(){
 
 
 //XXXXXXXXXXXXXXXXXXX---------END GREEDY---------XXXXXXXXXXXXXXXXXXXXXXXX
-
-/*
-
-       one iteration:
------------------Phase One, Preparations-----------------------------
-       hunterVision() - evaluates starting conditions 
-       nameCont() - name all contamined areas
-       identifyBoundry() - indentify boundry category a,b,c,d,e
-       extendBoundry() - extend boundrys of category a,c
-       findEquiv() - find possible equivalent hunter positions
----------------------------------------------------------------------
-*********************************************************************
------------------Phase Two, Cost Evaluatuion-------------------------	   
-       evalCost() - purpose: run costfunctions and designate values for each direction
-         evalDist() - evaluate distance for each hunter to each boundry
-           if (number of hunters)>= (number of areas){
-	       designateArea(HigH) - designate one area to each hunter, category a,c must be chosen.
-	       addDirection() - add value to the directions that doesn't increase the distance to designated boundry
-           }
-	   else {
-	       designateArea(Low) - designate one hunter to each area, category
-	       addDirection() - add values to the directions that dosen't increase the distance to designated boundry
-	   }
-	 
-         addGuardUniqueBound() - add value to directions closest to boundry
-         addCatAC() - add value to directions where boundrys of category A and C are guarded uniquely
-	 addGuardVision() - add value to directions with maximum vision
-	 addOddness() - add a small value to a direction, to disable problems with extreme symmetry
-	 
----------------------------------------------------------------------
-*********************************************************************
------------------Phase three, move ----------------------------------
-         moveHunter() - moves hunters to maximum gain positions according to evalCost()
-	 uppdateEnv() - uppdate states and enviroment
----------------------------------------------------------------------
-return: array with move strategy. 
