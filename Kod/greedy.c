@@ -150,10 +150,13 @@ void greedyAlg(struct greedy *input){
 int run(struct greedy *input){
   printf("run\n");
   if (enviroment_cleared()==TRUE){
+    printf("run return: FALSE\n");
     return FALSE;
   }else if(test_break(input)==TRUE){
+        printf("run return: FALSE\n");
     return FALSE;
   }else
+    printf("run return: TRUE\n");
     return TRUE;
 }
 
@@ -171,15 +174,17 @@ int enviroment_cleared(){
     return FALSE
 }
   */
+  printf("enviroment_cleared return: FALSE\n");
   return FALSE;
 
 }
 
 int test_break(struct greedy *input){
   if ((*input).Break[0]!=(*input).Break[1]){
+    printf("test_break, FALSE\n");
     return FALSE;
   }else{
-    printf("test_break, end\n");
+    printf("test_break, TRUE\n");
     return TRUE;
   }
 }
