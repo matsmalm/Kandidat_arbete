@@ -318,8 +318,10 @@ int main() {
 		preGenetic(B, Hunters, BREAK);
 		genAlg(); // Main Genetic Algorithm program.
 		printf("start greedy: \n");
-		preGreedy(B, Hunters, BREAK);
-		greedyAlg(B, Hunters, BREAK);
+		struct greedy start=preGreedy(B, Hunters, BREAK);
+		struct greedy *input;
+		input=&start;
+		greedyAlg(input);
 
 
 }

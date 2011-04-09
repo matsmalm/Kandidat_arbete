@@ -18,14 +18,6 @@ antag att vi har fyra områden i en yta och två rand områden till ytan. skapa en 
 #define priority 1 // parameter for cost function. priorized visible boundrys
 #define big_vision 1  // parameter for cost function. largest vision
 
-struct greedy{
-  //  int tile_distance[]; //tabell med avståndet mellan alla nod-par
-  // int total_area[];  //total_area={totalt antal områden,r1,k1, r2,k2,...}, område1=(r1,k1)
-  // struct Node node_matrix; //B[][]
-  int Break[2]; //brytvillkor för algoritm{nuvarande värde, givet brytvillkor}
-  // int solution[]; //solution= {antal jagare,antal steg, sj1r1,sj1k1,..., sj1r2,sj1k2,...}
-};
-
 struct Area{
    /*
     int area_type;
@@ -44,10 +36,10 @@ void alloc_Matrix_enviroment();
 void create_tables(/*int *tile_distance, int *total_area*/);
 void get_node_distance(/*int tile_distance*/);
 void get_total_area(/*int *total_area*/);
-void greedyAlg(/*struct greedy *input*/);
-int run(/*struct greedy *input*/);
+void greedyAlg(struct greedy *input);
+int run(struct greedy *input);
 int enviroment_cleared();
-int test_break(/*struct greedy *input*/);
+/*KLAR*/int test_break(struct greedy *input);
 void release_alloc_Matrix_enviroment();
 void one_iteration(/*struct greedy *input, int *move_strat*/);
 void preparation();
@@ -81,7 +73,7 @@ void update_states();
 
 
 //===========********======PREGREEDY========**********=============
-struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int *BREAK){
+struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int BREAK){
   printf("preGreedy\n");
   printf("  ");
   alloc_Matrix_enviroment();
@@ -91,6 +83,7 @@ struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int *BREAK){
 
   struct greedy start;
   start.Break[1]=BREAK;
+  start.Break[0]=0;
 
   /*int tile_distance[];
   int total_area[];
@@ -99,7 +92,8 @@ struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int *BREAK){
   start.node_matrix=NodeMatrix[][];
   start.solution=Hunters[];
   */
-  return;
+  
+  return start;
 }
 
 
@@ -134,7 +128,7 @@ void get_total_area(/*int total_area*/){
 
 //%%%%%%%%%%%%%%%%%%%%%------GREEDY------&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-void greedyAlg(/*struct greedy *input*/){
+void greedyAlg(struct greedy *input){
   printf("greedyAlg\n");
   /* 
      printf("  ");
@@ -142,9 +136,9 @@ void greedyAlg(/*struct greedy *input*/){
      printf("  ");
      one_iteration(struct greedy *input);
 */
-  while (run()==TRUE){
+  while (run(input)==TRUE){
   one_iteration(/*struct greedy *input*/);
-  break;
+  (*input).Break[0]=(*input).Break[0]+1;
 }
   
   printf("  ");
@@ -153,16 +147,14 @@ void greedyAlg(/*struct greedy *input*/){
    
 }
 
-int run(/*struct greedy *input*/){
+int run(struct greedy *input){
   printf("run\n");
   if (enviroment_cleared()==TRUE){
     return FALSE;
-  }else if(test_break(/*input*/)==TRUE){
+  }else if(test_break(input)==TRUE){
     return FALSE;
-  }else{
+  }else
     return TRUE;
-}
-  return 0; 
 }
 
 
@@ -183,15 +175,13 @@ int enviroment_cleared(){
 
 }
 
-int test_break(/*struct greedy *input*/){
-  /*
-  if (input.Break[0]==input.Break[1]){
+int test_break(struct greedy *input){
+  if ((*input).Break[0]!=(*input).Break[1]){
     return FALSE;
+  }else{
+    printf("test_break, end\n");
+    return TRUE;
   }
-  return TRUE;
-  */
-  printf("test_break, end\n");
-  return 0;
 }
 
 void release_alloc_Matrix_enviroment(){
