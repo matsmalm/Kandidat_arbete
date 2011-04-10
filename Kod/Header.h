@@ -17,7 +17,7 @@ struct Node{
 
 struct greedy{
   int tile_distance[400]; //tabell med avståndet mellan alla nod-par
-  int total_area[100];  //total_area={totalt antal områden,r1,k1, r2,k2,...}, område1=(r1,k1)
+  struct Node *total_area[100];  //total_area={totalt antal områden,r1,k1, r2,k2,...}, område1=(r1,k1)
   struct Node (*node_matrix)[SIZE][SIZE]; //B[][]
   int Break[2]; //brytvillkor för algoritm{nuvarande värde, givet brytvillkor}
   int solution[200]; //solution= {antal jagare,antal steg, sj1r1,sj1k1,..., sj1r2,sj1k2,...}

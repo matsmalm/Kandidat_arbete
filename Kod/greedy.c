@@ -37,7 +37,7 @@ struct Area{
 /*struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int *BREAK); init in greedy.h*/
 void create_tables(struct greedy *poutput);
 void get_node_distance(/*int tile_distance*/);
-void get_total_area(/*int *total_area*/);
+/*klar*/void get_total_area(struct greedy *input); //lägger pekare i input som pekar på alla &B[i][j]
 /*void greedyAlg(struct greedy *input); init in greedy.h*/
 int run(struct greedy *input);
 int enviroment_cleared();
@@ -103,7 +103,7 @@ void create_tables(struct greedy *poutput){
   printf("    ");
   get_node_distance(/*pekare på output*/);
   printf("    ");
-  get_total_area(/*pekare på output*/);
+  get_total_area(poutput);
   return;
 }
 
@@ -111,18 +111,27 @@ void get_node_distance(/*pekare på output*/){
   printf("get_node_distance, end.\n");
   /*
 -kör A* eller liknande för att beräkna kortaste avstånd mellan två områden
--spara i en tabell
+-spara i en (Hash?)tabell
 -skriv tabell via pekare till output
 */
 }
 
-void get_total_area(/*pekare på output*/){
+void get_total_area(struct greedy *input){ //lägger pekare i input som pekar på &B
   printf("get total_area, end.\n");
-  /*
--använd output.node_matrix och ta fram hur många områden som finns
--spara dessa i en tabell. 
--spara tabellen i output genom att peka dit.
-*/
+
+  int i=0;
+  int row=0;
+  int kol=0;
+  struct Node (*temp)[SIZE][SIZE]=(*input).node_matrix;
+  while (row<SIZE){
+    while(kol<SIZE){
+      (*input).total_area[i]=&(*temp)[row][kol];
+      kol++;
+      i++;
+    }
+    row++;
+  }
+  return;
 }
 
 //*************************END PREGREEDY*******************************
