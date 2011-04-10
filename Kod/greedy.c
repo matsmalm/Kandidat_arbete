@@ -1,6 +1,8 @@
 /*
 notes to self:
 -sätt solution som en global variabel istället?
+-föreslå SIZE och OBSTACLE som globala, för att kunna sätta storlekar på array etc.
+-i definition av struct greedy: försök hitta lösning på variabel längd av solution[]
 -i funktionen get_area: kanske representera områden som sammanslagning av noder?
 antag att vi har fyra områden i en yta och två rand områden till ytan. skapa en struct "yta" som innehåller antal ränder, lista med pekare på structen rand. structen rand i sin tur innehåller en lista med pekare på rand-områden samt en parameter som visar randens karaktär.
 
@@ -8,7 +10,7 @@ antag att vi har fyra områden i en yta och två rand områden till ytan. skapa en 
 //  function call-order:
 
 #include "Header.h"
-
+#include "greedy.h"
 //---------------variabel declaration---------------------------  
 #define TRUE 1
 #define FALSE 0
@@ -27,21 +29,20 @@ struct Area{
 };
 
 
+
 //-------------------end variabel definitions----------------------
 
 
 //------------------Function initialization-----------------------------
-struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int BREAK);
-void alloc_Matrix_enviroment();
-void create_tables(/*int *tile_distance, int *total_area*/);
+/*struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int *BREAK); init in greedy.h*/
+void create_tables(struct greedy *poutput);
 void get_node_distance(/*int tile_distance*/);
 void get_total_area(/*int *total_area*/);
-void greedyAlg(struct greedy *input);
+/*void greedyAlg(struct greedy *input); init in greedy.h*/
 int run(struct greedy *input);
 int enviroment_cleared();
 /*KLAR*/int test_break(struct greedy *input);
-void release_alloc_Matrix_enviroment();
-void one_iteration(/*struct greedy *input, int *move_strat*/);
+void one_iteration(struct greedy *input/*, int *move_strat*/);
 void preparation();
 void get_conditions(/*int *team_vision, struct greedy *input*/);
 void get_vision(/*struct greedy *input*/);
@@ -73,49 +74,55 @@ void update_states();
 
 
 //===========********======PREGREEDY========**********=============
-struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int BREAK){
+struct greedy preGreedy(struct Node (*NodeMat)[SIZE][SIZE], int *Hunters, int *BREAK){
   printf("preGreedy\n");
-  printf("  ");
-  alloc_Matrix_enviroment();
-  printf("  ");
-  create_tables(/*int *tile_distance, int *total_area*/);
+  struct greedy output;
+  int i=0;
+  int *p1=NULL;
+  int temp=0;
+  int *pos=NULL;
+  struct greedy *poutput=NULL;
+  poutput=&output;
+  output.node_matrix=NodeMat;
 
+  create_tables(poutput); //skriv in tabeller i output struct
 
-  struct greedy start;
-  start.Break[1]=BREAK;
-  start.Break[0]=0;
-
-  /*int tile_distance[];
-  int total_area[];
-  start.tile_distance=tile_distance[];
-  start.total_area=total_area[];
-  start.node_matrix=NodeMatrix[][];
-  start.solution=Hunters[];
-  */
-  
-  return start;
+  output.Break[1]=(*BREAK);
+  output.Break[0]=0;
+  p1=&Hunters[0];
+  pos=&(output.solution[0]);
+  while(i<=Hunters[0]*2){
+    output.solution[i]=*(p1+i);
+    i++; 
+}
+  return output;
 }
 
-
-void alloc_Matrix_enviroment(){
-  //allokera minne för nodmatris
-  printf("alloc_matrix_enviroment, end.\n");
-}
-void create_tables(/*int *tile_distance, int *total_area*/){
+void create_tables(struct greedy *poutput){
   printf("create_tables\n");
   printf("    ");
-  get_node_distance(/*int tile_distance*/);
+  get_node_distance(/*pekare på output*/);
   printf("    ");
-  get_total_area(/*int total_area*/);
+  get_total_area(/*pekare på output*/);
   return;
 }
 
-void get_node_distance(/*int tile_distance*/){
+void get_node_distance(/*pekare på output*/){
   printf("get_node_distance, end.\n");
+  /*
+-kör A* eller liknande för att beräkna kortaste avstånd mellan två områden
+-spara i en tabell
+-skriv tabell via pekare till output
+*/
 }
 
-void get_total_area(/*int total_area*/){
+void get_total_area(/*pekare på output*/){
   printf("get total_area, end.\n");
+  /*
+-använd output.node_matrix och ta fram hur många områden som finns
+-spara dessa i en tabell. 
+-spara tabellen i output genom att peka dit.
+*/
 }
 
 //*************************END PREGREEDY*******************************
@@ -130,21 +137,11 @@ void get_total_area(/*int total_area*/){
 
 void greedyAlg(struct greedy *input){
   printf("greedyAlg\n");
-  /* 
-     printf("  ");
-     run();
-     printf("  ");
-     one_iteration(struct greedy *input);
-*/
   while (run(input)==TRUE){
-  one_iteration(/*struct greedy *input*/);
+  one_iteration(input);
   (*input).Break[0]=(*input).Break[0]+1;
 }
-  
-  printf("  ");
-  release_alloc_Matrix_enviroment();
-  return;   //output ska vara samma som input, men vi har trixat med structen.
-   
+  return;   //output ska vara samma som input, men vi har trixat med structen.  
 }
 
 int run(struct greedy *input){
@@ -189,13 +186,8 @@ int test_break(struct greedy *input){
   }
 }
 
-void release_alloc_Matrix_enviroment(){
-  // släpp allokerat minne för matrisen NodeMatrix
-  printf("release_alloc_Matrix_enviroment, end.\n");
-  return;
-}
 
-void one_iteration(/*struct greedy *input, int *move_strat*/){
+void one_iteration(struct greedy *input/*, int *move_strat*/){
   printf("one_iteration\n");
   printf("    ");
   preparation(); //tar fram nödvändig data för en iteration
@@ -203,7 +195,6 @@ void one_iteration(/*struct greedy *input, int *move_strat*/){
   valuation(/**move_strat*/); //beräknar kostnader
   printf("    ");
   move(/*struct greedy *input*/); // flyttar till bästa kostnad
-
   return;
 }
 

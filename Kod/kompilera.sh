@@ -1,3 +1,3 @@
-gcc -c genetic.c
-gcc -c greedy.c
-gcc -o NodeGen NodeGenFromFile.c genetic.o greedy.o
+gcc -g -c genetic.c
+gcc -g -c greedy.c
+gcc -g -o NodeGen NodeGenFromFile.c genetic.o greedy.o

@@ -1,5 +1,7 @@
 
 #include "Header.h"
+#include "genetic.h"
+#include "greedy.h"
 
 //#define SIZE 10 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
 int A[SIZE][SIZE]; // The matrix of the area to create a network from.
@@ -248,52 +250,53 @@ int numVisible(struct Node *b) {
 	return visible;
 }
 int readFromFile() {
-	resetAB();
-	ROWS=0;
-	COLS=0;
-	int tmpcols=0;
-	int currentcol=0;
-	char line[2048]; // Maimum number of columns*2, line length. Should allow about 1025 columns.
-	while ( fgets ( line, sizeof line, fr ) != NULL ) /* read a line */
-	{
-		currentcol=0;
-		tmpcols=0;
-		int i=0;
-		while(1==1){
-			if(line[i]!='\n'){
-				i++;
-				tmpcols++;
-			}else{
-				break;
-			}
-		}
-		if(line[0]!='\n'){
-			ROWS++;
-		}
-		if(tmpcols>COLS){
-			COLS=tmpcols;
-		}
-		if(line[0]!='\n'){
-			for(i=0;i<=COLS;i++){
-				if((line[i] != ' ') && (line[i] != '\n')){ // Will only happen for 0 and 1 in the matrix.
-					A[ROWS-1][currentcol] = (int) strtol(&line[i],NULL,10);
-					currentcol++;
-				}
-			}
-		}else{
-			break;
-		}
-		for(i=0;i<COLS;i++){
-			line[i]=0;
-		}
-
+  resetAB();
+  ROWS=0;
+  COLS=0;
+  int tmpcols=0;
+  int currentcol=0;
+  char line[2048]; // Maimum number of columns*2, line length. Should allow about 1025 columns.
+  while ( fgets ( line, sizeof line, fr ) != NULL ) /* read a line */
+    {
+      currentcol=0;
+      tmpcols=0;
+      int i=0;
+      while(1==1){
+	if(line[i]!='\n'){
+	  i++;
+	  tmpcols++;
+	}else{
+	  break;
 	}
-	if(ROWS==0){ // Shift between two matrices, can stop reading.
-		return -1;
+      }
+      if(line[0]!='\n'){
+	ROWS++;
+      }
+      if(tmpcols>COLS){
+	COLS=tmpcols;
+      }
+      if(line[0]!='\n'){
+	for(i=0;i<=COLS;i++){
+	  if((line[i] != ' ') && (line[i] != '\n')){ // Will only happen for 0 and 1 in the matrix.
+	    A[ROWS-1][currentcol] = (int) strtol(&line[i],NULL,10);
+	    currentcol++;
+	  }
 	}
-	COLS = (int)(COLS/2+1);
-	return 1;
+      }else{
+	break;
+      }
+      for(i=0;i<COLS;i++){
+	line[i]=0;
+      }
+      
+    }
+  if(ROWS==0){ // Shift between two matrices, can stop reading.
+    return -1;
+  }
+  COLS = (int)(COLS/2+1);
+  return 1;
 }
+
 int resetAB() {
 	int r=0,c=0;
 	for(r=0;r<SIZE;r++){
@@ -302,6 +305,9 @@ int resetAB() {
 		}
 	}
 }
+
+
+
 int main() {
 	srand(time(0)); // Resets random.
 	fr = fopen("OK.txt", "r"); // Open file once
@@ -315,10 +321,12 @@ int main() {
 		/****
 		 Here we should be able to call our algorithms, since B will contain the graph network.
 		 ****/
-		preGenetic(B, Hunters, BREAK);
+
+		preGenetic(&B, &Hunters, BREAK);
 		genAlg(); // Main Genetic Algorithm program.
 		printf("start greedy: \n");
-		struct greedy start=preGreedy(B, Hunters, BREAK);
+
+		struct greedy start=preGreedy(&B, Hunters, &BREAK);
 		struct greedy *input;
 		input=&start;
 		greedyAlg(input);
