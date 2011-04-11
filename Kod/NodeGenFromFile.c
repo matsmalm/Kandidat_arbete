@@ -49,6 +49,11 @@ void place() {
 			for(j=0;j<5;j++){
 				if(A[i][j]==1){
 					setVision(&B[i][j]);
+				}else{
+				  printf("(%d, %d)=0", i,j);
+				  B[i][j].state=25;
+				  printf("    B[%d][%d].state=%d\n",i,j,B[i][j].state);
+				  B[i][j].vision[0]= (struct Node *)0;
 				}
 			}
 	}
@@ -313,11 +318,13 @@ int main() {
 	fr = fopen("OK.txt", "r"); // Open file once
 	int numMatrices=0;
 	while(readFromFile() != -1){
+
 		numMatrices++;
 		place();
 		int NUM_PUR = 3;
 		int Hunters[] = {NUM_PUR, 0, 0, 4, 0, 3,4};
 		int BREAK = 1;
+		
 		/****
 		 Here we should be able to call our algorithms, since B will contain the graph network.
 		 ****/
@@ -327,8 +334,10 @@ int main() {
 		printf("start greedy: \n");
 
 		struct greedy start=preGreedy(&B, Hunters, &BREAK);
+
 		struct greedy *input;
 		input=&start;
+
 		greedyAlg(input);
 
 

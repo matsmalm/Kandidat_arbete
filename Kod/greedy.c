@@ -1,6 +1,9 @@
 /*
 notes to self:
 -sätt solution som en global variabel istället?
+-i enviroment_cleared, korrigera konstanten "correct_size=22"
+-i enviroment_cleared, korrigera villkor rad 205 så att alla tillstånd skilda från osäkrade
+ 
 -föreslå SIZE och OBSTACLE som globala, för att kunna sätta storlekar på array etc.
 -i definition av struct greedy: försök hitta lösning på variabel längd av solution[]
 -i funktionen get_area: kanske representera områden som sammanslagning av noder?
@@ -37,10 +40,10 @@ struct Area{
 /*struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int *BREAK); init in greedy.h*/
 void create_tables(struct greedy *poutput);
 void get_node_distance(/*int tile_distance*/);
-/*klar*/void get_total_area(struct greedy *input); //lägger pekare i input som pekar på alla &B[i][j]
+/*klar*/void get_total_area(struct greedy *input); //lägger pekare i input som pekar på alla B[i][j]
 /*void greedyAlg(struct greedy *input); init in greedy.h*/
-int run(struct greedy *input);
-int enviroment_cleared();
+/*KLAR*/int run(struct greedy *input);
+/*KLAR*/int enviroment_cleared();
 /*KLAR*/int test_break(struct greedy *input);
 void one_iteration(struct greedy *input/*, int *move_strat*/);
 void preparation();
@@ -75,7 +78,6 @@ void update_states();
 
 //===========********======PREGREEDY========**********=============
 struct greedy preGreedy(struct Node (*NodeMat)[SIZE][SIZE], int *Hunters, int *BREAK){
-  printf("preGreedy\n");
   struct greedy output;
   int i=0;
   int *p1=NULL;
@@ -84,6 +86,7 @@ struct greedy preGreedy(struct Node (*NodeMat)[SIZE][SIZE], int *Hunters, int *B
   struct greedy *poutput=NULL;
   poutput=&output;
   output.node_matrix=NodeMat;
+  *output.total_area=NULL;
 
   create_tables(poutput); //skriv in tabeller i output struct
 
@@ -91,10 +94,14 @@ struct greedy preGreedy(struct Node (*NodeMat)[SIZE][SIZE], int *Hunters, int *B
   output.Break[0]=0;
   p1=&Hunters[0];
   pos=&(output.solution[0]);
+
   while(i<=Hunters[0]*2){
     output.solution[i]=*(p1+i);
     i++; 
 }
+
+  printf("\n\n");
+
   return output;
 }
 
@@ -104,30 +111,50 @@ void create_tables(struct greedy *poutput){
   get_node_distance(/*pekare på output*/);
   printf("    ");
   get_total_area(poutput);
+
   return;
 }
 
 void get_node_distance(/*pekare på output*/){
   printf("get_node_distance, end.\n");
   /*
+så länge det finns noder i total_area;
+-ta en nod
+-beräkna kortaste avståndet till var och en av noderna i total_area
+-lägg int avstånd i index find_distance_index(*from,*to)
+
+
 -kör A* eller liknande för att beräkna kortaste avstånd mellan två områden
 -spara i en (Hash?)tabell
 -skriv tabell via pekare till output
 */
+
+
+  return;
 }
 
-void get_total_area(struct greedy *input){ //lägger pekare i input som pekar på &B
-  printf("get total_area, end.\n");
-
+void get_total_area(struct greedy *input){ 
+//lägger alla pekare som pekar på var sin nod i globala B i input.total_area[] 
   int i=0;
   int row=0;
   int kol=0;
   struct Node (*temp)[SIZE][SIZE]=(*input).node_matrix;
   while (row<SIZE){
+    kol=0;
     while(kol<SIZE){
-      (*input).total_area[i]=&(*temp)[row][kol];
+      if(i>80){
+	break;
+      }
+      else if((*temp)[row][kol].state!=25){
+	if((*temp)[row][kol].vision[0]!=(struct Node *)0){
+	  (*input).total_area[i]=&(*temp)[row][kol];	
+	  i++;	
+	}
+      }
       kol++;
-      i++;
+    }
+    if (i>80){
+      break;
     }
     row++;
   }
@@ -147,50 +174,41 @@ void get_total_area(struct greedy *input){ //lägger pekare i input som pekar på 
 void greedyAlg(struct greedy *input){
   printf("greedyAlg\n");
   while (run(input)==TRUE){
-  one_iteration(input);
-  (*input).Break[0]=(*input).Break[0]+1;
-}
+    one_iteration(input);
+    (*input).Break[0]=(*input).Break[0]+1;
+  }
   return;   //output ska vara samma som input, men vi har trixat med structen.  
 }
 
 int run(struct greedy *input){
-  printf("run\n");
-  if (enviroment_cleared()==TRUE){
-    printf("run return: FALSE\n");
+  if (enviroment_cleared(input)==TRUE){
     return FALSE;
   }else if(test_break(input)==TRUE){
-        printf("run return: FALSE\n");
     return FALSE;
   }else
-    printf("run return: TRUE\n");
     return TRUE;
 }
 
+int enviroment_cleared(struct greedy *input){
+  int i=0;
+  int correct_size=22;
+  struct Node *temp=(*input).total_area[0];
+  while (/*(*temp).vision[0]!=(struct Node *)0*/i<correct_size){
+    if((*temp).state==4){
+      printf("enviroment_cleared return: FALSE\n");
+      return FALSE;
+    }
+    i++;
+  }
 
-
-int enviroment_cleared(){
-  printf("enviroment_cleared, end.\n");
-  /*  
-
-
-//kolla om området är säkrat i nuläget
-   
-  if(){
-    //område säkrat
-    return FALSE
-}
-  */
-  printf("enviroment_cleared return: FALSE\n");
-  return FALSE;
-
+  printf("enviroment_cleared return: TRUE\n");
+  return TRUE;
 }
 
 int test_break(struct greedy *input){
   if ((*input).Break[0]!=(*input).Break[1]){
-    printf("test_break, FALSE\n");
     return FALSE;
   }else{
-    printf("test_break, TRUE\n");
     return TRUE;
   }
 }
