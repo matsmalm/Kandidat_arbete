@@ -1,365 +1,236 @@
-/*	Function call-order:
-	preGenetic()
-		generatePopulation()
-			getRandom()
-	genAlg()
-		calculateFitness()
-		sortPopulation()
-		addToNewPopulation(Population[0], Population[1])
-		while(New_Population < MAX_POPULATION):
-			doCrossover()
-				doSelect()
-				doMutation()
-				calculateFitness()
-				sortTempPop()
-			addToNewPopulation()
-		doDecode()
-						*/
 #include <string.h>
 #include "Header.h"
 
 /*** Definitions ***/
-#define MAX_GEN 100 // Maximum number of generations
-#define POPULATION_SIZE 1 // Population size, static.
-#define MAX_GENETIC_PURSUERS 10 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
-#define MAX_STEPS 5 // Maximum number of steps, just to allocate enough memory
-
-/*** Pre-declarations ***/
-struct Gene;
-struct Chromosome;
-
+#define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
+#define GENETIC_POPULATION_SIZE 100 // Population size, static.
+#define GENETIC_MAX_GENETIC_PURSUERS 10 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
+#define GENETIC_MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
 /*** Variables ***/
 int GENETIC_PURSUERS = 0; // Only a temporary value.
-int GENERATIONS = 0; // Only a temporary value.
+int GENETIC_GENERATIONS = 0; // Only a temporary value.
 int GENETIC_ROWS = 0;
 int GENETIC_COLS = 0;
 
+/*** Pre-declarations ***/
 struct Gene{ // Gene contains two parts, start[] which is starting position and allele[] which is direction of every step, 0=stay,1=left,2=right,3=up,4=down.
 	int start[2];
-	int allele[MAX_STEPS];
+	int allele[GENETIC_MAX_STEPS];
 };
 struct Chromosome{
 	int fitnessValue[2]; // [0] = number of contaminated, [1] = required steps until no contamination.
-	struct Gene gene[MAX_GENETIC_PURSUERS]; // One gene for each pursuer
+	struct Gene gene[GENETIC_MAX_GENETIC_PURSUERS]; // One gene for each pursuer
 };
-struct Chromosome Population[POPULATION_SIZE];
-struct Chromosome New_Population[POPULATION_SIZE];
+struct Chromosome Population[GENETIC_POPULATION_SIZE];
+struct Chromosome New_Population[GENETIC_POPULATION_SIZE];
 
 /*** Functions ***/
-void generatePopulation();
-void preGenetic(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK);
-void getRandom(struct Gene *g);
+//void preGenetic(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK);
+void getRandom(struct Gene *g, int from);
 void calculateFitness(struct Chromosome *chrom);
 void sortPopulation(struct Chromosome *pop, int popSize);
 void addToNewPopulation(struct Chromosome chrom);
-void doCrossover();
 void doMutation(struct Chromosome *chrom);
 void doDecode(struct Chromosome *chrom, int *returnPath, int stratLen);
-void printBest(int popNr);
-void printFitness(void);
 void doReproduce(void);
-void swapPopulations(void);
-void calculateStates(struct Chromosome *chrom);
+//int calculateStates(struct Chromosome *chrom);
 void printStates(void);
-int getS4(void);
+//int getS4(void);
 
-struct Node **NodeMatrix;
-typedef int (*compfn)(const void*, const void*);
-int compare(struct Chromosome *, struct Chromosome *);
+struct Node **NodeMatrix; // Node matrix
+typedef int (*compfn)(const void*, const void*); // For quicksort
+int compare(struct Chromosome *, struct Chromosome *); // For quicksort
 int NewPopLocation = 0;
 
 /*** Preparations ***/
 void preGenetic(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
-	//printf("Pre-processing.\n");
-	GENERATIONS = BREAK;
+	GENETIC_GENERATIONS = BREAK;
 	GENETIC_PURSUERS = Hunters[0];
 	int i,j;
-
 	/*** Allocate memory for NodeMatrix ***/
 	NodeMatrix = malloc(SIZE * sizeof(struct Node *));
 	if(NodeMatrix == NULL)
-	{
 		fprintf(stderr, "out of memory\n");
-	}
 	for(i = 0; i < SIZE; i++)
 	{
 		NodeMatrix[i] = malloc(SIZE * sizeof(struct Node));
 		if(NodeMatrix[i] == NULL)
-		{
 			fprintf(stderr, "out of memory\n");
-		}
 	}
 	for(i=0;i<SIZE;i++){
 		for(j=0;j<SIZE;j++){
 			NodeMatrix[i][j] = NodeMat[i][j];
-			
 			/*** Check number of rows and columns of B. */
 			if(NodeMatrix[i][j].vision[0] != 0){
-				if(NodeMatrix[i][j].name[0]+1 > GENETIC_ROWS){
+				if(NodeMatrix[i][j].name[0]+1 > GENETIC_ROWS)
 					GENETIC_ROWS = 1+NodeMatrix[i][j].name[0];
-				}
-				if(NodeMatrix[i][j].name[1]+1 > GENETIC_COLS){
+				if(NodeMatrix[i][j].name[1]+1 > GENETIC_COLS)
 					GENETIC_COLS = 1+NodeMatrix[i][j].name[1];
-				}
 			}
 		}
 	}
 	/*** Do actual pre-processing ***/
 	int k;
-	for(i = 0; i < POPULATION_SIZE; i++){ // Set starting positions for every gene in the population.
-		for(j = 0; j < GENETIC_PURSUERS; j++){
-			for(k = 0; k < 2; k++){
+	for(i = 0; i < GENETIC_POPULATION_SIZE; i++) // Set starting positions for every gene in the population.
+		for(j = 0; j < GENETIC_PURSUERS; j++)
+			for(k = 0; k < 2; k++)
 				Population[i].gene[j].start[k] = Hunters[1+j*2+k];
-			}
-		}
-	}
-	generatePopulation();
-}
-void generatePopulation() {
-	//printf("\tGenerate population\n");
+	/*** Generate population ***/
 	int ChromNr, GeneNr;
-	for(ChromNr = 0; ChromNr < POPULATION_SIZE; ChromNr++){ // For each Chromosome
+	for(ChromNr = 0; ChromNr < GENETIC_POPULATION_SIZE; ChromNr++){ // For each Chromosome
 		for(GeneNr = 0; GeneNr < GENETIC_PURSUERS; GeneNr++){ // For each Gene
-			getRandom(&(Population[ChromNr].gene[GeneNr])); // Generate a random step sequence
+			getRandom(&(Population[ChromNr].gene[GeneNr]),0); // Generate a random step sequence
 		}
 	}
 }
-void getRandom(struct Gene *g){ // Generate random step-sequence from a given node
-	//printf("\t\tGenerate random step-sequence\n");
-	int stepnr=1, nextStep;
+void getRandom(struct Gene *g, int from){ // Generate random step-sequence from a given node
+	int stepnr=from, nextStep;
 	struct Node *current = &NodeMatrix[(*g).start[0]][(*g).start[1]];
-	for(stepnr = 0; stepnr < MAX_STEPS; stepnr++){
+	for(stepnr = from; stepnr < GENETIC_MAX_STEPS; stepnr++){
 		while(1==1){
 			nextStep = ((int)((double)rand() / ((double)RAND_MAX + 1)*5));
-			if(nextStep == 4){
+			if(nextStep == 4)
 				break;
-			}
-			if((*current).move[nextStep] != 0){
+			if((*current).move[nextStep] != 0)
 				break;
-			}
 		}
 		(*g).allele[stepnr] = nextStep;
-		if(nextStep != 4){
+		if(nextStep != 4)
 			current = (*current).move[nextStep];
-		}
 	}
 }
-
 /*** Algorithm ***/
-void genAlg() { // Main call function for Genetic Algorithm
-	printf("The genetic library\n");
+void genAlg(int *solution) { // Main call function for Genetic Algorithm
 	int currentGeneration, currentChromosome;
-	for(currentGeneration = 0; currentGeneration < GENERATIONS; currentGeneration++){
-		printf("***** Generation %d *****\n", currentGeneration+1);
-		for(currentChromosome = 0; currentChromosome < POPULATION_SIZE; currentChromosome++){ // Calculate fitness for every strategy.
+	printf("**** Genetic Algorithm info ****\nPopulation size:\t%d\nPursuers:\t\t%d\nMaximum steps:\t\t%d\n", GENETIC_POPULATION_SIZE,GENETIC_PURSUERS,GENETIC_MAX_STEPS);
+	for(currentGeneration = 0; currentGeneration < GENETIC_GENERATIONS; currentGeneration++){
+		/*** New generation ***/
+		for(currentChromosome = 0; currentChromosome < GENETIC_POPULATION_SIZE; currentChromosome++){ // Calculate fitness for every strategy.
 			calculateFitness(&Population[currentChromosome]);
 		}
-		sortPopulation(Population, POPULATION_SIZE); // Sort the population after fitness
-		//printFitness();
-		int NewPopSize = 2;
+		sortPopulation(Population, GENETIC_POPULATION_SIZE); // Sort the population after fitness
 		addToNewPopulation(Population[0]);
-		if(POPULATION_SIZE>2){
-			addToNewPopulation(Population[1]);
-		}
-		else{
-			NewPopSize = 1;
-		}
-		while(NewPopSize < POPULATION_SIZE){
-			//printf("Location: %d\nPopulation size: %d\n", NewPopLocation, POPULATION_SIZE);
-			//printf("%d Reproduce:\n", NewPopSize);
+		addToNewPopulation(Population[1]);
+		while(NewPopLocation < GENETIC_POPULATION_SIZE){
 			doReproduce();
-			NewPopSize+=2;
-			//printf("%d End Reproduce\n", NewPopSize);
 		}
-		//printf("Location: %d\nPopulation size: %d\n", NewPopLocation, POPULATION_SIZE);
-		//printf("Hej2\n");
-		
-		//printf("Swap populations\n");
-		swapPopulations();
-		NewPopSize = 2;
+		if(NewPopLocation<GENETIC_POPULATION_SIZE){
+			printf("Missing\n");
+		}
+		/*** Swap populations ***/
+		int i;
+		for(i = 0; i < GENETIC_POPULATION_SIZE; i++){
+			Population[i] = New_Population[i];
+		}
 		NewPopLocation = 0;
-		//printf("Start over\n");
+		sortPopulation(Population, GENETIC_POPULATION_SIZE);
+		if((Population[0].fitnessValue[0]==Population[abs(GENETIC_MAX_GEN*0.9)].fitnessValue[0])){
+			if(Population[0].fitnessValue[1]==Population[4].fitnessValue[1]){
+				break;
+			}
+		}
 	}
-	//printf("Sort population after final generation\n");
-	sortPopulation(Population, POPULATION_SIZE); // Sort the population after fitness
-	//doDecode(&Population[0]); //Decode best strategy to correct output, node index instead of directions
+	sortPopulation(Population, GENETIC_POPULATION_SIZE); // Sort the population after fitness
+	
+	printf("End of Genetic Algorithm.\nTook %d generations.\n", currentGeneration);
+	int shortest;
+	if(Population[0].fitnessValue[0]==0){
+		shortest = Population[0].fitnessValue[1];
+	}
+	else{
+		shortest=GENETIC_MAX_STEPS;
+	}
+	doDecode((&Population[0]), solution, shortest);
 	/*** Free memory for NodeMatrix ***/
 	int i;
 	for(i = 0; i < SIZE; i++){
 		free(NodeMatrix[i]);
 	}
 	free(NodeMatrix);
-	printf("End of Genetic Algorithm.\n");
+	return;
 }
 void calculateFitness(struct Chromosome *chrom){
-	//printf("\tCalculate fitness\n");
-	int fitness[] = {0,0};
-	fitness[0] = 0;
-	fitness[1] = ((int)((double)rand() / ((double)RAND_MAX + 1)*100));
-	(*chrom).fitnessValue[0] = fitness[0];
-	(*chrom).fitnessValue[1] = fitness[1];
-	calculateStates(chrom);
+	(*chrom).fitnessValue[1] = calculateStates(chrom);
 	(*chrom).fitnessValue[0] = getS4();
 }
-void sortPopulation(struct Chromosome *pop, int popSize){
-	//printf("\tSort population (of size %d)\n", popSize);
-	qsort((void *) pop, popSize, sizeof(struct Chromosome), (compfn)compare );
-}
 void addToNewPopulation(struct Chromosome chrom){
-	//printf("\tAdd to new population\n");
-	if(NewPopLocation >= POPULATION_SIZE){
-		printf("Population full\n");
-		return;
-	}
 	New_Population[NewPopLocation] = chrom;
 	NewPopLocation++;
 }
 void doReproduce(){
-	//printf("Reproduce!\n");
 	struct Chromosome XoverPop[4];
-	XoverPop[0] = Population[doSelect()];
-	XoverPop[1] = Population[doSelect()];
-	doCrossover(&XoverPop);
-	doMutation(XoverPop);
-	sortPopulation(XoverPop, 4);
-	//printf("Add best to new population.\n");
-	addToNewPopulation(XoverPop[0]);
-	if(POPULATION_SIZE>3 && NewPopLocation < POPULATION_SIZE){
-		//printf("Add second best to new population.\n");
-		addToNewPopulation(XoverPop[1]);
-	}else{
-		NewPopLocation++;
-		//printf("Only added one from reproduction\n");
-	}
-}
-void doCrossover(struct Chromosome *parentPop){ // Will work with Population.
-	//printf("\tDo crossover\n");
-	// Create offspring 1,2 from parents in [0], [1], place in [2], [3]
+	XoverPop[0] = Population[selectParent()];
+	XoverPop[1] = Population[selectParent()];
+	/*** Crossover ***/
 	int GeneNr;
 	for(GeneNr = 0; GeneNr < GENETIC_PURSUERS; GeneNr++){
-		parentPop[2].gene[GeneNr  ] = parentPop[0].gene[GeneNr];
-		parentPop[2].gene[GeneNr+1] = parentPop[1].gene[GeneNr];
-		parentPop[3].gene[GeneNr  ] = parentPop[1].gene[GeneNr];
-		parentPop[3].gene[GeneNr+1] = parentPop[0].gene[GeneNr];
+		XoverPop[2].gene[GeneNr  ] = XoverPop[0].gene[GeneNr];
+		XoverPop[2].gene[GeneNr+1] = XoverPop[1].gene[GeneNr];
+		XoverPop[3].gene[GeneNr  ] = XoverPop[1].gene[GeneNr];
+		XoverPop[3].gene[GeneNr+1] = XoverPop[0].gene[GeneNr];
 		GeneNr++;
 	}
+	/*** Mutation ***/
+	//doMutation(XoverPop);
+	/*** sort to add best individes ***/
+	sortPopulation(XoverPop, 4);
+	addToNewPopulation(XoverPop[0]);
+	addToNewPopulation(XoverPop[1]);
 }
-int doSelect(){ // Return position in Population for the chromosome that was selected.
-	//printf("Do random selection\n");
-	return ((int)((double)rand() / ((double)RAND_MAX + 1)*POPULATION_SIZE));
+int selectParent(){ // Return position in Population for the chromosome that was selected.
+	return ((int)((double)rand() / ((double)RAND_MAX + 1)*GENETIC_POPULATION_SIZE));
 }
 void doMutation(struct Chromosome *chrom){ // Mutate Chromosome
-	//printf("\t\tDo Mutation\n");
 	int i;
 	for(i = 0; i < 2; i++){
 		int mutationProp = 5; // probability of mutation*100
 		int randomValue = ((int)((double)rand() / ((double)RAND_MAX + 1)*100)); // Random number between 0 and 999
-		int randomGene = ((int)((double)rand() / ((double)RAND_MAX + 1)*MAX_GENETIC_PURSUERS)); // Random number between 0 and 999
+		int randomGene = ((int)((double)rand() / ((double)RAND_MAX + 1)*GENETIC_MAX_GENETIC_PURSUERS)); // Random number between 0 and 999
 		if(randomValue < mutationProp){
 			//printf("Mutation!\n");
-			//getRandom(&((*chrom).gene[randomGene])); // Generate a new random path for a random gene.
+			//getRandom(&((*chrom).gene[randomGene]),((int)((double)rand() / ((double)RAND_MAX + 1)*GENETIC_MAX_STEPS))); // Generate a new random path for a random gene.
 		}
 	}
 }
-void doDecode(struct Chromosome *chrom, int *returnPath, int stratLen){ // Decode the best chromosome and return it
-	printf("Decode best chromosome\n");
+void doDecode(struct Chromosome *chrom, int *returnPath, int stepLen){ // Decode the best chromosome and return it
+	int i,pursuer,step;
 	/*** Starting positions ***/
-	int i;
-	for(i=0;i<GENETIC_PURSUERS;i++){
-		returnPath[2*i]=(*chrom).gene[i].start[0];
-		returnPath[2*i+1]=(*chrom).gene[i].start[1];
+	int location = 0;
+	returnPath[0] = GENETIC_PURSUERS;
+	returnPath[1] = stepLen;
+	location+=2;
+	
+	for(pursuer=0;pursuer<GENETIC_PURSUERS;pursuer++){
+		returnPath[location]=(*chrom).gene[pursuer].start[0];
+		returnPath[location+1]=(*chrom).gene[pursuer].start[1];
+		location+=2;
 	}
-	/*** Following steps ***/
-	// Add pursuer i step j until all steps have been added.
-	int step,pursuer,prevR=returnPath[0],prevC=returnPath[1],currentR=0,currentC=0; // which step, pursuer, current row and column, next row and column
-	for(step=0;step<MAX_STEPS;step++){
+	/*** Following positions ***/
+	int prevR=0,prevC=0,currentR=0,currentC=0;
+	for(step=0;step<GENETIC_MAX_STEPS;step++){
 		for(pursuer=0;pursuer<GENETIC_PURSUERS;pursuer++){
-			/**If step=4, use previous step.
-			 * If step=0,1,2,3 take step and save row/col to next step.
-			 * ***/
-			if(pursuer>0){
-				prevR = returnPath[2*step+2*(pursuer-1)];
-				prevC = returnPath[2*step+2*(pursuer-1)+1];
-			}
-			else{
-				prevR = returnPath[2*step+2*pursuer];
-				prevC = returnPath[2*step+2*pursuer+1];
-			}
-			printf("prevR: %d, prevC: %d, direction: %d, step: %d, pursuer: %d\n", prevR,prevC, (*chrom).gene[pursuer].allele[step], step, pursuer);
+			prevR = returnPath[location-2*GENETIC_PURSUERS];
+			prevC = returnPath[location-2*GENETIC_PURSUERS+1];
 			if((*chrom).gene[pursuer].allele[step]==4){
-				//printf("If\n");
-				currentR = prevR;
-				currentC = prevC;
-				returnPath[2+2*step+2*pursuer] = currentR;
-				returnPath[2+2*step+2*pursuer+1] = currentC;
-				//printf("If done\n");
+				currentR=prevR;
+				currentC=prevC;
+				returnPath[location] = prevR;
+				returnPath[location+1] = prevC;
 			}
 			else{
-				//printf("Else\n");
-				printf("Current: (%d,%d)\n", currentR, currentC);
-				printBest(0);
 				currentR=(*NodeMatrix[ prevR ][ prevC ].move[(*chrom).gene[pursuer].allele[step]]).name[0];
 				currentC=(*NodeMatrix[ prevR ][ prevC ].move[(*chrom).gene[pursuer].allele[step]]).name[1];
-				printf("Else halfways\n");
-				returnPath[2+2*step+2*pursuer] = currentR;
-				returnPath[2+2*step+2*pursuer+1] = currentC;
-				printf("Else done\n");
+				returnPath[location] = currentR;
+				returnPath[location+1] = currentC;
 			}
-			printf("currentR: %d, currentC: %d\n", currentR,currentC);
+			location+=2;
 		}
 	}
 }
-void printBest(int popNr){ // Print the best solution
-	printf("Print best in population:\n");
-	int i=0,j=0,k=0;
-	for(j=0;j<GENETIC_PURSUERS; j++){ // For each pursuer
-		printf("Gene %d:\t", j);
-		printf("(%d,%d): ", Population[popNr].gene[j].start[0], Population[popNr].gene[j].start[1]);
-		for(k=0;k<MAX_STEPS;k++){ // Print step sequence
-			printf("%d ", Population[popNr].gene[j].allele[k]);
-		}
-		printf("\n");
-	}
-	printf("\n");
-}
-int compare(struct Chromosome *chrom1, struct Chromosome *chrom2){ // Compares two pointers to sort by fitness function. Basic code found at http://support.microsoft.com/kb/73853
-	if ( chrom1->fitnessValue[0] < chrom2->fitnessValue[0]){
-		return -1;
-	}
-	else if ( chrom1->fitnessValue[0] > chrom2->fitnessValue[0]){
-		return 1;
-	}
-	else{		
-		if ( chrom1->fitnessValue[1] < chrom2->fitnessValue[1]){
-			return -1;
-		}
-		else if (chrom1->fitnessValue[1] > chrom2->fitnessValue[1]){
-			return 1;
-		}
-		else{
-			return 0;
-		}
-	}
-}
-void printFitness(void){ // Print fitness of best population, should be run after the population is sorted
-	int i;
-	for (i = 0; i < POPULATION_SIZE; i++){
-		printf("(%d,%d)", Population[i].fitnessValue[0], Population[i].fitnessValue[1]);
-	}
-	printf("\n");
-}
-void swapPopulations(){
-	//printf("Swap populations\n");
-	int i;
-	for(i = 0; i < POPULATION_SIZE; i++){
-		Population[i] = New_Population[i];
-	}
-}
-void calculateStates(struct Chromosome *chrom){
-	int stratLen = 2*(GENETIC_PURSUERS+MAX_STEPS); // GENETIC_PURSUERS + start position + following steps
-	//int tempPath[stratLen];
-	int tempPath[] = {0,0,1,0,2,0,2,1,2,2,1,2};
-	//doDecode(chrom, tempPath, stratLen); // Returns an array with [#GENETIC_PURSUERS, pursuer 1 start row, pursuer 1 start column, ..., pursuer 1 move 2 row, puruser 2 move 2 column, ...]
+int calculateStates(struct Chromosome *chrom){
+	int stepLen = GENETIC_MAX_STEPS; // GENETIC_PURSUERS + start position + following steps
+	int tempPath[2+2*stepLen*GENETIC_PURSUERS];
+	doDecode(chrom, tempPath, stepLen); // Returns an array with [#GENETIC_PURSUERS, pursuer 1 start row, pursuer 1 start column, ..., pursuer 1 move 2 row, puruser 2 move 2 column, ...]
 	int currentStep,j;
 	int S[GENETIC_ROWS][GENETIC_COLS], S_u[GENETIC_ROWS][GENETIC_COLS];
 	int r,c;
@@ -369,6 +240,7 @@ void calculateStates(struct Chromosome *chrom){
 			if(NodeMatrix[r][c].vision[0] == 0){
 				S[r][c]=0; // Obstacle
 				S_u[r][c]=0; // Obstacle
+				NodeMatrix[r][c].state = 0;
 			}
 			else{
 				S[r][c]=4;
@@ -377,16 +249,16 @@ void calculateStates(struct Chromosome *chrom){
 		}
 	}
 	/*** For all steps ***/
-	for(currentStep = 0; currentStep < MAX_STEPS;currentStep++){ // Go through every step, should terminate if no Node is in state 4.
+	for(currentStep = 0; currentStep < GENETIC_MAX_STEPS;currentStep++){ // Go through every step, should terminate if no Node is in state 4.
 		/*** Set values in S ***/
 		for(j=0;j < GENETIC_PURSUERS; j++){ // For each pursuer
 			/*** State 1 ***/
-			S[tempPath[2*currentStep+2*j]][tempPath[2*currentStep+2*j+1]] = 1; // Set state for S to 1	//NodeMatrix[tempPath[2*j]][tempPath[2*j+1]].state = 1; // Set S=1 for pursuer j in position (row,col) given by (tempPath[2*j], tempPath[2*j+1]).
+			S[tempPath[2+2*currentStep+2*j]][tempPath[2+2*currentStep+2*j+1]] = 1; // Set state for S to 1	//NodeMatrix[tempPath[2*j]][tempPath[2*j+1]].state = 1; // Set S=1 for pursuer j in position (row,col) given by (tempPath[2*j], tempPath[2*j+1]).
 			/*** State 2 ***/
 			int k=0;
-			while((NodeMatrix[tempPath[2*currentStep+2*j]][tempPath[2*currentStep+2*j+1]].vision[k]) != 0){ // Set S2 for every visible node not in S1.
-				int S_r = (*NodeMatrix[tempPath[2*currentStep+2*j]][tempPath[2*currentStep+2*j+1]].vision[k]).name[0];
-				int S_c = (*NodeMatrix[tempPath[2*currentStep+2*j]][tempPath[2*currentStep+2*j+1]].vision[k]).name[1];
+			while((NodeMatrix[tempPath[2+2*currentStep+2*j]][tempPath[2+2*currentStep+2*j+1]].vision[k]) != 0){ // Set S2 for every visible node not in S1.
+				int S_r = (*NodeMatrix[tempPath[2+2*currentStep+2*j]][tempPath[2+2*currentStep+2*j+1]].vision[k]).name[0];
+				int S_c = (*NodeMatrix[tempPath[2+2*currentStep+2*j]][tempPath[2+2*currentStep+2*j+1]].vision[k]).name[1];
 				if(S[S_r][S_c] != 1){
 					S[S_r][S_c] = 2;
 				}
@@ -409,12 +281,12 @@ void calculateStates(struct Chromosome *chrom){
 			/*** Set S1 for pursuers, S2 for visible ***/
 			for(j=0;j < GENETIC_PURSUERS; j++){ // For each pursuer
 				/*** State 1 ***/
-				S_u[tempPath[2*currentStep+2*j]][tempPath[2*currentStep+2*j+1]] = 1; // Set state for S_u to 1, since that value will be needed.
+				S_u[tempPath[2+2*currentStep+2*j]][tempPath[2+2*currentStep+2*j+1]] = 1; // Set state for S_u to 1, since that value will be needed.
 				/*** State 2 ***/
 				int k=0;
-				while((NodeMatrix[tempPath[2*currentStep+2*j]][tempPath[2*currentStep+2*j+1]].vision[k]) != 0){
-					int S_r = (*NodeMatrix[tempPath[2*currentStep+2*j]][tempPath[2*currentStep+2*j+1]].vision[k]).name[0];
-					int S_c = (*NodeMatrix[tempPath[2*currentStep+2*j]][tempPath[2*currentStep+2*j+1]].vision[k]).name[1];
+				while((NodeMatrix[tempPath[2+2*currentStep+2*j]][tempPath[2+2*currentStep+2*j+1]].vision[k]) != 0){
+					int S_r = (*NodeMatrix[tempPath[2+2*currentStep+2*j]][tempPath[2+2*currentStep+2*j+1]].vision[k]).name[0];
+					int S_c = (*NodeMatrix[tempPath[2+2*currentStep+2*j]][tempPath[2+2*currentStep+2*j+1]].vision[k]).name[1];
 					if(S_u[S_r][S_c] != 1){
 						S_u[S_r][S_c] = 2;
 					}
@@ -467,45 +339,17 @@ void calculateStates(struct Chromosome *chrom){
 			for(c = 0; c < GENETIC_COLS; c++){ // For every node:
 				NodeMatrix[r][c].state = S[r][c];
 			}
-		}		
+		}
 		if(getS4()==0){
 			//Can stop calculate states, solution found.
-			printf("Done in step %d\n", currentStep);
-			printf("States:\n");
-			printStates();
-			printf("\n");
+			tempPath[1]=currentStep;
+			return currentStep;
 		}
 	}
-	/* Pseudo code:
-	 * Repeat for each step:
-	 * 
-	 * int S_u[SIZE][SIZE];
-	 * Set S=1 for each pursuer position.
-	 * Set S=2 for each vision for every pursuer, IF NOT S=1
-	 * check = 1
-	 * while (check == 1){
-	 * Set S_u = 4 for all nodes
-	 * Set S_u=1 and S_u=2.
-	 * 	For each node:
-	 * 	If S==1 && S_u == 1{}
-	 * 	Else if S==2 && S_u==2{}
-	 * 	Else if S==2 && S_u==1
-	 * 		S_u = 3
-	 * 	Else{
-	 * 		check = 1
-	 * 		for m in move(){
-	 * 			if S==4
-	 * 				check = 0, break
-	 * 		if check == 1
-	 * 			S_u = 3
-	 * 	check = 0
-	 * 	For each node:
-	 * 		if S != S_u
-	 * 			check = 1
-	 * 		S = S_u
-	 * 
-	 * End by writing S to NodeMatrix.
-	 * */
+	return currentStep;
+}
+void sortPopulation(struct Chromosome *pop, int popSize){
+	qsort((void *) pop, popSize, sizeof(struct Chromosome), (compfn)compare );
 }
 void printStates(){
 	int r,c;
@@ -517,8 +361,7 @@ void printStates(){
 	}
 }
 int getS4(){
-	int S4=0;
-	int r,c;
+	int S4=0,r,c;
 	for(r = 0; r < GENETIC_ROWS; r++){
 		for(c = 0; c < GENETIC_COLS; c++){ // For every node:
 			if(NodeMatrix[r][c].state == 4){
@@ -527,4 +370,18 @@ int getS4(){
 		}
 	}
 	return S4;
+}
+int compare(struct Chromosome *chrom1, struct Chromosome *chrom2){ // Compares two pointers to sort by fitness function. Basic code found at http://support.microsoft.com/kb/73853
+	if ( chrom1->fitnessValue[0] < chrom2->fitnessValue[0])
+		return -1;
+	else if ( chrom1->fitnessValue[0] > chrom2->fitnessValue[0])
+		return 1;
+	else{		
+		if ( chrom1->fitnessValue[1] < chrom2->fitnessValue[1])
+			return -1;
+		else if (chrom1->fitnessValue[1] > chrom2->fitnessValue[1])
+			return 1;
+		else
+			return 0;
+	}
 }

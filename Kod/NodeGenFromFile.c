@@ -325,20 +325,26 @@ int main() {
 
 		numMatrices++;
 		place();
-		int NUM_PUR = 3;
-		int Hunters[] = {NUM_PUR, 0, 0, 4, 0, 3,4};
-		int BREAK = 1;
+		int NUM_PUR = 2;
+		int Hunters[] = {NUM_PUR, 0, 0, 4, 0};
+		int BREAK = 100;
 		
 		/****
 		 Here we should be able to call our algorithms, since B will contain the graph network.
 		 ****/
-
+		int geneticSolution[400];
+		int solStep = 0;
 		preGenetic(&B, &Hunters, BREAK);
-		genAlg(); // Main Genetic Algorithm program.
-	
+		genAlg(geneticSolution); // Main Genetic Algorithm program.
+		printf("\nGenetic Algorithm ended.");
+		printf("Using %d pursuers, a solution of %d steps was obtained:\n", geneticSolution[0], geneticSolution[1]);
+		int i;
+		for(i=2;i<=2+2*(1+geneticSolution[0]*geneticSolution[1]);i+=2)
+			printf(" (%d,%d)", geneticSolution[i], geneticSolution[i+1]);
+		printf("\n");
 		printf("start greedy: \n");
-		struct greedy start=preGreedy(&B, Hunters, &BREAK);
-		greedyAlg(&start);
+		//struct greedy start=preGreedy(&B, Hunters, &BREAK);
+		//greedyAlg(&start);
 
 }
 
