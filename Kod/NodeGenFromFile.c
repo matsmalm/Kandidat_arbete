@@ -154,6 +154,10 @@ void setVision(struct Node *b) {
 	int k = (*b).name[1];
 	int v = 0; // Counter for vision[]
 	int i=0;
+	while(i<SIZE*SIZE){
+	  (*b).vision[i]=(struct Node *)0;
+	  i++;
+	}
 	int z;
 	int Lmax=SIZE,Rmax=SIZE,Umax=SIZE,Dmax=SIZE;
 	struct Node *temp;
@@ -331,15 +335,10 @@ int main() {
 
 		preGenetic(&B, &Hunters, BREAK);
 		genAlg(); // Main Genetic Algorithm program.
+	
 		printf("start greedy: \n");
-
 		struct greedy start=preGreedy(&B, Hunters, &BREAK);
-
-		struct greedy *input;
-		input=&start;
-
-		greedyAlg(input);
-
+		greedyAlg(&start);
 
 }
 

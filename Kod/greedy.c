@@ -4,6 +4,7 @@ notes to self:
 -i enviroment_cleared, korrigera konstanten "correct_size=22"
 -i enviroment_cleared, korrigera villkor rad 205 så att alla tillstånd skilda från osäkrade
  
+-i get_vision(), rad 330 eventuellt uppdatera states så att man skiljer på sedd, och unikt sedd
 -föreslå SIZE och OBSTACLE som globala, för att kunna sätta storlekar på array etc.
 -i definition av struct greedy: försök hitta lösning på variabel längd av solution[]
 -i funktionen get_area: kanske representera områden som sammanslagning av noder?
@@ -23,6 +24,21 @@ antag att vi har fyra områden i en yta och två rand områden till ytan. skapa en 
 #define priority 1 // parameter for cost function. priorized visible boundrys
 #define big_vision 1  // parameter for cost function. largest vision
 
+#define SEEN 1
+#define HUNTER 2
+#define CONTAMINED 3
+#define SECURED 4
+
+struct valuation{
+  //solution[solution_iter_index+rj] placerar radindex för jagare j i aktuell iteration.
+  struct Node *total_vision[MAX_SIZE_TOTAL_VISION];
+};
+
+struct move{
+
+};
+
+
 struct Area{
    /*
     int area_type;
@@ -30,6 +46,7 @@ struct Area{
     struct Node boundry; //pekar på rand-noderna till ett ickesett område.
    */
 };
+
 
 
 
@@ -46,9 +63,10 @@ void get_node_distance(/*int tile_distance*/);
 /*KLAR*/int enviroment_cleared();
 /*KLAR*/int test_break(struct greedy *input);
 void one_iteration(struct greedy *input/*, int *move_strat*/);
-void preparation();
+struct valuation preparation(struct greedy *input);
 void get_conditions(/*int *team_vision, struct greedy *input*/);
-void get_vision(/*struct greedy *input*/);
+/*KLAR*/void get_vision(struct greedy *input, struct valuation *output);
+/*KLAR*/int is_in_vision(struct valuation *input, struct Node *tile);
 void get_areas(/*struct greedy *input*/);
 void subtract_vision(/*struct Node area, int *team_vision*/);
 void identify_boundry(/*int areaindex*/);
@@ -57,7 +75,7 @@ void classify_boundry(/*area,boundry*/);
 void check_boundry_priority(/*area, boundry*/);
 void set_boundry(/*boundry, prio*/);
 void get_hunter_equiv();
-void valuation(/*int *next_move*/);
+struct move valuation(/*int *next_move*/);
 void designate_boundry(/*antal_att_delegera, boundry, jagare*/);
 void make_distance(/*boundry, jagare*/);
 void add_directional_value(/*antal_att_delegera, data från make_distance*/);
@@ -85,20 +103,42 @@ struct greedy preGreedy(struct Node (*NodeMat)[SIZE][SIZE], int *Hunters, int *B
   int *pos=NULL;
   struct greedy *poutput=NULL;
   poutput=&output;
+  //fill node_matrix
   output.node_matrix=NodeMat;
-  *output.total_area=NULL;
 
-  create_tables(poutput); //skriv in tabeller i output struct
+  //set total_vision[i]=-1
+  while(i<MAX_SIZE_TOTAL_VISION){
+    output.total_vision_zero[i]=(struct Node *)0;
+  i++;
+}
+  i=0;
+  // set total_area[i]=-1
+  while(i<MAX_TOTAL_AREA){
+  output.total_area[i]=(struct Node *)0;
+  i++;
+}
+  i=0;
 
+  //fill Break values.
   output.Break[1]=(*BREAK);
   output.Break[0]=0;
-  p1=&Hunters[0];
-  pos=&(output.solution[0]);
 
+  p1=&Hunters[0];
+
+  //fill solution[]={number of pursuers, number of itterations, starting pos.,{-1}}
+  output.solution[0]=*p1;
+  output.solution[1]=0;
   while(i<=Hunters[0]*2){
-    output.solution[i]=*(p1+i);
+    output.solution[i+2]=*(p1+i+1);
     i++; 
-}
+  }
+  i++;
+  while (i<MAX_SIZE_SOLUTION){
+    output.solution[i]=-1;
+    i++; 
+  }
+
+  create_tables(poutput); //skriv in tabeller i output struct
 
   printf("\n\n");
 
@@ -173,9 +213,12 @@ void get_total_area(struct greedy *input){
 
 void greedyAlg(struct greedy *input){
   printf("greedyAlg\n");
+  (*input).solution_iter_index=2;
   while (run(input)==TRUE){
+    (*input).solution_iter_index=(*input).solution_iter_index+2*(*input).solution[0]*(*input).solution[1];
     one_iteration(input);
     (*input).Break[0]=(*input).Break[0]+1;
+    ((*input).solution[1])++;
   }
   return;   //output ska vara samma som input, men vi har trixat med structen.  
 }
@@ -217,16 +260,16 @@ int test_break(struct greedy *input){
 void one_iteration(struct greedy *input/*, int *move_strat*/){
   printf("one_iteration\n");
   printf("    ");
-  preparation(); //tar fram nödvändig data för en iteration
+  struct valuation prep_info=preparation(input); //tar fram nödvändig data för en iteration
   printf("    ");
-  valuation(/**move_strat*/); //beräknar kostnader
+  struct move val_info=valuation(/**move_strat*/); //beräknar kostnader
   printf("    ");
   move(/*struct greedy *input*/); // flyttar till bästa kostnad
   return;
 }
 
 /*===================one_iteration(): Phase one, Preparations================================*/
-void preparation(){ //tar fram alla startdata för en iteration
+struct valuation preparation(struct greedy *input){ //tar fram alla startdata för en iteration
   /*
  int team_vision[];
  get_conditions(int team_vision); 
@@ -235,39 +278,70 @@ void preparation(){ //tar fram alla startdata för en iteration
  return //skicka ut boundrys(med tillhörande prioritet), ytor, ekvivalent jagare;
   */
   printf("preparation\n");
+  struct valuation output;
+
+  memset(output.total_vision, 0, sizeof(output.total_vision));
+
   printf("      ");
-  get_conditions();
+  get_conditions(input, &output);
   printf("      ");
   get_hunter_equiv();
-  return;
+  return output;
 }
 
-void get_conditions(/*int *team_vision, struct greedy *input*/){ //fastställ vilka områden som finns utanför synfält, namnge och definiera ränder
+void get_conditions(struct greedy *input, struct valuation *output){ //fastställ vilka områden som finns utanför synfält, namnge och definiera ränder
   printf("get_conditions\n");
+  get_vision(input, output); //skriv in gruppens sikt som states i NodeMatrix
   printf("        ");
-  get_vision(/**input*/); //skriv in gruppens sikt som states i NodeMatrix
-  printf("        ");
-  get_areas(/**input*/);
+  get_areas(input, output);
   return;
 }
 
-void get_vision(/*struct greedy *input*/){
-  //find the total sight of the team, function partly solved in greedy.c ??
-/*
-förslag:
-loop
--ta position från en jagare
--ändra state i aktuell nod
--hämta vision för aktuell nod
--ändra states till synlig i de rutor som finns i vision.
-loop end
-  return;
-*/
-  printf("get_vision, end.\n");
+void get_vision(struct greedy *input, struct valuation *output){
+  //find the total sight of the team, update states correspondingly
+  int j=0;
+  int k=0;
+  int i=0;
+  int row=0;
+  int kol=0;
+  struct Node (*temp)[SIZE][SIZE]=(*input).node_matrix;
+  struct Node *pvision= *(*output).total_vision;
+  struct Node *hunter;
+  struct Node *temp2;
+  while(j<(*input).solution[0]){
+    row=(*input).solution[(*input).solution_iter_index+2*j];
+    kol=(*input).solution[(*input).solution_iter_index+2*j+1];
+    hunter=&(*temp)[row][kol];
+    (*hunter).state=HUNTER;
+    k=0;
+    temp2=(*hunter).vision[k];
+    while ( temp2!= (struct Node *)0){
+      if(is_in_vision(output,(*hunter).vision[k])==FALSE){
+	(*output).total_vision[i]=(*hunter).vision[k];
+	i++;
+      }
+      //eventuellt uppdatera states som att den inte är unikt sedd
+      k++;
+      temp2=(*hunter).vision[k];
+      }
+    j++;
+  }
   return;
 }
+int is_in_vision(struct valuation *input, struct Node *tile){
+  int i=0;
+  while (1==1){
+    if((*input).total_vision[i]==tile){
+      return TRUE;
+    }
+    if((*input).total_vision[i]==(struct Node *)0){
+      return FALSE;
+    }
+    i++;
+  }
+}
 
-void get_areas(/*struct greedy *input*/){
+void get_areas(struct greedy *input, struct valuation *output){
   /*  struct Node areaindex[];
   struct Node *p1;
   *p1=areaindex[0];
@@ -278,39 +352,37 @@ void get_areas(/*struct greedy *input*/){
     i++;
   }
   */
+
   printf("get_areas\n");
-  printf("          ");
-  subtract_vision();
-  printf("          ");
-  identify_boundry();
+  printf("              ");
+  subtract_vision(input, output);
+  printf("              ");
+  identify_boundry(/*input, output*/);
   return;
 }
 
-void subtract_vision(/*struct Node area, int *team_vision*/){
-  /*
-
+void subtract_vision(struct greedy *input, struct valuation *output){
+/*
 ta fram index på de områden som inte ligger inom synfältet.
  
 förslag:
--ta in global tabel med alla områden
--ta in array med team_vision
+-ta in total_area
+-ta in array med total_vision
 -ta fram punkt (i,j) ur tabell med alla områden
 -kolla om samma punkt finns i team_vision
 -om inte: 
 
-   
-
-  return; //skicka tillbaka vilka områden som finns
-  */
+return; //skicka tillbaka vilka områden som finns
+*/
   printf("subtract_vision, end.\n");
   return;
 }
 
 void identify_boundry(/*int areaindex*/){
   printf("identify_boundry\n");
-  printf("            ");
+  printf("                ");
   find_boundry(/*areaindex*/);
-  printf("            ");
+  printf("                ");
   classify_boundry(/*area, boundry*/);
   return;
 }
@@ -331,9 +403,9 @@ void classify_boundry(/*area, boundry*/){
   return;
   */
   printf("classify_boundry\n");
-  printf("              ");
+  printf("                    ");
   check_boundry_priority();
-  printf("              ");
+  printf("                    ");
   set_boundry();
 return;
 }
@@ -373,7 +445,7 @@ void get_hunter_equiv(){
 }
 
 /*====================one_iteration():Phase two, Evaluation=======================================*/
-void valuation(/*int *next_move*/){ //använder data från preparation och designerar värden till noder som går at flytta till
+struct move valuation(/*int *next_move*/){ //använder data från preparation och designerar värden till noder som går at flytta till
   /*
 vill veta från preparation:
 -antal områden
