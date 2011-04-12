@@ -29,9 +29,11 @@ antag att vi har fyra områden i en yta och två rand områden till ytan. skapa en 
 #define CONTAMINED 3
 #define SECURED 4
 
+#define MAX_SIZE_AREA_COLLECTION 40
 struct valuation{
   //solution[solution_iter_index+rj] placerar radindex för jagare j i aktuell iteration.
   struct Node *total_vision[MAX_SIZE_TOTAL_VISION];
+  struct Area *area_collection[MAX_SIZE_AREA_COLLECTION];
 };
 
 struct move{
@@ -40,17 +42,50 @@ struct move{
 
 
 struct Area{
-   /*
+   
     int area_type;
-    struct Node area_adress; //pekar på en nod inom ett ickesett område.
-    struct Node boundry; //pekar på rand-noderna till ett ickesett område.
-   */
+  //struct Node area_adress; //pekar på en nod inom ett ickesett område.
+    struct Node *boundry[MAX_TOTAL_AREA]; //pekar på rand-noderna till ett ickesett område.
+   
 };
 
 
 
 
 //-------------------end variabel definitions----------------------
+
+//-------------------DEFINING A STACK---------------------
+#define STACKSIZE 10000000
+
+int  *tos, *p1, stack[STACKSIZE];
+void push(int i)
+{
+  p1++;
+  if(p1 == (tos+STACKSIZE)) {
+    printf("Stack Overflow. Please increase STACKSIZE if you have very large environments.\n");
+    exit(1);
+  }
+  *p1 = i;
+}
+
+int pop(void)
+{
+  if(p1 == tos) {
+    printf("Stack Underflow.\n");
+    exit(1);
+  }
+  p1--;
+  return *(p1+1);
+}
+
+int empty(void){
+	if (p1==tos){
+		return 1;
+	}else return 0;
+}
+
+//-------------------end of stack definition---------
+
 
 
 //------------------Function initialization-----------------------------
@@ -67,7 +102,9 @@ struct valuation preparation(struct greedy *input);
 void get_conditions(/*int *team_vision, struct greedy *input*/);
 /*KLAR*/void get_vision(struct greedy *input, struct valuation *output);
 /*KLAR*/int is_in_vision(struct valuation *input, struct Node *tile);
-void get_areas(/*struct greedy *input*/);
+void get_total_areas(/*struct greedy *input*/);
+/*KLAR*/int is_checked();
+void get_area();
 void subtract_vision(/*struct Node area, int *team_vision*/);
 void identify_boundry(/*int areaindex*/);
 void find_boundry(/*int areaindex*/);
@@ -293,7 +330,7 @@ void get_conditions(struct greedy *input, struct valuation *output){ //fastställ
   printf("get_conditions\n");
   get_vision(input, output); //skriv in gruppens sikt som states i NodeMatrix
   printf("        ");
-  get_areas(input, output);
+  get_total_areas(input, output);
   return;
 }
 
@@ -341,19 +378,27 @@ int is_in_vision(struct valuation *input, struct Node *tile){
   }
 }
 
-void get_areas(struct greedy *input, struct valuation *output){
-  /*  struct Node areaindex[];
-  struct Node *p1;
-  *p1=areaindex[0];
-  subtract_vision(p1, *team_vision); //compare areas in sight of team with total amount of tiles.
+void get_total_areas(struct greedy *input, struct valuation *output){
   int i=0;
-  while(i<areaindex){
-    identify_boundry(areaindex[i]);
+  struct Node *checked_tiles[MAX_SIZE_TOTAL_VISION];
+  memset(checked_tiles, 0, sizeof(checked_tiles));
+  while((*output).total_vision[i]!=(struct Node *)0){
+      checked_tiles[i]=(*output).total_vision[i]; //lägg alla element i total vision i en array med kollade noder
+      i++;
+    }
+
+  struct Area area;
+  struct Node *tile;
+  i=0;
+  while ((*input).total_area[i]!=(struct Node *)0){
+    tile=(*input).total_area[i];
+    if (is_checked(tile, &checked_tiles)==FALSE){// <-styr över vilka noder som är "checked"
+      get_area(/*tile, (*output).area_collection[i], checked_tiles*/);     
+    }
     i++;
   }
-  */
-
-  printf("get_areas\n");
+  
+  printf("get_total_areas\n");
   printf("              ");
   subtract_vision(input, output);
   printf("              ");
@@ -361,19 +406,39 @@ void get_areas(struct greedy *input, struct valuation *output){
   return;
 }
 
+int is_checked(struct Node *tile, struct Node *(*checked_tiles)){
+  int i=0;
+  while(1==1){
+    if(checked_tiles[i]==tile){
+      return TRUE;
+    }
+    if(checked_tiles[i]==(struct Node *)0){
+      checked_tiles[i]=tile;
+      return FALSE;
+    }
+    i++;  
+  }
+}
+
+void get_area(){
+  /*
+-ta in tile (som inte ligger i checked_tiles)
+-för alla flyttbara noder från tile:
+    -om den ligger i checked_tiles: lägg den som en rand
+    -om den inte ligger i checked_tiles: kolla alla flyttbara noder (utom dig själv) från den flyttbara noden
+*/
+
+return;
+}
+
 void subtract_vision(struct greedy *input, struct valuation *output){
 /*
-ta fram index på de områden som inte ligger inom synfältet.
- 
-förslag:
--ta in total_area
--ta in array med total_vision
--ta fram punkt (i,j) ur tabell med alla områden
--kolla om samma punkt finns i team_vision
--om inte: 
+ta fram index på de områden som inte ligger inom synfältet. 
 
 return; //skicka tillbaka vilka områden som finns
 */
+
+
   printf("subtract_vision, end.\n");
   return;
 }
