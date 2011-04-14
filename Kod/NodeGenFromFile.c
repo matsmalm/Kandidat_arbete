@@ -341,20 +341,27 @@ int main() {
 		/****
 		 Here we should be able to call our algorithms, since B will contain the graph network.
 		 ****/
+		 
+		 /*** Genetic ***/
 		int geneticSolution[400];
 		int solStep = 0;
 		preGenetic(&B, &Hunters, BREAK, ROWS, COLS);
 		genAlg(geneticSolution); // Main Genetic Algorithm program.
-		printf("\nGenetic Algorithm ended.");
-		printf("Using %d pursuers, a solution of %d steps was obtained:\n", geneticSolution[0], geneticSolution[1]);
+		if(geneticSolution[1]<0)
+			printf("No solution found\n");
+		else
+			printf("Using %d pursuers, a solution of %d steps was obtained:\n", geneticSolution[0], geneticSolution[1]);
 		int i;
 		for(i=2;i<=2*(geneticSolution[0]+geneticSolution[0]*geneticSolution[1]);i+=2)
 			printf(" (%d,%d)", geneticSolution[i], geneticSolution[i+1]);
 		printf("\n");
+		
+		/*** Greedy ***/
 		printf("start greedy: \n");
-		//struct greedy start=preGreedy(&B, Hunters, &BREAK);
-		//greedyAlg(&start);
-
+		struct greedy start=preGreedy(&B, Hunters, &BREAK);
+		greedyAlg(&start);
+		
+		/*** Tabu ***/
 	}
 	printf("There were %d matrices in input file.\n", numMatrices);
 	fclose (fr); // Close file once.
