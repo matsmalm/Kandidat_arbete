@@ -31,8 +31,8 @@ struct Path{
 
 void place() {
 	int i=0, j=0;
-	for(i=0;i<5;i++){
-			for(j=0;j<5;j++){
+	for(i=0;i<ROWS;i++){
+			for(j=0;j<COLS;j++){
 				if(A[i][j]==1){
 					B[i][j].name[0] = i;
 					B[i][j].name[1] = j;
@@ -45,8 +45,8 @@ void place() {
 				}
 			}
 	}
-	for(i=0;i<5;i++){
-			for(j=0;j<5;j++){
+	for(i=0;i<ROWS;i++){
+			for(j=0;j<COLS;j++){
 				if(A[i][j]==1){
 					setVision(&B[i][j]);
 				}else{
@@ -62,31 +62,23 @@ void setMove(struct Node *b){
 	int i = (*b).name[0];
 	int j = (*b).name[1];
 	if(j>0 && A[i][j-1]==1){ //Left
-		//(*b).left=1;
 		(*b).move[LEFT]=(&(*getMove(b,LEFT)));
 	}else{
-		//(*b).left=0;
 		(*b).move[LEFT]=NULL;
 	}
 	if(j<4 && A[i][j+1]==1){ //Right
-		//(*b).right=1;
 		(*b).move[RIGHT]=(&(*getMove(b,RIGHT)));
 	}else{
-		//(*b).right=0;
 		(*b).move[RIGHT]=NULL;
 	}
 	if(i>0 && A[i-1][j]==1){ //Up
-		//(*b).up=1;
 		(*b).move[UP]=(&(*getMove(b,UP)));
 	}else{
-		//(*b).up=0;
 		(*b).move[UP]=NULL;
 	}
 	if(i<4 && A[i+1][j]==1){ //Down
-		//(*b).down=1;
 		(*b).move[DOWN]=(&(*getMove(b,DOWN)));
 	}else{
-		//(*b).down=0;
 		(*b).move[DOWN]=NULL;
 	}
 }
@@ -259,51 +251,49 @@ int numVisible(struct Node *b) {
 	return visible;
 }
 int readFromFile() {
-  resetAB();
-  ROWS=0;
-  COLS=0;
-  int tmpcols=0;
-  int currentcol=0;
-  char line[2048]; // Maimum number of columns*2, line length. Should allow about 1025 columns.
-  while ( fgets ( line, sizeof line, fr ) != NULL ) /* read a line */
-    {
-      currentcol=0;
-      tmpcols=0;
-      int i=0;
-      while(1==1){
-	if(line[i]!='\n'){
-	  i++;
-	  tmpcols++;
-	}else{
-	  break;
+	resetAB();
+	ROWS=0;
+	COLS=0;
+	int tmpcols=0;
+	int currentcol=0;
+	char line[2048]; // Maimum number of columns*2, line length. Should allow about 1025 columns.
+	while ( fgets ( line, sizeof line, fr ) != NULL ){ /* read a line */
+		currentcol=0;
+		tmpcols=0;
+		int i=0;
+		while(1==1){
+			if(line[i]!='\n'){
+				i++;
+				tmpcols++;
+			}else{
+				break;
+			}
+		}
+		if(line[0]!='\n'){
+			ROWS++;
+		}
+		if(tmpcols>COLS){
+			COLS=tmpcols;
+		}
+		if(line[0]!='\n'){
+			for(i=0;i<=COLS;i++){
+				if((line[i] != ' ') && (line[i] != '\n')){ // Will only happen for 0 and 1 in the matrix.
+					A[ROWS-1][currentcol] = (int) strtol(&line[i],NULL,10);
+					currentcol++;
+				}
+			}
+		}else{
+			break;
+		}
+		for(i=0;i<COLS;i++){
+			line[i]=0;
+		}
 	}
-      }
-      if(line[0]!='\n'){
-	ROWS++;
-      }
-      if(tmpcols>COLS){
-	COLS=tmpcols;
-      }
-      if(line[0]!='\n'){
-	for(i=0;i<=COLS;i++){
-	  if((line[i] != ' ') && (line[i] != '\n')){ // Will only happen for 0 and 1 in the matrix.
-	    A[ROWS-1][currentcol] = (int) strtol(&line[i],NULL,10);
-	    currentcol++;
-	  }
+	if(ROWS==0){ // Shift between two matrices, can stop reading.
+		return -1;
 	}
-      }else{
-	break;
-      }
-      for(i=0;i<COLS;i++){
-	line[i]=0;
-      }
-      
-    }
-  if(ROWS==0){ // Shift between two matrices, can stop reading.
-    return -1;
-  }
-  COLS = (int)(COLS/2+1);
-  return 1;
+	COLS = (int)(COLS/2+1);
+	return 1;
 }
 
 int resetAB() {
@@ -314,7 +304,26 @@ int resetAB() {
 		}
 	}
 }
-
+void getStartPositions(int *Hunters){
+	Hunters[0] = 4;
+	int i;
+	for(i=1;i<1+2*Hunters[0];i+=2){
+		while(1==1){
+			int r = (int)((double)rand() / ((double)RAND_MAX + 1)*ROWS);
+			int c = (int)((double)rand() / ((double)RAND_MAX + 1)*COLS);
+			if(B[r][c].vision[0] != 0){
+				Hunters[i]=r;
+				Hunters[i+1]=c;
+				break;
+			}
+		}
+	}
+	printf("Hunters: %d\nPositions: ", Hunters[0]);
+	for(i=1;i<1+2*Hunters[0];i+=2){
+		printf("(%d,%d)", Hunters[i], Hunters[i+1]);
+	}
+	printf("\n");
+}
 
 
 int main() {
@@ -325,33 +334,30 @@ int main() {
 
 		numMatrices++;
 		place();
-		int NUM_PUR = 2;
-		int Hunters[] = {NUM_PUR, 0, 0, 4, 0};
-		int BREAK = 100;
+		int Hunters[21];
+		getStartPositions(Hunters);
+		int BREAK = 5;
 		
 		/****
 		 Here we should be able to call our algorithms, since B will contain the graph network.
 		 ****/
 		int geneticSolution[400];
 		int solStep = 0;
-		preGenetic(&B, &Hunters, BREAK);
+		preGenetic(&B, &Hunters, BREAK, ROWS, COLS);
 		genAlg(geneticSolution); // Main Genetic Algorithm program.
 		printf("\nGenetic Algorithm ended.");
 		printf("Using %d pursuers, a solution of %d steps was obtained:\n", geneticSolution[0], geneticSolution[1]);
 		int i;
-		for(i=2;i<=2+2*(1+geneticSolution[0]*geneticSolution[1]);i+=2)
+		for(i=2;i<=2*(geneticSolution[0]+geneticSolution[0]*geneticSolution[1]);i+=2)
 			printf(" (%d,%d)", geneticSolution[i], geneticSolution[i+1]);
 		printf("\n");
 		printf("start greedy: \n");
 		//struct greedy start=preGreedy(&B, Hunters, &BREAK);
 		//greedyAlg(&start);
 
-}
-
-
+	}
 	printf("There were %d matrices in input file.\n", numMatrices);
 	fclose (fr); // Close file once.
 	printf("End main\n");
 	return EXIT_SUCCESS;
-
 }
