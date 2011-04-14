@@ -111,7 +111,7 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 	printf("Maximum generations:\t%d\n", GENETIC_GENERATIONS);
 	printf("Convergence %%:\t\t%d\n\n", abs(GENETIC_CONVERGENCE_PERCENT*100));
 	for(currentGeneration = 0; currentGeneration < GENETIC_GENERATIONS; currentGeneration++){
-		printf("Generation %d\n", currentGeneration, GENETIC_GENERATIONS);
+		//printf("Generation %d\n", currentGeneration, GENETIC_GENERATIONS);
 		/*** New generation ***/
 		for(currPop = 0; currPop < GENETIC_POPULATION_SIZE; currPop++){ // Calculate fitness for every strategy.
 			calculateFitness(&Population[currPop]);
@@ -146,8 +146,8 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 		printf("Unsolved\n");
 		solution[1] = -solution[1];
 	}
-	printStates();
-	printf("End of Genetic Algorithm.\nTook %d generations.\n", currentGeneration);
+	//printStates();
+	//printf("End of Genetic Algorithm.\nTook %d generations.\n", currentGeneration);
 	/*** Free memory for NodeMatrix ***/
 	int i;
 	for(i = 0; i < SIZE; i++){
