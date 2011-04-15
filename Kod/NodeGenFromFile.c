@@ -50,9 +50,7 @@ void place() {
 				if(A[i][j]==1){
 					setVision(&B[i][j]);
 				}else{
-				  //printf("(%d, %d)=0", i,j);
 				  B[i][j].state=25;
-				  //printf("    B[%d][%d].state=%d\n",i,j,B[i][j].state);
 				  B[i][j].vision[0]= (struct Node *)0;
 				}
 			}
@@ -66,7 +64,7 @@ void setMove(struct Node *b){
 	}else{
 		(*b).move[LEFT]=NULL;
 	}
-	if(j<4 && A[i][j+1]==1){ //Right
+	if(j<COLS && A[i][j+1]==1){ //Right
 		(*b).move[RIGHT]=(&(*getMove(b,RIGHT)));
 	}else{
 		(*b).move[RIGHT]=NULL;
@@ -76,7 +74,7 @@ void setMove(struct Node *b){
 	}else{
 		(*b).move[UP]=NULL;
 	}
-	if(i<4 && A[i+1][j]==1){ //Down
+	if(i<COLS && A[i+1][j]==1){ //Down
 		(*b).move[DOWN]=(&(*getMove(b,DOWN)));
 	}else{
 		(*b).move[DOWN]=NULL;
@@ -109,11 +107,13 @@ int getLeft(struct Node *b) {
 	return 0;
 }
 int getRight(struct Node *b) {
-	if((*b).move[RIGHT]==NULL){
+	if((*b).move[RIGHT] == NULL){ // No more steps to the left.
 		int s=0;
 		return s;
 	}else{
 		int s = getRight(getMove(&(*b), RIGHT))+1;
+		if(s>=9){
+		}
 		return s;
 	}
 	printf("Something went very wrong.\n");
@@ -295,7 +295,6 @@ int readFromFile() {
 	COLS = (int)(COLS/2+1);
 	return 1;
 }
-
 int resetAB() {
 	int r=0,c=0;
 	for(r=0;r<SIZE;r++){
@@ -324,8 +323,6 @@ void getStartPositions(int *Hunters){
 	}
 	printf("\n");
 }
-
-
 int main() {
 	srand(time(0)); // Resets random.
 	fr = fopen("OK.txt", "r"); // Open file once
@@ -335,33 +332,36 @@ int main() {
 		place();
 		int Hunters[21];
 		getStartPositions(Hunters);
-		int BREAK = 100;
+		int BREAK = 10;
 		/****
-		 Here we should be able to call our algorithms, since B will contain the graph network.
-		 ****/
-		 
-		 /*** Genetic ***/
-		 printf("Genetic\n");
-		int geneticSolution[2*(1+Hunters[0]*200)];
-		preGenetic(&B, &Hunters, BREAK, ROWS, COLS);
-		genAlg(geneticSolution); // Main Genetic Algorithm program.
-		/*
-		if(geneticSolution[1]<0)
-			printf("No solution found\n");
-		else
-			printf("Using %d pursuers, a solution of %d steps was obtained:\n", geneticSolution[0], geneticSolution[1]);
+		Here we should be able to call our algorithms, since B will contain the graph network.
+		****/
 		int i;
-		for(i=2;i<=2*(geneticSolution[0]+geneticSolution[0]*geneticSolution[1]);i+=2)
-			printf(" (%d,%d)", geneticSolution[i], geneticSolution[i+1]);
-		printf("\n");
-		* */
-		printf("Genetic completed\n");
-		/*** Greedy ***/
-		printf("Greedy\n");
-		//struct greedy start=preGreedy(&B, Hunters, &BREAK);
-		//greedyAlg(&start);
-		printf("Greedy completed\n");		
-		/*** Tabu ***/
+		for(i = Hunters[0];i>1;i--){
+			Hunters[0] = i;
+			printf("Pursuers: %d\n", Hunters[0]);
+			/*** Genetic ***/
+			//printf("Genetic\n");
+			int geneticSolution[2*(1+Hunters[0]*1000)];
+			preGenetic(&B, &Hunters, BREAK, ROWS, COLS);
+			genAlg(geneticSolution, &Hunters); // Main Genetic Algorithm program.
+			if(geneticSolution[1]<0)
+				printf("No solution found for %d pursuers\n", geneticSolution[0]);
+			else{
+				printf("Using %d pursuers, a solution of %d steps was obtained:\n", geneticSolution[0], geneticSolution[1]);
+				//int i;
+				//for(i=2;i<=2*(geneticSolution[0]+geneticSolution[0]*geneticSolution[1]);i+=2)
+					//printf(" (%d,%d)", geneticSolution[i], geneticSolution[i+1]);
+				//printf("\n");
+			}
+			//printf("Genetic completed\n");
+			/*** Greedy ***/
+			//printf("Greedy\n");
+			//struct greedy start=preGreedy(&B, Hunters, &BREAK);
+			//greedyAlg(&start);
+			//printf("Greedy completed\n");		
+			/*** Tabu ***/
+		}
 	}
 	printf("There were %d matrices in input file.\n", numMatrices);
 	fclose (fr); // Close file once.
