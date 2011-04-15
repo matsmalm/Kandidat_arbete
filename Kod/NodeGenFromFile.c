@@ -50,9 +50,9 @@ void place() {
 				if(A[i][j]==1){
 					setVision(&B[i][j]);
 				}else{
-				  printf("(%d, %d)=0", i,j);
+				  //printf("(%d, %d)=0", i,j);
 				  B[i][j].state=25;
-				  printf("    B[%d][%d].state=%d\n",i,j,B[i][j].state);
+				  //printf("    B[%d][%d].state=%d\n",i,j,B[i][j].state);
 				  B[i][j].vision[0]= (struct Node *)0;
 				}
 			}
@@ -305,7 +305,7 @@ int resetAB() {
 	}
 }
 void getStartPositions(int *Hunters){
-	Hunters[0] = 4;
+	Hunters[0] = 2;
 	int i;
 	for(i=1;i<1+2*Hunters[0];i+=2){
 		while(1==1){
@@ -318,7 +318,7 @@ void getStartPositions(int *Hunters){
 			}
 		}
 	}
-	printf("Hunters: %d\nPositions: ", Hunters[0]);
+	printf("%d pursuers in positions: ", Hunters[0]);
 	for(i=1;i<1+2*Hunters[0];i+=2){
 		printf("(%d,%d)", Hunters[i], Hunters[i+1]);
 	}
@@ -331,22 +331,21 @@ int main() {
 	fr = fopen("OK.txt", "r"); // Open file once
 	int numMatrices=0;
 	while(readFromFile() != -1){
-
 		numMatrices++;
 		place();
 		int Hunters[21];
 		getStartPositions(Hunters);
-		int BREAK = 5;
-		
+		int BREAK = 100;
 		/****
 		 Here we should be able to call our algorithms, since B will contain the graph network.
 		 ****/
 		 
 		 /*** Genetic ***/
-		int geneticSolution[400];
-		int solStep = 0;
+		 printf("Genetic\n");
+		int geneticSolution[2*(1+Hunters[0]*200)];
 		preGenetic(&B, &Hunters, BREAK, ROWS, COLS);
 		genAlg(geneticSolution); // Main Genetic Algorithm program.
+		/*
 		if(geneticSolution[1]<0)
 			printf("No solution found\n");
 		else
@@ -355,16 +354,18 @@ int main() {
 		for(i=2;i<=2*(geneticSolution[0]+geneticSolution[0]*geneticSolution[1]);i+=2)
 			printf(" (%d,%d)", geneticSolution[i], geneticSolution[i+1]);
 		printf("\n");
-		
+		* */
+		printf("Genetic completed\n");
 		/*** Greedy ***/
-		printf("start greedy: \n");
-		struct greedy start=preGreedy(&B, Hunters, &BREAK);
-		greedyAlg(&start);
-		
+		printf("Greedy\n");
+		//struct greedy start=preGreedy(&B, Hunters, &BREAK);
+		//greedyAlg(&start);
+		printf("Greedy completed\n");		
 		/*** Tabu ***/
 	}
 	printf("There were %d matrices in input file.\n", numMatrices);
 	fclose (fr); // Close file once.
 	printf("End main\n");
+	printf("End\n");
 	return EXIT_SUCCESS;
 }
