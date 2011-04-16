@@ -6,10 +6,7 @@ notes to self:
  
 -i get_vision(), rad 330 eventuellt uppdatera states så att man skiljer på sedd, och unikt sedd
 -föreslå SIZE och OBSTACLE som globala, för att kunna sätta storlekar på array etc.
--i definition av struct greedy: försök hitta lösning på variabel längd av solution[]
--i funktionen get_area: kanske representera områden som sammanslagning av noder?
-antag att vi har fyra områden i en yta och två rand områden till ytan. skapa en struct "yta" som innehåller antal ränder, lista med pekare på structen rand. structen rand i sin tur innehåller en lista med pekare på rand-områden samt en parameter som visar randens karaktär.
-
+-frigör allocerat minne från get_area() mellan itterationer
 */
 //  function call-order:
 
@@ -24,10 +21,21 @@ antag att vi har fyra områden i en yta och två rand områden till ytan. skapa en 
 #define priority 1 // parameter for cost function. priorized visible boundrys
 #define big_vision 1  // parameter for cost function. largest vision
 
-#define SEEN 1
-#define HUNTER 2
-#define CONTAMINED 3
-#define SECURED 4
+#define SEEN 2
+#define HUNTER 1
+#define CONTAMINED 4
+#define SECURED 3
+//priorities
+#define PRIO_SECURED 5
+#define PRIO_VIS_ONE_BOUND 4
+#define PRIO_VIS_SEV_BOUND 3
+#define PRIO_ONE_BOUND 2
+#define PRIO_SEV_BOUND 1
+
+#define CHECKED 20
+#define MARKED 10
+
+#define UNIQUE 100
 
 #define MAX_SIZE_AREA_COLLECTION 40
 struct valuation{
@@ -43,9 +51,10 @@ struct move{
 
 struct Area{
    
-    int area_type;
+  int area_type;
   //struct Node area_adress; //pekar på en nod inom ett ickesett område.
-    struct Node *boundry[MAX_TOTAL_AREA]; //pekar på rand-noderna till ett ickesett område.
+  struct Node *interior[MAX_TOTAL_AREA];
+  struct Node *boundry[MAX_TOTAL_AREA]; //pekar på rand-noderna till ett ickesett område.
    
 };
 
@@ -54,8 +63,179 @@ struct Area{
 
 //-------------------end variabel definitions----------------------
 
+//-------------------defining a queue----------------------
+/*
+ *  FILE   : queue.h
+ *  AUTHOR : Jeffrey Hunter
+ *  WEB    : http://www.iDevelopment.info
+ *  NOTES  : Define queue record structure and
+ *           all forward declarations.
+ */
+
+//#include <stdio.h>  , imported by Header.h
+//#include <stdlib.h>,   imported by Header.h
+
+#define Error(Str)        FatalError(Str)
+#define FatalError(Str)   fprintf(stderr, "%s\n", Str), exit(1)
+
+typedef struct Node* ElementType;
+
+#ifndef _Queue_h
+
+  struct QueueRecord;
+  typedef struct QueueRecord *Queue;
+
+  int         IsEmpty(Queue Q);
+  int         IsFull(Queue Q);
+  Queue       CreateQueue(int MaxElements);
+  void        DisposeQueue(Queue Q);
+  void        MakeEmpty(Queue Q);
+  void        Enqueue(ElementType X, Queue Q);
+  ElementType Front(Queue Q);
+  void        Dequeue(Queue Q);
+  ElementType FrontAndDequeue(Queue Q);
+
+#endif  /* _Queue_h */
+
+/*
+ *  FILE   : queue.c
+ *  AUTHOR : Jeffrey Hunter
+ *  WEB    : http://www.iDevelopment.info
+ *  NOTES  : Implement all functions required
+ *           for a Queue data structure.
+ */
+
+//#include "queue.h" , given above
+//#include <stdlib.h>   already imported by Header.h
+
+#define MinQueueSize (1)
+
+struct QueueRecord {
+  int Capacity;
+  int Front;
+  int Rear;
+  int Size;
+  ElementType *Array;
+};
+
+int IsEmpty(Queue Q) {
+    return   Q->Size == 0;
+}
+
+int TryIfEmpty(Queue Q) {
+  if (IsEmpty(Q)){
+      return TRUE;
+}
+    return FALSE;
+}
+
+
+int IsFull(Queue Q) {
+  return Q->Size == Q->Capacity;
+}
+
+Queue CreateQueue(int MaxElements) {
+  Queue Q;
+
+  if (MaxElements < MinQueueSize) {
+    Error("CreateQueue Error: Queue size is too small.");
+  }
+
+  Q = malloc (sizeof(struct QueueRecord));
+  if (Q == NULL) {
+    FatalError("CreateQueue Error: Unable to allocate more memory.");
+  }
+
+  Q->Array = malloc( sizeof(ElementType) * MaxElements );
+  if (Q->Array == NULL) {
+    FatalError("CreateQueue Error: Unable to allocate more memory.");
+  }
+
+  Q->Capacity = MaxElements;
+  MakeEmpty(Q);
+
+  return Q;
+}
+
+void MakeEmpty(Queue Q) {
+
+  Q->Size = 0;
+  Q->Front = 1;
+  Q->Rear = 0;
+
+}
+
+void DisposeQueue(Queue Q) {
+  if (Q != NULL) {
+    free(Q->Array);
+    free(Q);
+  }
+}
+
+static int Succ(int Value, Queue Q) {
+  if (++Value == Q->Capacity) {
+    Value = 0;
+  }
+  return Value;
+}
+
+void Enqueue(ElementType X, Queue Q) {
+
+  if (IsFull(Q)) {
+    Error("Enqueue Error: The queue is full.");
+  } else {
+    Q->Size++;
+    Q->Rear = Succ(Q->Rear, Q);
+    Q->Array[Q->Rear] = X;
+  }
+
+}
+
+ElementType Front(Queue Q) {
+
+  if (!IsEmpty(Q)) {
+    return Q->Array[Q->Front];
+  }
+  Error("Front Error: The queue is empty.");
+
+  /* Return value to avoid warnings from the compiler */
+  return ;
+
+}
+
+void Dequeue(Queue Q) {
+
+  if (IsEmpty(Q)) {
+    Error("Dequeue Error: The queue is empty.");
+  } else {
+    Q->Size--;
+    Q->Front = Succ(Q->Front, Q);
+  }
+
+}
+
+ElementType FrontAndDequeue(Queue Q) {
+
+  ElementType X = (struct Node *)0;
+
+  if (IsEmpty(Q)) {
+    Error("FrontAndDequeue Error: The queue is empty.");
+  } else {
+    Q->Size--;
+    X = Q->Array[Q->Front];
+    Q->Front = Succ(Q->Front, Q);
+  }
+  return X;
+
+}
+
+
+//-------------------end of queue definition--------------
+
+
+
 //-------------------DEFINING A STACK---------------------
-#define STACKSIZE 10000000
+#define STACKSIZE 10000
 
 int  *tos, *p1, stack[STACKSIZE];
 void push(int i)
@@ -101,7 +281,7 @@ void one_iteration(struct greedy *input/*, int *move_strat*/);
 struct valuation preparation(struct greedy *input);
 void get_conditions(/*int *team_vision, struct greedy *input*/);
 /*KLAR*/void get_vision(struct greedy *input, struct valuation *output);
-/*KLAR*/int is_in_vision(struct valuation *input, struct Node *tile);
+/*KLAR*/int is_in_vision(struct valuation *input, struct Node *tile); //används inte i nuläget
 void get_total_areas(/*struct greedy *input*/);
 /*KLAR*/int is_checked();
 void get_area();
@@ -140,9 +320,10 @@ struct greedy preGreedy(struct Node (*NodeMat)[SIZE][SIZE], int *Hunters, int *B
   int *pos=NULL;
   struct greedy *poutput=NULL;
   poutput=&output;
-  //fill node_matrix
+  memset (&output,0,sizeof(output));
+ //fill node_matrix
   output.node_matrix=NodeMat;
-
+  /*
   //set total_vision[i]=-1
   while(i<MAX_SIZE_TOTAL_VISION){
     output.total_vision_zero[i]=(struct Node *)0;
@@ -155,7 +336,7 @@ struct greedy preGreedy(struct Node (*NodeMat)[SIZE][SIZE], int *Hunters, int *B
   i++;
 }
   i=0;
-
+  */
   //fill Break values.
   output.Break[1]=(*BREAK);
   output.Break[0]=0;
@@ -317,7 +498,7 @@ struct valuation preparation(struct greedy *input){ //tar fram alla startdata fö
   printf("preparation\n");
   struct valuation output;
 
-  memset(output.total_vision, 0, sizeof(output.total_vision));
+  memset(&output, 0, sizeof(output));
 
   printf("      ");
   get_conditions(input, &output);
@@ -342,29 +523,39 @@ void get_vision(struct greedy *input, struct valuation *output){
   int row=0;
   int kol=0;
   struct Node (*temp)[SIZE][SIZE]=(*input).node_matrix;
-  struct Node *pvision= *(*output).total_vision;
   struct Node *hunter;
   struct Node *temp2;
+  Queue vision=CreateQueue(MAX_TOTAL_AREA);
+ 
+
   while(j<(*input).solution[0]){
     row=(*input).solution[(*input).solution_iter_index+2*j];
     kol=(*input).solution[(*input).solution_iter_index+2*j+1];
     hunter=&(*temp)[row][kol];
-    (*hunter).state=HUNTER;
-    k=0;
-    temp2=(*hunter).vision[k];
-    while ( temp2!= (struct Node *)0){
-      if(is_in_vision(output,(*hunter).vision[k])==FALSE){
-	(*output).total_vision[i]=(*hunter).vision[k];
+    (*hunter).state=HUNTER+CHECKED;
+    (*output).total_vision[i]=hunter;
+    i++;
+    Enqueue(hunter,vision);
+    j++;  
+  }
+  j=0; 
+  while(j<(*input).solution[0]){
+    temp2=FrontAndDequeue(vision);
+    while((*temp2).vision[k]!=(struct Node *)0){
+      if ((*(*temp2).vision[k]).state<CHECKED){
+	(*(*temp2).vision[k]).state=SEEN+CHECKED;
+	(*output).total_vision[i]=(*temp2).vision[k];
 	i++;
       }
-      //eventuellt uppdatera states som att den inte är unikt sedd
       k++;
-      temp2=(*hunter).vision[k];
-      }
+    }
+    k=0;
     j++;
   }
+  DisposeQueue(vision);
   return;
 }
+
 int is_in_vision(struct valuation *input, struct Node *tile){
   int i=0;
   while (1==1){
@@ -379,90 +570,89 @@ int is_in_vision(struct valuation *input, struct Node *tile){
 }
 
 void get_total_areas(struct greedy *input, struct valuation *output){
-  int i=0;
-  struct Node *checked_tiles[MAX_SIZE_TOTAL_VISION];
+  /*  struct Node *checked_tiles[MAX_SIZE_TOTAL_VISION];
   memset(checked_tiles, 0, sizeof(checked_tiles));
-  while((*output).total_vision[i]!=(struct Node *)0){
-      checked_tiles[i]=(*output).total_vision[i]; //lägg alla element i total vision i en array med kollade noder
-      i++;
-    }
+  */
 
-  struct Area area;
+  Queue unchecked_queue=CreateQueue(MAX_TOTAL_AREA);
   struct Node *tile;
-  i=0;
+
+
+  int i=0;
+  int k=0;
   while ((*input).total_area[i]!=(struct Node *)0){
     tile=(*input).total_area[i];
-    if (is_checked(tile, &checked_tiles)==FALSE){// <-styr över vilka noder som är "checked"
-      get_area(/*tile, (*output).area_collection[i], checked_tiles*/);     
+    if ((*tile).state<20){
+      Enqueue(tile, unchecked_queue);
+      if((*tile).state<MARKED){
+	struct Area *area=malloc(sizeof(struct Area));
+	get_area(tile, area);
+	(*output).area_collection[k]=area;
+	k++;
+      }
     }
     i++;
+
   }
   
-  printf("get_total_areas\n");
-  printf("              ");
-  subtract_vision(input, output);
-  printf("              ");
-  identify_boundry(/*input, output*/);
+  classify_boundry(/*input, output*/);
   return;
 }
 
-int is_checked(struct Node *tile, struct Node *(*checked_tiles)){
+void get_area(struct Node *tile, struct Area *input){
   int i=0;
-  while(1==1){
-    if(checked_tiles[i]==tile){
-      return TRUE;
-    }
-    if(checked_tiles[i]==(struct Node *)0){
-      checked_tiles[i]=tile;
-      return FALSE;
-    }
-    i++;  
+  int k=0;
+  int l=1;
+  struct Node *node_temp;
+  struct Area *output_get_area;
+  struct Area area_temp;
+  //  output_get_area=(struct Area*) malloc(sizeof(struct Area));
+  memset(input, 0,sizeof(struct Area));
+  
+  if ((*tile).state<MARKED){
+    (*input).interior[0]=tile;
+    (*tile).state=(*tile).state+MARKED;
   }
-}
+  Queue list= CreateQueue(MAX_TOTAL_AREA);
+  Queue tree =CreateQueue(MAX_TOTAL_AREA);
+  Enqueue(tile, list);
+  Enqueue(tile, tree);
 
-void get_area(){
-  /*
--ta in tile (som inte ligger i checked_tiles)
--för alla flyttbara noder från tile:
-    -om den ligger i checked_tiles: lägg den som en rand
-    -om den inte ligger i checked_tiles: kolla alla flyttbara noder (utom dig själv) från den flyttbara noden
-*/
+  while(TryIfEmpty(list)==FALSE){
+    node_temp=FrontAndDequeue(list);
+    i=0;
+    while(i<4){
+      if ((*node_temp).move[i]==(struct Node *)0){
+	i++;
+      }else if((*(*node_temp).move[i]).state>=CHECKED){
+	//det är en nod som är synlig, dvs boundry
+	(*input).boundry[k]=(*node_temp).move[i];
+	k++;
+	i++;
+      }else if ((*(*node_temp).move[i]).state>=MARKED){  //is marked
+	//det är en redan undersökt interior point
+	i++;
+      }else if((*(*node_temp).move[i]).state<MARKED){ //is unmarked
+	//det är en ny nod inom området.
+	(*(*node_temp).move[i]).state=	(*(*node_temp).move[i]).state+MARKED;
+	Enqueue((*node_temp).move[i], list);
+	Enqueue((*node_temp).move[i], tree);
+	(*input).interior[l]=(*node_temp).move[i];
+	l++;
+	i++;
+      }      
+    }
+  }
 
-return;
-}
-
-void subtract_vision(struct greedy *input, struct valuation *output){
-/*
-ta fram index på de områden som inte ligger inom synfältet. 
-
-return; //skicka tillbaka vilka områden som finns
-*/
-
-
-  printf("subtract_vision, end.\n");
-  return;
-}
-
-void identify_boundry(/*int areaindex*/){
-  printf("identify_boundry\n");
-  printf("                ");
-  find_boundry(/*areaindex*/);
-  printf("                ");
-  classify_boundry(/*area, boundry*/);
-  return;
-}
-
-void find_boundry(/*int areaindex*/){
-  //find the boundrys to the given area
-  /*
-  return boundry, number of boundrys;
-  */
-  printf("find_boundry, end.\n");
+  DisposeQueue(list);
+  DisposeQueue(tree);
   return;
 }
 
 void classify_boundry(/*area, boundry*/){
-  /*
+  //tillskriv den medskickade randen sin prioritet.  
+
+/*
   int prio=check_boundry_priority(area,boundry);
   set_boundry(boundry, prio);
   return;
@@ -470,30 +660,48 @@ void classify_boundry(/*area, boundry*/){
   printf("classify_boundry\n");
   printf("                    ");
   check_boundry_priority();
-  printf("                    ");
-  set_boundry();
+
 return;
 }
 
-void check_boundry_priority(/*area, boundry*/){
-  /*givet en yta och tillhörande ränder:
--är ytan är säkrad -> prio=5
--kan man se hela ytan från alla områden på randen?
-         -ja: är antalet områden i randen mer än ett?
-	           -ja: prio ->3
-		   -nej:prio ->1
-         -nej: är antalet områden i randen mer än ett?
-                   -ja: prio->4
-		   -nej: prio->2
-  */
-  printf("check_boundry_priority, end.\n");
-  return;
-}
-
-void set_boundry(/*boundry, prio*/){
-  //tillskriv randen den medskickade prioriteten.
-  printf("set_boundry, end.\n");
-  return;
+void check_boundry_priority(struct Area *input){
+  int i=0;
+  int k=0;
+  if( (*(*input).interior[0]).state==SECURED){
+    (*input).area_type=PRIO_SECURED;
+    return;
+  }
+  if((*input).boundry[1]==(struct Node*)0){ //har endast EN rand-Nod
+    //    kolla om man kan se hela interior från rand
+    k=0;
+    while((*(*input).boundry[0]).vision[k]!=(struct Node *)0){
+      if((*input).interior[0]==(*(*input).boundry[i]).vision[k]){
+	(*input).area_type=PRIO_VIS_ONE_BOUND;
+	return;
+      }
+      k++;
+    }
+    (*input).area_type=PRIO_ONE_BOUND;
+    return;
+  }
+  
+  else{
+    //kolla om man ser hela interior från rand
+    i=0;
+    while ((*input).boundry[i]!=(struct Node *)0){
+      k=0;
+      while((*(*input).boundry[i]).vision[k]!=(struct Node *)0){
+	if((*input).interior[0]==(*(*input).boundry[i]).vision[k]){
+	  (*input).area_type=PRIO_VIS_SEV_BOUND;
+	  return;
+	}
+	k++;
+      }
+      i++;
+    }
+    (*input).area_type=PRIO_SEV_BOUND;
+    return;
+  }
 }
 
 
