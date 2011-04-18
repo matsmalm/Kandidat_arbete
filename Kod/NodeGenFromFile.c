@@ -360,7 +360,7 @@ int main() {
 			//printf("Genetic completed\n");*/
 			/*** Greedy ***/
 			printf("Greedy\n");
-			struct greedy start=preGreedy(&B, &Hunter_static, &BREAK);
+			struct greedy start=preGreedy(B, &Hunter_static, &BREAK);
 			greedyAlg(&start);
 			//printf("Greedy completed\n");		
 			/*** Tabu ***/

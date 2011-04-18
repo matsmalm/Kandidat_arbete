@@ -1,17 +1,19 @@
 /*
 notes to self:
--sätt solution som en global variabel istället?
+-sâ€°tt solution som en global variabel istâ€°llet?
 -i enviroment_cleared, korrigera konstanten "correct_size=22"
--i enviroment_cleared, korrigera villkor rad 205 så att alla tillstånd skilda från osäkrade
+-i enviroment_cleared, korrigera villkor rad 205 sÃ‚ att alla tillstÃ‚nd skilda frÃ‚n osâ€°krade
  
--i get_vision(), rad 330 eventuellt uppdatera states så att man skiljer på sedd, och unikt sedd
--föreslå SIZE och OBSTACLE som globala, för att kunna sätta storlekar på array etc.
--frigör allocerat minne från get_area() mellan itterationer
+-i get_vision(), rad 330 eventuellt uppdatera states sÃ‚ att man skiljer pÃ‚ sedd, och unikt sedd
+-fË†reslÃ‚ SIZE och OBSTACLE som globala, fË†r att kunna sâ€°tta storlekar pÃ‚ array etc.
+-frigË†r allocerat minne frÃ‚n get_area() mellan itterationer
 */
 //  function call-order:
 
 #include "Header.h"
 #include "greedy.h"
+#include "hashtab.h"
+
 //---------------variabel declaration---------------------------  
 #define TRUE 1
 #define FALSE 0
@@ -38,8 +40,15 @@ notes to self:
 #define UNIQUE 100
 
 #define MAX_SIZE_AREA_COLLECTION 40
+struct hash_node{
+	struct Node *from;
+	struct Node *to;
+	int distance;
+	struct Node *direction[3];
+};
+
 struct valuation{
-  //solution[solution_iter_index+rj] placerar radindex för jagare j i aktuell iteration.
+  //solution[solution_iter_index+rj] placerar radindex fË†r jagare j i aktuell iteration.
   struct Node *total_vision[MAX_SIZE_TOTAL_VISION];
   struct Area *area_collection[MAX_SIZE_AREA_COLLECTION];
 };
@@ -49,11 +58,10 @@ struct move{
 };
 
 struct Area{
-   
   int area_type;
-  //struct Node area_adress; //pekar på en nod inom ett ickesett område.
+  //struct Node area_adress; //pekar pÃ‚ en nod inom ett ickesett omrÃ‚de.
   struct Node *interior[MAX_TOTAL_AREA];
-  struct Node *boundry_nodes[MAX_TOTAL_AREA]; //pekar på rand-noderna till ett ickesett område.
+  struct Node *boundry_nodes[MAX_TOTAL_AREA]; //pekar pÃ‚ rand-noderna till ett ickesett omrÃ‚de.
   struct Node *boundry_vision[MAX_TOTAL_AREA];
   int number_of_boundries;
    
@@ -200,7 +208,7 @@ ElementType Front(Queue Q) {
   Error("Front Error: The queue is empty.");
 
   /* Return value to avoid warnings from the compiler */
-  return ;
+  return 0;
 
 }
 
@@ -273,7 +281,7 @@ int empty(void){
 /*struct greedy preGreedy(struct Node *NodeMat, int *Hunters, int *BREAK); init in greedy.h*/
 void create_tables(struct greedy *poutput);
 void get_node_distance(/*int tile_distance*/);
-/*klar*/void get_total_area(struct greedy *input); //lägger pekare i input som pekar på alla B[i][j]
+/*klar*/void get_total_area(struct greedy *input); //lâ€°gger pekare i input som pekar pÃ‚ alla B[i][j]
 /*void greedyAlg(struct greedy *input); init in greedy.h*/
 /*KLAR*/int run(struct greedy *input);
 /*KLAR*/int enviroment_cleared();
@@ -282,7 +290,7 @@ void one_iteration(struct greedy *input/*, int *move_strat*/);
 struct valuation preparation(struct greedy *input);
 /*KLAR*/void get_conditions(/*int *team_vision, struct greedy *input*/);
 /*KLAR*/void get_vision(struct greedy *input, struct valuation *output);
-/*KLAR*/int is_in_vision(struct valuation *input, struct Node *tile); //används inte i nuläget
+/*KLAR*/int is_in_vision(struct valuation *input, struct Node *tile); //anvâ€°nds inte i nulâ€°get
 /*KLAR*/void get_total_areas(/*struct greedy *input*/);
 /*KLAR*/int is_checked();
 /*KLAR*/void get_area();
@@ -291,8 +299,8 @@ void get_hunter_equiv();
 struct move valuation(/*int *next_move*/);
 void designate_boundry(/*antal_att_delegera, boundry, jagare*/);
 void make_distance(/*boundry, jagare*/);
-void add_directional_value(/*antal_att_delegera, data från make_distance*/);
-void solve_knappsack(/*antal_att_delegera, data från make_distance*/);
+void add_directional_value(/*antal_att_delegera, data frÃ‚n make_distance*/);
+void solve_knappsack(/*antal_att_delegera, data frÃ‚n make_distance*/);
 void designate_direction(/*solution_from_knappsack*/);
 void add_geometric_value();
 void add_close_boundry_value(/*jagare[i]*/);
@@ -308,31 +316,29 @@ void update_states();
 
 
 //===========********======PREGREEDY========**********=============
-struct greedy preGreedy(struct Node (*NodeMat)[SIZE][SIZE], int *Hunters, int *BREAK){
+struct greedy preGreedy(struct Node NodeMat[SIZE][SIZE], int *Hunters, int *BREAK){
   struct greedy output;
   int i=0;
+  int j=0;
   int *p1=NULL;
-  int temp=0;
-  int *pos=NULL;
+
   struct greedy *poutput=NULL;
   poutput=&output;
   memset (&output,0,sizeof(output));
  //fill node_matrix
-  output.node_matrix=NodeMat;
-  /*
-  //set total_vision[i]=-1
-  while(i<MAX_SIZE_TOTAL_VISION){
-    output.total_vision_zero[i]=(struct Node *)0;
-  i++;
-}
+  while(i<SIZE){
+    while(j<SIZE){
+      output.node_matrix[i][j] = &((NodeMat)[i][j]);
+      j++;
+    }
+    j=0;
+    i++;
+  }
   i=0;
-  // set total_area[i]=-1
-  while(i<MAX_TOTAL_AREA){
-  output.total_area[i]=(struct Node *)0;
-  i++;
-}
-  i=0;
-  */
+
+  memset(output.total_vision_zero,0, sizeof(output.total_vision_zero));
+  memset(output.total_area,0,sizeof(output.total_area));
+  memset(output.solution,-1,sizeof(output.solution));
   //fill Break values.
   output.Break[1]=(*BREAK);
   output.Break[0]=0;
@@ -342,13 +348,8 @@ struct greedy preGreedy(struct Node (*NodeMat)[SIZE][SIZE], int *Hunters, int *B
   //fill solution[]={number of pursuers, number of itterations, starting pos.,{-1}}
   output.solution[0]=*p1;
   output.solution[1]=0;
-  while(i<=Hunters[0]*2){
+  while(i<Hunters[0]*2){
     output.solution[i+2]=*(p1+i+1);
-    i++; 
-  }
-  i++;
-  while (i<MAX_SIZE_SOLUTION){
-    output.solution[i]=-1;
     i++; 
   }
 
@@ -362,22 +363,255 @@ struct greedy preGreedy(struct Node (*NodeMat)[SIZE][SIZE], int *Hunters, int *B
 void create_tables(struct greedy *poutput){
   printf("create_tables\n");
   printf("    ");
-  get_node_distance(/*pekare på output*/);
   get_total_area(poutput);
+  get_node_distance(poutput);
+
 
   return;
 }
 
-void get_node_distance(/*pekare på output*/){
+//---------start dijkstra from http://www.indiastudychannel.com/resources/12984-C-Program-shortest-path-between-two-node.aspx
+
+/* Program of shortest path between two node in graph using Djikstra
+algorithm */
+
+#define MAX 100
+#define TEMP 0
+#define PERM 1
+#define infinity 9999
+
+struct node
+{
+int predecessor;
+int dist; /*minimum distance of node from source*/
+int status;
+};
+
+int findpath(int s,int d,int path[MAX],int *sdist, int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA])
+{
+struct node state[MAX];
+int i;
+int min;
+int count=0;
+int current;
+int newdist;
+int u;
+int v;
+*sdist=0;
+int j=0;
+/* Make all nodes temporary */
+for(j=1;j<=MAX_TOTAL_AREA;j++)
+{
+state[j].predecessor=0;
+state[j].dist = infinity;
+state[j].status = TEMP;
+}
+/*Source node should be permanent*/
+state[s].predecessor=0;
+state[s].dist = 0;
+state[s].status = PERM;
+
+/*Starting from source node until destination is found*/
+current=s;
+while(current!=d)
+{
+for(i=1;i<=MAX_TOTAL_AREA;i++)
+{
+/*Checks for adjacent temporary nodes */
+if ( adj[current][i] > 0 && state[i].status == TEMP )
+{
+newdist=state[current].dist + adj[current][i];
+/*Checks for Relabeling*/
+if( newdist < state[i].dist )
+{
+state[i].predecessor = current;
+state[i].dist = newdist;
+}
+}
+}/*End of for*/
+
+/*Search for temporary node with minimum distand make it current
+node*/
+min=infinity;
+current=0;
+for(i=1;i<=MAX_TOTAL_AREA;i++)
+{
+if(state[i].status == TEMP && state[i].dist < min)
+{
+min = state[i].dist;
+current=i;
+}
+}/*End of for*/
+
+if(current==0) /*If Source or Sink node is isolated*/
+return 0;
+state[current].status=PERM;
+
+}/*End of while*/
+
+/* Getting full path in array from destination to source */
+while( current!=0 )
+{
+count++;
+path[count]=current;
+current=state[current].predecessor;
+}
+
+/*Getting distance from source to destination*/
+for(i=count;i>1;i--)
+{
+u=path[i];
+v=path[i-1];
+*sdist+= adj[u][v];
+}
+printf("count =%d\n",count);
+return (count);
+}/*End of findpath()*/
+
+
+void create_graph(struct greedy *input, int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA]){
+int i=0;
+int k=0;
+int max_edges=MAX_TOTAL_AREA*(MAX_TOTAL_AREA-1);
+int origin=0;
+int destin=0;
+//int wt;
+
+
+
+	for(i=1;i<=max_edges;i++){
+		while((*input).total_area[origin]!=(struct Node *)0){
+			while(k<4){
+				if((*(*input).total_area[origin]).move[k]!=(struct Node *)0){
+					destin=0;
+					while((*input).total_area[destin]!=(struct Node *)0){
+						if((*input).total_area[destin]==(*(*input).total_area[origin]).move[k]){ 
+							adj[origin][destin]=1;
+							break;
+						}
+						destin++;
+					}
+				}
+				k++;
+			}
+			origin++;
+		}
+	}/*End of for*/
+	return;
+}/*End of create_graph()*/
+
+
+
+void dijkstra_indiastudy(struct greedy *input, int from, int to){
+//int n;
+//int i,j;
+//int source,destin;
+int path[MAX];
+int shortdist=0;
+int count=0;
+int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA];
+memset(&adj,0,sizeof(adj));
+memset(&path,0,sizeof(path));
+
+create_graph(input, adj);
+
+//while((*input).total_area[source]!=(struct Node *)0){
+//	while((*input).total_area[destin]!=(struct Node*)0){
+//		if(destin!=source){
+			count=findpath(from,to,path,&shortdist, adj);
+//		}
+//	destin++;
+//	}
+//	source++;
+//}
+return;
+}
+//while(1)
+//{
+//printf("Enter source node(0 to quit) : ");
+//scanf("%d",&source);
+//printf("Enter destination node(0 to quit) : ");
+//scanf("%d",&dest);
+
+//if(source==0 || dest==0)
+//exit(1);
+
+//count = findpath(source,dest,path,&shortdist);
+//if(shortdist!=0)
+//{
+//printf("Shortest distance is : %d\n", shortdist);
+//printf("Shortest Path is : ");
+//for(i=count;i>1;i--)
+//printf("%d->",path[i]);
+//printf("%d",path[i]);
+//printf("\n");
+//}
+//else
+//printf("There is no path from source to destination node\n");
+//}/*End of while*/
+//}/*End of main()*/
+
+/*
+display()
+{
+int i,j;
+for(i=1;i<=n;i++)
+{
+for(j=1;j<=n;j++)
+printf("%3d",adj[i][j]);
+printf("\n");
+}
+
+}/*End of display()*/
+
+
+
+//-----------------------------------------------------------
+
+
+
+void get_node_distance(struct greedy *output){
   printf("get_node_distance, end.\n");
+
+	hashtab_t *node_distance = ht_init (10*SIZE*SIZE, NULL); // skapa en hashtabel
+    int i=0;
+	int j=0;
+	
+	while((*output).total_area[i]!=(struct Node*)0){
+		while((*output).total_area[j]!=(struct Node *)0){
+			if(i!=j){
+				struct Node *key[2]={(*output).total_area[i],(*output).total_area[j]};
+				struct hash_node hash_input[1];
+				(*hash_input).from=(*output).total_area[i];
+				(*hash_input).to=(*output).total_area[j];
+				printf("i,j fore dijkstra: %d, %d,\n", i,j);
+				dijkstra_indiastudy(output,i,j);
+				
+	//			(*hash_input).distance=distance_temp;
+
+
+//					struct Node *direction[3];
+	//			(*hash_input).direction[]=
+
+				ht_insert(node_distance,key, sizeof(key), hash_input ,sizeof(hash_input));
+			}
+		j++;
+		}
+		j=0;
+		i++;
+		}
+		
+		//struct hash_node *test;
+		//test=ht_search(node_distance, key_test, sizeof(key_test));
+		
   /*
-så länge det finns noder i total_area;
+sÃ‚ lâ€°nge det finns noder i total_area;
 -ta en nod
--beräkna kortaste avståndet till var och en av noderna i total_area
--lägg int avstånd i index find_distance_index(*from,*to)
+-berâ€°kna kortaste avstÃ‚ndet till var och en av noderna i total_area
+-lâ€°gg int avstÃ‚nd i index find_distance_index(*from,*to)
 
 
--kör A* eller liknande för att beräkna kortaste avstånd mellan två områden
+-kË†r A* eller liknande fË†r att berâ€°kna kortaste avstÃ‚nd mellan tvÃ‚ omrÃ‚den
 -spara i en (Hash?)tabell
 -skriv tabell via pekare till output
 */
@@ -386,27 +620,103 @@ så länge det finns noder i total_area;
   return;
 }
 
+
+/*
+//---------start dikjstra from http://compprog.files.wordpress.com/2008/01/dijkstra.c --------------
+#include <stdio.h>
+
+#define GRAPHSIZE 2048
+#define INFINITY GRAPHSIZE*GRAPHSIZE
+#define MAX(a, b) ((a > b) ? (a) : (b))
+
+int e; /* The number of nonzero edges in the graph */
+//int n; /* The number of nodes in the graph */
+//long dist[GRAPHSIZE][GRAPHSIZE]; /* dist[i][j] is the distance between node i and j; or 0 if there is no direct connection */
+//long d[GRAPHSIZE]; /* d[i] is the length of the shortest path between the source (s) and node i */
+//int prev[GRAPHSIZE]; /* prev[i] is the node that comes right before i in the shortest path from the source to i*//*
+/*
+void printD() {
+	int i;
+
+	printf("Distances:\n");
+	for (i = 1; i <= n; ++i)
+		printf("%10d", i);
+	printf("\n");
+	for (i = 1; i <= n; ++i) {
+		printf("%10ld", d[i]);
+	}
+	printf("\n");
+}
+*/
+/*
+ * Prints the shortest path from the source to dest.
+ *
+ * dijkstra(int) MUST be run at least once BEFORE
+ * this is called
+ */
+ /*
+void printPath(int dest) {
+	if (prev[dest] != -1)
+		printPath(prev[dest]);
+	printf("%d ", dest);
+}
+
+void dijkstra(int s) {
+	int i, k, mini;
+	int visited[GRAPHSIZE];
+
+	for (i = 1; i <= n; ++i) {
+		d[i] = INFINITY;
+		prev[i] = -1; /* no path has yet been found to i */
+//		visited[i] = 0; /* the i-th element has not yet been visited */
+/*	}
+
+	d[s] = 0;
+
+	for (k = 1; k <= n; ++k) {
+		mini = -1;
+		for (i = 1; i <= n; ++i)
+			if (!visited[i] && ((mini == -1) || (d[i] < d[mini])))
+				mini = i;
+
+		visited[mini] = 1;
+
+		for (i = 1; i <= n; ++i)
+			if (dist[mini][i])
+				if (d[mini] + dist[mini][i] < d[i]) {
+					d[i] = d[mini] + dist[mini][i];
+					prev[i] = mini;
+				}
+	}
+}
+///___________________end dijkstra-----------------------
+
+*/
+
+
 void get_total_area(struct greedy *input){ 
-//lägger alla pekare som pekar på var sin nod i globala B i input.total_area[] 
+//lâ€°gger alla pekare som pekar pÃ‚ var sin nod i globala B i input.total_area[] 
   int i=0;
   int row=0;
   int kol=0;
-  struct Node (*temp)[SIZE][SIZE]=(*input).node_matrix;
+
   while (row<SIZE){
     kol=0;
     while(kol<SIZE){
-      if(i>80){
+      if(i>MAX_TOTAL_AREA){
+	printf("MAX_TOTAL_AREA to small\n");
 	break;
       }
-      else if((*temp)[row][kol].state!=25){
-	if((*temp)[row][kol].vision[0]!=(struct Node *)0){
-	  (*input).total_area[i]=&(*temp)[row][kol];	
+            else if((*(*input).node_matrix[row][kol]).state!=25){
+	if((*(*input).node_matrix[row][kol]).vision[0]!=(struct Node *)0){
+	  (*input).total_area[i]=((*input).node_matrix[row][kol]);	
 	  i++;	
 	}
       }
       kol++;
-    }
-    if (i>80){
+      }
+    if (i>MAX_TOTAL_AREA){
+      printf("MAX_TOTAL_AREA to small\n");
       break;
     }
     row++;
@@ -473,16 +783,16 @@ int test_break(struct greedy *input){
 void one_iteration(struct greedy *input){
   printf("one_iteration\n");
   printf("    ");
-  struct valuation prep_info=preparation(input); //tar fram nödvändig data för en iteration
+  struct valuation prep_info=preparation(input); //tar fram nË†dvâ€°ndig data fË†r en iteration
   printf("    ");
-  struct move val_info=valuation(&prep_info, input); //beräknar kostnader
+  struct move val_info=valuation(&prep_info, input); //berâ€°knar kostnader
   printf("    ");
-  move(/*struct greedy *input*/); // flyttar till bästa kostnad
+  move(*input, val_info); // flyttar till bâ€°sta kostnad
   return;
 }
 
 /*===================one_iteration(): Phase one, Preparations================================*/
-struct valuation preparation(struct greedy *input){ //tar fram alla startdata för en iteration
+struct valuation preparation(struct greedy *input){ //tar fram alla startdata fË†r en iteration
  
   printf("preparation\n");
   struct valuation output;
@@ -495,7 +805,7 @@ struct valuation preparation(struct greedy *input){ //tar fram alla startdata fö
   return output;
 }
 
-void get_conditions(struct greedy *input, struct valuation *output){ //fastställ vilka områden som finns utanför synfält, namnge och definiera ränder
+void get_conditions(struct greedy *input, struct valuation *output){ //faststâ€°ll vilka omrÃ‚den som finns utanfË†r synfâ€°lt, namnge och definiera râ€°nder
   get_vision(input, output); //skriv in gruppens sikt som states i NodeMatrix
   get_total_areas(input, output);
   return;
@@ -508,8 +818,7 @@ void get_vision(struct greedy *input, struct valuation *output){
   int i=0;
   int row=0;
   int kol=0;
-  struct Node (*temp)[SIZE][SIZE]=(*input).node_matrix;
-  struct Node *hunter;
+
   struct Node *temp2;
   Queue vision=CreateQueue(MAX_TOTAL_AREA);
  
@@ -517,11 +826,11 @@ void get_vision(struct greedy *input, struct valuation *output){
   while(j<(*input).solution[0]){
     row=(*input).solution[(*input).solution_iter_index+2*j];
     kol=(*input).solution[(*input).solution_iter_index+2*j+1];
-    hunter=&(*temp)[row][kol];
-    (*hunter).state=HUNTER+CHECKED;
-    (*output).total_vision[i]=hunter;
+    (*(*input).node_matrix[row][kol]).state=HUNTER+CHECKED;
+    //    (*hunter).state=HUNTER+CHECKED;
+    (*output).total_vision[i]=&(*(*input).node_matrix[row][kol]);//hunter;
     i++;
-    Enqueue(hunter,vision);
+    Enqueue(&(*(*input).node_matrix[row][kol]),vision);
     j++;  
   }
   j=0; 
@@ -611,12 +920,12 @@ void get_area(struct Node *tile, struct Area *input){
   while(TryIfEmpty(list)==FALSE){
     node_temp=FrontAndDequeue(list);
     i=0;
-    while(i<4){ //för alla flyttbara från node_temp utför:
+    while(i<4){ //fË†r alla flyttbara frÃ‚n node_temp utfË†r:
       if ((*node_temp).move[i]==(struct Node *)0){
 	i++;
       }else if((*(*node_temp).move[i]).state>=CHECKED){
-	//det är en nod som är synlig, dvs boundry
-	//kolla om den redan finns i boundry_nodes, om inte: lägg in den.
+	//det â€°r en nod som â€°r synlig, dvs boundry
+	//kolla om den redan finns i boundry_nodes, om inte: lâ€°gg in den.
 	m=0;
 	if((*input).boundry_nodes[m]==(struct Node *)0){
 	    (*input).boundry_nodes[k]=(*node_temp).move[i];
@@ -640,10 +949,10 @@ void get_area(struct Node *tile, struct Area *input){
 	i++;
 	
       }else if ((*(*node_temp).move[i]).state>=MARKED){  //is marked
-	//det är en redan undersökt interior point
+	//det â€°r en redan undersË†kt interior point
 	i++;
       }else if((*(*node_temp).move[i]).state<MARKED){ //is unmarked
-	//det är en ny nod inom området.
+	//det â€°r en ny nod inom omrÃ‚det.
 	(*(*node_temp).move[i]).state=	(*(*node_temp).move[i]).state+MARKED;
 	Enqueue((*node_temp).move[i], list);
 	Enqueue((*node_temp).move[i], tree);
@@ -669,7 +978,7 @@ void check_boundry_priority(struct Area *input){
     return;
   }
   if((*input).number_of_boundries==1){ //har endast EN rand-Nod
-    //    kolla om man kan se hela interior från rand
+    //    kolla om man kan se hela interior frÃ‚n rand
     k=0;
     while((*(*input).boundry_nodes[0]).vision[k]!=(struct Node *)0){
       if((*input).interior[0]==(*(*input).boundry_nodes[i]).vision[k]){
@@ -682,11 +991,11 @@ void check_boundry_priority(struct Area *input){
     return;
   }
   else{
-    //kolla om man ser hela interior från rand
+    //kolla om man ser hela interior frÃ‚n rand
     i=0;
     Queue vision=CreateQueue(MAX_TOTAL_AREA);
     struct Node *node_temp;
-    while ((*input).boundry_nodes[i]!=(struct Node *)0){ //lägg randernas totala synfält i en kö.
+    while ((*input).boundry_nodes[i]!=(struct Node *)0){ //lâ€°gg randernas totala synfâ€°lt i en kË†.
       while((*(*input).boundry_nodes[i]).vision[j]!=(struct Node *)0){
 	Enqueue((*(*input).boundry_nodes[i]).vision[j], vision);
 	j++;
@@ -722,8 +1031,8 @@ void check_boundry_priority(struct Area *input){
 void get_hunter_equiv(){
   /*
 -ta aktuell nod.
--undersök om flyttbara noders synfält redan finns med inom aktuellt synfält från gruppen
--om det finns någon ekvivalent position: skapa en fiktiv jagare
+-undersË†k om flyttbara noders synfâ€°lt redan finns med inom aktuellt synfâ€°lt frÃ‚n gruppen
+-om det finns nÃ‚gon ekvivalent position: skapa en fiktiv jagare
 
   return;
   */
@@ -732,21 +1041,23 @@ void get_hunter_equiv(){
 }
 
 /*====================one_iteration():Phase two, Evaluation=======================================*/
-struct move valuation(struct valuation *input_val, struct greedy *input_greedy){ //använder data från preparation och designerar värden till noder som går at flytta till
-  /*
-vill veta från preparation:
--antal områden
--fullständig rand till varje område
--karaktär på rand a,b,c,d,e
+struct move valuation(struct valuation *input_val, struct greedy *input_greedy){ //anvâ€°nder data frÃ‚n preparation och designerar vâ€°rden till noder som gÃ‚r at flytta till
+ struct move temp;
+  
+    /*
+vill veta frÃ‚n preparation:
+-antal omrÃ‚den
+-fullstâ€°ndig rand till varje omrÃ‚de
+-karaktâ€°r pÃ‚ rand a,b,c,d,e
 -jagarpositioner
 
-vill veta allmänt:
--tillgång till tabel med kortaste vägen mellan områden.
+vill veta allmâ€°nt:
+-tillgÃ‚ng till tabel med kortaste vâ€°gen mellan omrÃ‚den.
 
-  if (antal_jagare<=antal_områden){
+  if (antal_jagare<=antal_omrÃ‚den){
     designate_boundry(antal_jagare);
   }else {
-    designate_boundry(antal_områden);
+    designate_boundry(antal_omrÃ‚den);
 }
   int i=0;
   while(i<antal_jagare){
@@ -757,11 +1068,12 @@ vill veta allmänt:
   */
 
   /*
--skapa array för varje jagare med fem index, ett för varje flyttbar nod.
--kör adderingsfunktioner och lägger värden i varje index enligt algoritm
--kör find_best_cost för att bestämma vilken nod som varje jagare ska gå till (den med högst värde)
--skicka ut array med pekare till varje nod som jagarna ska gå till.
+-skapa array fË†r varje jagare med fem index, ett fË†r varje flyttbar nod.
+-kË†r adderingsfunktioner och lâ€°gger vâ€°rden i varje index enligt algoritm
+-kË†r find_best_cost fË†r att bestâ€°mma vilken nod som varje jagare ska gÃ‚ till (den med hË†gst vâ€°rde)
+-skicka ut array med pekare till varje nod som jagarna ska gÃ‚ till.
    */
+  /*
   int i=0;
   int row=0;
   int kol=0;
@@ -783,19 +1095,19 @@ vill veta allmänt:
   printf("      ");
   find_best_cost();
   i++;
-  }
-  return;
+  }*/
+  return temp;
 }
 
 void designate_boundry(/*antal_att_delegera, boundry, jagare*/){
   /*
 -ta en rand
 -ta en jagare
--ta fram avstånd mellan rand och jagare
+-ta fram avstÃ‚nd mellan rand och jagare
   */
   /*
-  make_distance(boundry, jagare); //räkna fram kortaste väg för varje jagare till varje rand
-  add_directional_value(antal_att_delegera); // givet de val som finns från make_distance välj bästa
+  make_distance(boundry, jagare); //râ€°kna fram kortaste vâ€°g fË†r varje jagare till varje rand
+  add_directional_value(antal_att_delegera); // givet de val som finns frÃ‚n make_distance vâ€°lj bâ€°sta
   */
   printf("designate_boundry\n");
   printf("        ");
@@ -820,9 +1132,9 @@ void make_distance(/*boundry, jagare*/){
   return;
 }
 
-void add_directional_value(/*antal_att_delegera, data från make_distance*/){
+void add_directional_value(/*antal_att_delegera, data frÃ‚n make_distance*/){
   /*
-  solve_knappsack(antal_att_delegera, data från make_distance);
+  solve_knappsack(antal_att_delegera, data frÃ‚n make_distance);
   int i=0;  
   while(i<antal_att_delegera){
     designate_direction(solution_from_knappsack);
@@ -838,7 +1150,7 @@ void add_directional_value(/*antal_att_delegera, data från make_distance*/){
   return;
 }
 
-void solve_knappsack(/*antal_att_delegera, data från make_distance*/){
+void solve_knappsack(/*antal_att_delegera, data frÃ‚n make_distance*/){
   //solve knappsack problem? priorize boundrys of priority 1 or 3 (?)
   printf("solve_knappsack, end.\n");
   return;
@@ -874,45 +1186,45 @@ void add_geometric_value(int (*input)[5], struct Node *position){
 }
 
 void add_close_boundry_value(/*jagare[i]*/){
-  //addera värdet close på den/de flyttbara noder med kortast avstånd till någon rand
+  //addera vâ€°rdet close pÃ‚ den/de flyttbara noder med kortast avstÃ‚nd till nÃ‚gon rand
   printf("add_close_boundry_value,end.\n");
   return;
 
 }
 
 void add_unique_guarding_value(/*jagare[i]*/){
-  //addera värdet unique på den/de flyttbara noder som ser unika rand-områden
+  //addera vâ€°rdet unique pÃ‚ den/de flyttbara noder som ser unika rand-omrÃ‚den
   printf("add_unique_guarding_value, end.\n");
   return;
 }
 
 void add_priority_guarding_value(/*jagare[i]*/){
-  //addera värdet priority på den/de flyttbara noder som ser unika prioritetsområden
+  //addera vâ€°rdet priority pÃ‚ den/de flyttbara noder som ser unika prioritetsomrÃ‚den
   printf("add_priority_guarding_value, end.\n");
   return;
 }
 
 void add_big_vision_value(int (*input)[5], struct Node *position){
-  //addera värdet big_vision på den/de flyttbara noder som ser mest
+  //addera vâ€°rdet big_vision pÃ‚ den/de flyttbara noder som ser mest
   printf("add_big_vision_value, end.\n");
   return;
 }
 
 void find_best_cost(){
   /*
-för varje jagare:
--läs av vilken ruta som har högst värde
+fË†r varje jagare:
+-lâ€°s av vilken ruta som har hË†gst vâ€°rde
    */ 
   printf("find_best_cost, end.\n");
-  return; //pekare på vilken nod som har högsta värde
+  return; //pekare pÃ‚ vilken nod som har hË†gsta vâ€°rde
 }
 
 
 /*====================one_iteration(): Phase three, Movement======================================*/
 
-void move(/*struct greedy *input*/){ //använder data från evaluation, flyttar till de noder med bäst kostnad, updaterar states, skickar resultat av en iteration.
+void move(struct greedy *input, struct move *input_valuation){ //anvâ€°nder data frÃ‚n evaluation, flyttar till de noder med bâ€°st kostnad, updaterar states, skickar resultat av en iteration.
   /*
-  int i=1;//index för jagarnummer.
+  int i=1;//index fË†r jagarnummer.
   struct Node *from;
   struct Node *to;
   int index;
@@ -921,7 +1233,7 @@ void move(/*struct greedy *input*/){ //använder data från evaluation, flyttar ti
     to=get_best_move(from); //find the moveable tile to move
     put_movestrat(index, from, to); // move and update the number of moves made
 } 
-  update_states(); //jämför tillstånd för förflyttning med efter, uppdaterar tillståndsändringar
+  update_states(); //jâ€°mfË†r tillstÃ‚nd fË†r fË†rflyttning med efter, uppdaterar tillstÃ‚ndsâ€°ndringar
   return;
   */
   printf("move\n");
@@ -952,9 +1264,9 @@ int antaljagare= input.solution[0];
 
 void /*struct Node*/ get_best_move(/*from*/){ 
  /*
--hämta nod (r,k) ur NodeMatrix
--hämta vilken nod som har bäst värde enligt utdata från evaluation()
-- sätt to=nod som ska flyttas till
+-hâ€°mta nod (r,k) ur NodeMatrix
+-hâ€°mta vilken nod som har bâ€°st vâ€°rde enligt utdata frÃ‚n evaluation()
+- sâ€°tt to=nod som ska flyttas till
    
  return to
  */
@@ -964,9 +1276,9 @@ void /*struct Node*/ get_best_move(/*from*/){
 
 void put_movestrat(/*int startindex,struct Node *from, struct Node *to*/){
   /*
--hämta nya positioner genom to.name[]
--beräkna rätt index att placera de nya positionerna på i solution[]
--lägg in jagarnas nya positionerpositioner i slutet på solution[]
+-hâ€°mta nya positioner genom to.name[]
+-berâ€°kna râ€°tt index att placera de nya positionerna pÃ‚ i solution[]
+-lâ€°gg in jagarnas nya positionerpositioner i slutet pÃ‚ solution[]
 -addera ett till solution [1] (antal steg gjorda)
   */
   printf("put_movestrat, end.\n");
@@ -975,9 +1287,9 @@ void put_movestrat(/*int startindex,struct Node *from, struct Node *to*/){
 
 void update_states(){
   /*
--läs av nuvarande states i NodeMatrix
--jämför förhållande före och efter förflyttning
--updatera de states som har förändrats.
+-lâ€°s av nuvarande states i NodeMatrix
+-jâ€°mfË†r fË†rhÃ‚llande fË†re och efter fË†rflyttning
+-updatera de states som har fË†râ€°ndrats.
    */
   printf("update_states, end.\n");
   return;
