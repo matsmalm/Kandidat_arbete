@@ -331,8 +331,11 @@ int main() {
 		numMatrices++;
 		place();
 		int Hunters[21];
-		getStartPositions(Hunters);
+		memset(Hunters,0,sizeof(Hunters));	
+	       	getStartPositions(Hunters);
+
 		int BREAK = 10;
+		int Hunter_static[]={2,2,0,4,4};
 		/****
 		Here we should be able to call our algorithms, since B will contain the graph network.
 		****/
@@ -342,7 +345,7 @@ int main() {
 			printf("Pursuers: %d\n", Hunters[0]);
 			/*** Genetic ***/
 			//printf("Genetic\n");
-			int geneticSolution[2*(1+Hunters[0]*1000)];
+			/*			int geneticSolution[2*(1+Hunters[0]*1000)];
 			preGenetic(&B, &Hunters, BREAK, ROWS, COLS);
 			genAlg(geneticSolution, &Hunters); // Main Genetic Algorithm program.
 			if(geneticSolution[1]<0)
@@ -354,11 +357,11 @@ int main() {
 					//printf(" (%d,%d)", geneticSolution[i], geneticSolution[i+1]);
 				//printf("\n");
 			}
-			//printf("Genetic completed\n");
+			//printf("Genetic completed\n");*/
 			/*** Greedy ***/
-			//printf("Greedy\n");
-			//struct greedy start=preGreedy(&B, Hunters, &BREAK);
-			//greedyAlg(&start);
+			printf("Greedy\n");
+			struct greedy start=preGreedy(&B, &Hunter_static, &BREAK);
+			greedyAlg(&start);
 			//printf("Greedy completed\n");		
 			/*** Tabu ***/
 		}

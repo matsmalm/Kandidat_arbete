@@ -45,16 +45,17 @@ struct valuation{
 };
 
 struct move{
-
+  struct Node *next_move[30];
 };
-
 
 struct Area{
    
   int area_type;
   //struct Node area_adress; //pekar på en nod inom ett ickesett område.
   struct Node *interior[MAX_TOTAL_AREA];
-  struct Node *boundry[MAX_TOTAL_AREA]; //pekar på rand-noderna till ett ickesett område.
+  struct Node *boundry_nodes[MAX_TOTAL_AREA]; //pekar på rand-noderna till ett ickesett område.
+  struct Node *boundry_vision[MAX_TOTAL_AREA];
+  int number_of_boundries;
    
 };
 
@@ -279,18 +280,13 @@ void get_node_distance(/*int tile_distance*/);
 /*KLAR*/int test_break(struct greedy *input);
 void one_iteration(struct greedy *input/*, int *move_strat*/);
 struct valuation preparation(struct greedy *input);
-void get_conditions(/*int *team_vision, struct greedy *input*/);
+/*KLAR*/void get_conditions(/*int *team_vision, struct greedy *input*/);
 /*KLAR*/void get_vision(struct greedy *input, struct valuation *output);
 /*KLAR*/int is_in_vision(struct valuation *input, struct Node *tile); //används inte i nuläget
-void get_total_areas(/*struct greedy *input*/);
+/*KLAR*/void get_total_areas(/*struct greedy *input*/);
 /*KLAR*/int is_checked();
-void get_area();
-void subtract_vision(/*struct Node area, int *team_vision*/);
-void identify_boundry(/*int areaindex*/);
-void find_boundry(/*int areaindex*/);
-void classify_boundry(/*area,boundry*/);
-void check_boundry_priority(/*area, boundry*/);
-void set_boundry(/*boundry, prio*/);
+/*KLAR*/void get_area();
+/*KLAR*/void check_boundry_priority(/*area, boundry*/);
 void get_hunter_equiv();
 struct move valuation(/*int *next_move*/);
 void designate_boundry(/*antal_att_delegera, boundry, jagare*/);
@@ -367,7 +363,6 @@ void create_tables(struct greedy *poutput){
   printf("create_tables\n");
   printf("    ");
   get_node_distance(/*pekare på output*/);
-  printf("    ");
   get_total_area(poutput);
 
   return;
@@ -475,12 +470,12 @@ int test_break(struct greedy *input){
 }
 
 
-void one_iteration(struct greedy *input/*, int *move_strat*/){
+void one_iteration(struct greedy *input){
   printf("one_iteration\n");
   printf("    ");
   struct valuation prep_info=preparation(input); //tar fram nödvändig data för en iteration
   printf("    ");
-  struct move val_info=valuation(/**move_strat*/); //beräknar kostnader
+  struct move val_info=valuation(&prep_info, input); //beräknar kostnader
   printf("    ");
   move(/*struct greedy *input*/); // flyttar till bästa kostnad
   return;
@@ -488,19 +483,12 @@ void one_iteration(struct greedy *input/*, int *move_strat*/){
 
 /*===================one_iteration(): Phase one, Preparations================================*/
 struct valuation preparation(struct greedy *input){ //tar fram alla startdata för en iteration
-  /*
- int team_vision[];
- get_conditions(int team_vision); 
- get_hunter_equiv();
-
- return //skicka ut boundrys(med tillhörande prioritet), ytor, ekvivalent jagare;
-  */
+ 
   printf("preparation\n");
   struct valuation output;
 
   memset(&output, 0, sizeof(output));
 
-  printf("      ");
   get_conditions(input, &output);
   printf("      ");
   get_hunter_equiv();
@@ -508,9 +496,7 @@ struct valuation preparation(struct greedy *input){ //tar fram alla startdata fö
 }
 
 void get_conditions(struct greedy *input, struct valuation *output){ //fastställ vilka områden som finns utanför synfält, namnge och definiera ränder
-  printf("get_conditions\n");
   get_vision(input, output); //skriv in gruppens sikt som states i NodeMatrix
-  printf("        ");
   get_total_areas(input, output);
   return;
 }
@@ -582,7 +568,7 @@ void get_total_areas(struct greedy *input, struct valuation *output){
   int k=0;
   while ((*input).total_area[i]!=(struct Node *)0){
     tile=(*input).total_area[i];
-    if ((*tile).state<20){
+    if ((*tile).state<CHECKED){
       Enqueue(tile, unchecked_queue);
       if((*tile).state<MARKED){
 	struct Area *area=malloc(sizeof(struct Area));
@@ -594,8 +580,11 @@ void get_total_areas(struct greedy *input, struct valuation *output){
     i++;
 
   }
-  
-  classify_boundry(/*input, output*/);
+  i=0;
+  while ((*output).area_collection[i]!=(struct Area *)0){
+    check_boundry_priority((*output).area_collection[i]);
+  i++;
+  }
   return;
 }
 
@@ -603,9 +592,10 @@ void get_area(struct Node *tile, struct Area *input){
   int i=0;
   int k=0;
   int l=1;
+  int m=0;
   struct Node *node_temp;
-  struct Area *output_get_area;
-  struct Area area_temp;
+  // struct Area *output_get_area;
+  //  struct Area area_temp;
   //  output_get_area=(struct Area*) malloc(sizeof(struct Area));
   memset(input, 0,sizeof(struct Area));
   
@@ -621,14 +611,34 @@ void get_area(struct Node *tile, struct Area *input){
   while(TryIfEmpty(list)==FALSE){
     node_temp=FrontAndDequeue(list);
     i=0;
-    while(i<4){
+    while(i<4){ //för alla flyttbara från node_temp utför:
       if ((*node_temp).move[i]==(struct Node *)0){
 	i++;
       }else if((*(*node_temp).move[i]).state>=CHECKED){
 	//det är en nod som är synlig, dvs boundry
-	(*input).boundry[k]=(*node_temp).move[i];
-	k++;
+	//kolla om den redan finns i boundry_nodes, om inte: lägg in den.
+	m=0;
+	if((*input).boundry_nodes[m]==(struct Node *)0){
+	    (*input).boundry_nodes[k]=(*node_temp).move[i];
+	    ((*input).number_of_boundries)++;
+	    k++;
+	  }
+	while ((*input).boundry_nodes[m]!=(struct Node *)0){
+	  
+	  if((*node_temp).move[i]==(*input).boundry_nodes[m]){
+	    break;
+	  }
+	  m++;
+	  if((*input).boundry_nodes[m]==(struct Node *)0){
+	    (*input).boundry_nodes[k]=(*node_temp).move[i];
+	    ((*input).number_of_boundries)++;
+	    k++;
+	    break;
+	  }
+	}      
+	
 	i++;
+	
       }else if ((*(*node_temp).move[i]).state>=MARKED){  //is marked
 	//det är en redan undersökt interior point
 	i++;
@@ -643,39 +653,26 @@ void get_area(struct Node *tile, struct Area *input){
       }      
     }
   }
-
+  
   DisposeQueue(list);
   DisposeQueue(tree);
   return;
 }
 
-void classify_boundry(/*area, boundry*/){
-  //tillskriv den medskickade randen sin prioritet.  
-
-/*
-  int prio=check_boundry_priority(area,boundry);
-  set_boundry(boundry, prio);
-  return;
-  */
-  printf("classify_boundry\n");
-  printf("                    ");
-  check_boundry_priority();
-
-return;
-}
-
 void check_boundry_priority(struct Area *input){
   int i=0;
   int k=0;
+  int j=0;
+  int m=0;
   if( (*(*input).interior[0]).state==SECURED){
     (*input).area_type=PRIO_SECURED;
     return;
   }
-  if((*input).boundry[1]==(struct Node*)0){ //har endast EN rand-Nod
+  if((*input).number_of_boundries==1){ //har endast EN rand-Nod
     //    kolla om man kan se hela interior från rand
     k=0;
-    while((*(*input).boundry[0]).vision[k]!=(struct Node *)0){
-      if((*input).interior[0]==(*(*input).boundry[i]).vision[k]){
+    while((*(*input).boundry_nodes[0]).vision[k]!=(struct Node *)0){
+      if((*input).interior[0]==(*(*input).boundry_nodes[i]).vision[k]){
 	(*input).area_type=PRIO_VIS_ONE_BOUND;
 	return;
       }
@@ -684,26 +681,43 @@ void check_boundry_priority(struct Area *input){
     (*input).area_type=PRIO_ONE_BOUND;
     return;
   }
-  
   else{
     //kolla om man ser hela interior från rand
     i=0;
-    while ((*input).boundry[i]!=(struct Node *)0){
-      k=0;
-      while((*(*input).boundry[i]).vision[k]!=(struct Node *)0){
-	if((*input).interior[0]==(*(*input).boundry[i]).vision[k]){
-	  (*input).area_type=PRIO_VIS_SEV_BOUND;
-	  return;
-	}
-	k++;
+    Queue vision=CreateQueue(MAX_TOTAL_AREA);
+    struct Node *node_temp;
+    while ((*input).boundry_nodes[i]!=(struct Node *)0){ //lägg randernas totala synfält i en kö.
+      while((*(*input).boundry_nodes[i]).vision[j]!=(struct Node *)0){
+	Enqueue((*(*input).boundry_nodes[i]).vision[j], vision);
+	j++;
       }
       i++;
     }
-    (*input).area_type=PRIO_SEV_BOUND;
+    while (TryIfEmpty(vision)==FALSE){
+      node_temp=FrontAndDequeue(vision);
+      if((*node_temp).state<=CHECKED){
+	m=0;
+	while((*input).interior[m]!=(struct Node *)0){
+	  if ((*input).interior[m]==node_temp){
+	    (*node_temp).state=(*node_temp).state+MARKED;
+	    break;
+	  }
+	  m++;
+	}
+      }
+    }
+    m=0;
+    while((*input).interior[m]!=(struct Node *)0){
+      if((*(*input).interior[m]).state<=CHECKED){
+	(*input).area_type=PRIO_SEV_BOUND;
+	return;
+      }
+      m++;
+    }
+    (*input).area_type=PRIO_VIS_SEV_BOUND;  
     return;
   }
 }
-
 
 void get_hunter_equiv(){
   /*
@@ -718,7 +732,7 @@ void get_hunter_equiv(){
 }
 
 /*====================one_iteration():Phase two, Evaluation=======================================*/
-struct move valuation(/*int *next_move*/){ //använder data från preparation och designerar värden till noder som går at flytta till
+struct move valuation(struct valuation *input_val, struct greedy *input_greedy){ //använder data från preparation och designerar värden till noder som går at flytta till
   /*
 vill veta från preparation:
 -antal områden
@@ -741,13 +755,35 @@ vill veta allmänt:
   }
   return;
   */
+
+  /*
+-skapa array för varje jagare med fem index, ett för varje flyttbar nod.
+-kör adderingsfunktioner och lägger värden i varje index enligt algoritm
+-kör find_best_cost för att bestämma vilken nod som varje jagare ska gå till (den med högst värde)
+-skicka ut array med pekare till varje nod som jagarna ska gå till.
+   */
+  int i=0;
+  int row=0;
+  int kol=0;
+  int hunter_temp[100][5];
+  memset(&hunter_temp,0,sizeof(hunter_temp));
+  
+
+
+
   printf("valuation\n");
   printf("      ");
   designate_boundry();
   printf("      ");
-  add_geometric_value();
+  while(i<(*input_greedy).solution[0]){
+    row=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*i];
+    kol=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*i+1];
+    struct Node *position=&(*(*input_greedy).node_matrix[row])[kol];
+    add_geometric_value(&hunter_temp[i], position);
   printf("      ");
   find_best_cost();
+  i++;
+  }
   return;
 }
 
@@ -814,7 +850,7 @@ void designate_direction(/*solution_from_knappsack*/){
 return;
 }
 
-void add_geometric_value(){
+void add_geometric_value(int (*input)[5], struct Node *position){
   /* 
   int i=0;
   while(i<antal_jagare){
@@ -833,7 +869,7 @@ void add_geometric_value(){
   printf("        ");
   add_priority_guarding_value();
   printf("        ");
-  add_big_vision_value();
+  add_big_vision_value(input, position);
   return;
 }
 
@@ -856,7 +892,7 @@ void add_priority_guarding_value(/*jagare[i]*/){
   return;
 }
 
-void add_big_vision_value(/*jagare[i]*/){
+void add_big_vision_value(int (*input)[5], struct Node *position){
   //addera värdet big_vision på den/de flyttbara noder som ser mest
   printf("add_big_vision_value, end.\n");
   return;
