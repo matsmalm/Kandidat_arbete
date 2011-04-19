@@ -386,7 +386,8 @@ struct node{
 	int status;
 };
 
-int findpath(int s,int d,int path[MAX],int *sdist, int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA]){
+int findpath(int s,int d,int (*path)[MAX],int *sdist, int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA]){
+
 	struct node state[MAX];
 	int i, min, count=0, current, newdist, u, v, j=0;
 	*sdist=0;
@@ -400,7 +401,6 @@ int findpath(int s,int d,int path[MAX],int *sdist, int adj[MAX_TOTAL_AREA][MAX_T
 	state[s].predecessor=0;
 	state[s].dist = 0;
 	state[s].status = PERM;
-	
 	/*Starting from source node until destination is found*/
 	current=s;
 	while(current!=d){
@@ -415,6 +415,7 @@ int findpath(int s,int d,int path[MAX],int *sdist, int adj[MAX_TOTAL_AREA][MAX_T
 				}
 			}
 		}/*End of for*/
+
 		/*Search for temporary node with minimum distand make it current
 		node*/
 		min=infinity;
@@ -425,22 +426,30 @@ int findpath(int s,int d,int path[MAX],int *sdist, int adj[MAX_TOTAL_AREA][MAX_T
 				current=i;
 			}
 		}/*End of for*/
+
+
 		if(current==0) /*If Source or Sink node is isolated*/
 			return 0;
 		state[current].status=PERM;
 	}/*End of while*/
+
 	/* Getting full path in array from destination to source */
 	while( current!=0 ){
+
 		count++;
-		path[count]=current;
+		(*path)[count]=current;
 		current=state[current].predecessor;
+			printf("här\n");	
+
 	}
+
 	/*Getting distance from source to destination*/
 	for(i=count;i>1;i--){
-		u=path[i];
-		v=path[i-1];
+	  u=(*path)[i];
+	  v=(*path)[i-1];
 		*sdist+= adj[u][v];
 	}
+
 	return (count);
 }/*End of findpath()*/
 
@@ -471,17 +480,19 @@ void create_graph(struct greedy *input, int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA])
 	return;
 }/*End of create_graph()*/
 
-void dijkstra_indiastudy(struct greedy *input, int from, int to){
-	int path[MAX];
+void dijkstra_indiastudy(struct greedy *input, int from, int to, int *count,int (*path)[MAX] ){
+  //	int path[MAX];
 	int shortdist=0;
-	int count=0;
+//	int count=0;
 	int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA];
+
 	memset(&adj,0,sizeof(adj));
-	memset(&path,0,sizeof(path));
 
 	create_graph(input, adj);
-	count=findpath(from,to,path,&shortdist, adj);
+	*count=findpath(from,to,path,&shortdist, adj);
 	//printf("Count: %d\n", count);
+			printf("här\n");	
+
 	return;
 }
 //___________________end dijkstra-----------------------
@@ -502,10 +513,12 @@ void get_node_distance(struct greedy *output){
 				struct hash_node hash_input[1];
 				(*hash_input).from=(*output).total_area[i];
 				(*hash_input).to=(*output).total_area[j];
+				int *count=0;
+				int (*path)[MAX];
 
-				//printf("i,j for dijkstra: %d, %d,\n", i,j);
-				dijkstra_indiastudy(output,i,j);
-				//printf("Dijkstra_indiastudy complete\n");
+				printf("precis över dijkstra, (i,j)= (%d, %d)\n", i,j);
+				dijkstra_indiastudy(output,i,j,count,path);
+
 				//(*hash_input).distance=distance_temp;
 				//struct Node *direction[3];
 				//(*hash_input).direction[]=
@@ -966,11 +979,11 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val){
     while(j<nOfCols){
       row_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j];
       col_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j+1];
-      struct Node from=(*input_greedy).node_matrix[row_pos_hunter][col_pos_hunter]; //hunterposition, hunter number j, är en 
+      //struct Node from=(*input_greedy).node_matrix[row_pos_hunter][col_pos_hunter]; //hunterposition, hunter number j, är en 
       struct Area *area_temp=(*input_val).area_collection[i];
       m=0;
       while((*area_temp).boundry_nodes[m]!=(struct Node *)0){
-	to
+	//to
 	m++;
       }
 /*Node*/ //  to=;  //closest boundry to area number i

@@ -1,32 +1,32 @@
 /*
 function [assignment, cost] = assignmentoptimal(distMatrix)
 */
-
 /*
 source code taken from: http://www.mathworks.com/matlabcentral/fileexchange/6543
 Using the functions from C:
 (1)-The mex-files always contain a function called "mexFunction" that is needed for MATLAB and a function called "assignment_xx". You can use the second if you want to apply the algorithms directly from C. If you do not have MATLAB installed, you have to replace the mx-functions (e.g. mxCalloc) by ordinary C-functions and delete the two include lines.
-
 (2)-If you decide to use the functions in C, you might need the column indices to start from 0, not from 1 as in MATLAB. Just delete the definition of ONE_INDEXING and you are done. If you do not need to handle infinite values in your applications, also delete the definition of CHECK_FOR_INF.
-
 (3)-Two more points to take care of when using C: The assignment vector is defined as a double precision array, as MATLAB uses double precision values anyway. When referencing elements with the computed assignment vector in C, you have to change all function declarations to use integer values. Further, the distance or cost matrix of size MxN is defined as a double precision array of N*M elements. Matrices are saved MATLAB-internally in row-order (i.e. the matrix [1 2; 3 4] will be stored as a vector [1 3 2 4], NOT [1 2 3 4]).
-
  */
 
-														   //(1)#include <mex.h>
+//(1)#include <mex.h>
 //(1)#include <matrix.h>
-
 //(2)#define CHECK_FOR_INF
 //(2)#define ONE_INDEXING
+#include "Header.h"
 
-														   void assignmentoptimal(/*(3)double*/int *assignment, /*(3)double*/int *cost,/*(3) double*/int *distMatrix, int nOfRows, int nOfColumns);
-void buildassignmentvector(/*(3)double*/int *assignment, bool *starMatrix, int nOfRows, int nOfColumns);
+#define true 1
+#define false 0
+#define infinity 9999
+
+void assignmentoptimal(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(3)double*/int *distMatrix, int nOfRows, int nOfColumns);
+void buildassignmentvector(/*(3)double*/int *assignment, /*(3)bool*/ int *starMatrix, int nOfRows, int nOfColumns);
 void computeassignmentcost(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(3)double*/int *distMatrix, int nOfRows);
-void step2a(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim);
-void step2b(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim);
-void step3 (/*(3)double*/int *assignment, /*(3)double*/ *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim);
-void step4 (/*(3)double*/int *assignment,/*(3)double*/int *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim, int row, int col);
-void step5 (/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim);
+void step2a(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, /*(3)bool*/ int *starMatrix, /*(3)bool*/ int *newStarMatrix, /*(3)bool*/ int *primeMatrix, /*(3)bool*/ int *coveredColumns, /*(3)bool*/ int *coveredRows, int nOfRows, int nOfColumns, int minDim);
+void step2b(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, /*(3)bool*/ int *starMatrix, /*(3)bool*/ int *newStarMatrix, /*(3)bool*/ int *primeMatrix, /*(3)bool*/ int *coveredColumns, /*(3)bool*/ int *coveredRows, int nOfRows, int nOfColumns, int minDim);
+void step3 (/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, /*(3)bool*/ int *starMatrix, /*(3)bool*/ int *newStarMatrix, /*(3)bool*/ int *primeMatrix, /*(3)bool*/ int *coveredColumns, /*(3)bool*/ int *coveredRows, int nOfRows, int nOfColumns, int minDim);
+void step4 (/*(3)double*/int *assignment,/*(3)double*/int *distMatrix, /*(3)bool*/ int *starMatrix, /*(3)bool*/ int *newStarMatrix, /*(3)bool*/ int *primeMatrix, /*(3)bool*/ int *coveredColumns, /*(3)bool*/ int *coveredRows, int nOfRows, int nOfColumns, int minDim, int row, int col);
+void step5 (/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, /*(3)bool*/ int *starMatrix, /*(3)bool*/ int *newStarMatrix, /*(3)bool*/ int *primeMatrix, /*(3)bool*/ int *coveredColumns, /*(3)bool*/ int *coveredRows, int nOfRows, int nOfColumns, int minDim);
 /*
 (1)void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
 (1){
@@ -51,38 +51,39 @@ void step5 (/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *st
 void assignmentoptimal(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(3)double*/int *distMatrixIn, int nOfRows, int nOfColumns)
 {
 	/*(3)double*/int *distMatrix, *distMatrixTemp, *distMatrixEnd, *columnEnd, value, minValue;
-	bool *coveredColumns, *coveredRows, *starMatrix, *newStarMatrix, *primeMatrix;
+	/*(3)bool*/ int *coveredColumns, *coveredRows, *starMatrix, *newStarMatrix, *primeMatrix;
 	int nOfElements, minDim, row, col;
-#ifdef CHECK_FOR_INF
-	bool infiniteValueFound;
-	/*(3)double*/int maxFiniteValue, infValue;
-#endif
-	
+	//#ifdef CHECK_FOR_INF
+	//	/*(3)bool*/ int infiniteValueFound;
+	//	/*(3)double*/int maxFiniteValue, infValue;
+	//#endif
+	printf("assignmentoptmal\n");
 	/* initialization */
 	*cost = 0;
 	for(row=0; row<nOfRows; row++)
-#ifdef ONE_INDEXING
-		assignment[row] =  0.0;
-#else
+	  //#ifdef ONE_INDEXING
+	  //		assignment[row] =  0.0;
+	  //#else
 		assignment[row] = -1.0;
-#endif
+	//#endif
 	
 	/* generate working copy of distance Matrix */
 	/* check if all matrix elements are positive */
 	nOfElements   = nOfRows * nOfColumns;
-	distMatrix    = (/*(3)double*/int *)/*(1)mxM*/malloc(nOfElements * sizeof(/*(3)double*/int));
+	//	distMatrix    = (/*(3)double*/int *)/*(1)mxM*/malloc(nOfElements * sizeof(/*(3)double*/int));
+	distMatrix    = (int *)malloc(nOfElements * sizeof(int)); //samma som rad ovanför, utan massa inline kommentarer...
 	distMatrixEnd = distMatrix + nOfElements;
 	for(row=0; row<nOfElements; row++)
 	{
 		value = distMatrixIn[row];
-		if(mxIsFinite(value) && (value < 0))
-			mexErrMsgTxt("All matrix elements have to be non-negative.");
+		//	if(mxIsFinite(value) && (value < 0))
+		//	mexErrMsgTxt("All matrix elements have to be non-negative.");
 		distMatrix[row] = value;
 	}
 
-#ifdef CHECK_FOR_INF
+	/*#ifdef CHECK_FOR_INF*/
 	/* check for infinite values */
-	maxFiniteValue     = -1;
+	/*	maxFiniteValue     = -1;
 	infiniteValueFound = false;
 	
 	distMatrixTemp = distMatrix;
@@ -103,7 +104,7 @@ void assignmentoptimal(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(
 			return;
 		
 		/* set all infinite elements to big finite value */
-		if(maxFiniteValue > 0)
+		/*	if(maxFiniteValue > 0)
 			infValue = 10 * maxFiniteValue * nOfElements;
 		else
 			infValue = 10;
@@ -112,14 +113,14 @@ void assignmentoptimal(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(
 			if(mxIsInf(*distMatrixTemp++))
 				*(distMatrixTemp-1) = infValue;
 	}
-#endif
+	#endif*/
 				
 	/* memory allocation */
-	coveredColumns = (bool *)/*(1)mxC*/calloc(nOfColumns,  sizeof(bool));
-	coveredRows    = (bool *)/*(1)mxC*/calloc(nOfRows,     sizeof(bool));
-	starMatrix     = (bool *)/*(1)mxC*/calloc(nOfElements, sizeof(bool));
-	primeMatrix    = (bool *)/*(1)mxC*/alloc(nOfElements, sizeof(bool));
-	newStarMatrix  = (bool *)/*(1)mxC*/calloc(nOfElements, sizeof(bool)); /* used in step4 */
+	coveredColumns = (/*(3)bool*/ int *)/*(1)mxC*/calloc(nOfColumns,  sizeof(/*(3)bool*/ int));
+	coveredRows    = (/*(3)bool*/ int *)/*(1)mxC*/calloc(nOfRows,     sizeof(/*(3)bool*/ int));
+	starMatrix     = (/*(3)bool*/ int *)/*(1)mxC*/calloc(nOfElements, sizeof(/*(3)bool*/ int));
+	primeMatrix    = (/*(3)bool*/ int *)/*(1)mxC*/alloc(nOfElements, sizeof(/*(3)bool*/ int));
+	newStarMatrix  = (/*(3)bool*/ int *)/*(1)mxC*/calloc(nOfElements, sizeof(/*(3)bool*/ int)); /* used in step4 */
 
 	/* preliminary steps */
 	if(nOfRows <= nOfColumns)
@@ -218,10 +219,10 @@ void assignmentoptimal(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(
 }
 
 /********************************************************/
-void buildassignmentvector(/*(3)double*/int *assignment, bool *starMatrix, int nOfRows, int nOfColumns)
+void buildassignmentvector(/*(3)double*/int *assignment, /*(3)bool*/ int *starMatrix, int nOfRows, int nOfColumns)
 {
 	int row, col;
-	
+	  printf("in buildassignmentvector\n");
 	for(row=0; row<nOfRows; row++)
 		for(col=0; col<nOfColumns; col++)
 			if(starMatrix[row + nOfRows*col])
@@ -238,6 +239,7 @@ void buildassignmentvector(/*(3)double*/int *assignment, bool *starMatrix, int n
 /********************************************************/
 void computeassignmentcost(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(3)double*/int *distMatrix, int nOfRows)
 {
+  printf("in computeassignmentcost\n");
 	int row, col;
 #ifdef CHECK_FOR_INF
 	/*(3)double*/int value;
@@ -272,11 +274,11 @@ void computeassignmentcost(/*(3)double*/int *assignment, /*(3)double*/int *cost,
 }
 
 /********************************************************/
-void step2a(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim)
+void step2a(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, /*(3)bool*/ int *starMatrix, /*(3)bool*/ int *newStarMatrix, /*(3)bool*/ int *primeMatrix, /*(3)bool*/ int *coveredColumns, /*(3)bool*/ int *coveredRows, int nOfRows, int nOfColumns, int minDim)
 {
-	bool *starMatrixTemp, *columnEnd;
+	/*(3)bool*/ int *starMatrixTemp, *columnEnd;
 	int col;
-	
+  printf("in step 2a\n");	
 	/* cover every column containing a starred zero */
 	for(col=0; col<nOfColumns; col++)
 	{
@@ -296,10 +298,10 @@ void step2a(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *st
 }
 
 /********************************************************/
-void step2b(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim)
+void step2b(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, /*(3)bool*/ int *starMatrix, /*(3)bool*/ int *newStarMatrix, /*(3)bool*/ int *primeMatrix, /*(3)bool*/ int *coveredColumns, /*(3)bool*/ int *coveredRows, int nOfRows, int nOfColumns, int minDim)
 {
 	int col, nOfCoveredColumns;
-	
+	  printf("in step 2b\n");
 	/* count covered columns */
 	nOfCoveredColumns = 0;
 	for(col=0; col<nOfColumns; col++)
@@ -320,9 +322,10 @@ void step2b(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *st
 }
 
 /********************************************************/
-void step3(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim)
+void step3(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, /*(3)bool*/ int *starMatrix, /*(3)bool*/ int *newStarMatrix, /*(3)bool*/ int *primeMatrix, /*(3)bool*/ int *coveredColumns, /*(3)bool*/ int *coveredRows, int nOfRows, int nOfColumns, int minDim)
 {
-	bool zerosFound;
+  printf("in step 3\n");
+	/*(3)bool*/ int zerosFound;
 	int row, col, starCol;
 
 	zerosFound = true;
@@ -363,8 +366,9 @@ void step3(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *sta
 }
 
 /********************************************************/
-void step4(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim, int row, int col)
+void step4(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, /*(3)bool*/ int *starMatrix, /*(3)bool*/ int *newStarMatrix, /*(3)bool*/ int *primeMatrix, /*(3)bool*/ int *coveredColumns, /*(3)bool*/ int *coveredRows, int nOfRows, int nOfColumns, int minDim, int row, int col)
 {	
+  printf("in step 4\n");
 	int n, starRow, starCol, primeRow, primeCol;
 	int nOfElements = nOfRows*nOfColumns;
 	
@@ -417,13 +421,13 @@ void step4(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *sta
 }
 
 /********************************************************/
-void step5(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim)
+void step5(/*(3)double*/int *assignment, /*(3)double*/int *distMatrix, /*(3)bool*/ int *starMatrix, /*(3)bool*/ int *newStarMatrix, /*(3)bool*/ int *primeMatrix, /*(3)bool*/ int *coveredColumns, /*(3)bool*/ int *coveredRows, int nOfRows, int nOfColumns, int minDim)
 {
 	/*(3)double*/int h, value;
 	int row, col;
-	
+	printf("in step five \n");	
 	/* find smallest uncovered element h */
-	h = mxGetInf();	
+	h = infinity;//mxGetInf();	
 	for(row=0; row<nOfRows; row++)
 		if(!coveredRows[row])
 			for(col=0; col<nOfColumns; col++)
