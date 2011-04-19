@@ -12,7 +12,7 @@ notes to self:
 
 #include "Header.h"
 #include "greedy.h"
-#include "hashtab.h"
+
 
 //---------------variabel declaration---------------------------  
 #define TRUE 1
@@ -300,7 +300,7 @@ struct move valuation(/*int *next_move*/);
 void designate_boundry(/*antal_att_delegera, boundry, jagare*/);
 void make_distance(/*boundry, jagare*/);
 void add_directional_value(/*antal_att_delegera, data frÂn make_distance*/);
-void solve_knappsack(/*antal_att_delegera, data frÂn make_distance*/);
+void solve_assignment(struct greedy *input_greedy, struct valuation *input_val);
 void designate_direction(/*solution_from_knappsack*/);
 void add_geometric_value();
 void add_close_boundry_value(/*jagare[i]*/);
@@ -573,7 +573,7 @@ printf("\n");
 void get_node_distance(struct greedy *output){
   printf("get_node_distance, end.\n");
 
-	hashtab_t *node_distance = ht_init (10*SIZE*SIZE, NULL); // skapa en hashtabel
+  (*output).tile_distance= ht_init (10*SIZE*SIZE, NULL); // skapa en hashtabel
     int i=0;
 	int j=0;
 	
@@ -585,7 +585,7 @@ void get_node_distance(struct greedy *output){
 				(*hash_input).from=(*output).total_area[i];
 				(*hash_input).to=(*output).total_area[j];
 				printf("i,j fore dijkstra: %d, %d,\n", i,j);
-				dijkstra_indiastudy(output,i,j);
+				//	dijkstra_indiastudy(output,i,j);
 				
 	//			(*hash_input).distance=distance_temp;
 
@@ -593,7 +593,7 @@ void get_node_distance(struct greedy *output){
 //					struct Node *direction[3];
 	//			(*hash_input).direction[]=
 
-				ht_insert(node_distance,key, sizeof(key), hash_input ,sizeof(hash_input));
+				ht_insert((*output).tile_distance,key, sizeof(key), hash_input ,sizeof(hash_input));
 			}
 		j++;
 		}
@@ -1044,50 +1044,24 @@ void get_hunter_equiv(){
 struct move valuation(struct valuation *input_val, struct greedy *input_greedy){ //anv‰nder data frÂn preparation och designerar v‰rden till noder som gÂr at flytta till
  struct move temp;
   
-    /*
-vill veta frÂn preparation:
--antal omrÂden
--fullst‰ndig rand till varje omrÂde
--karakt‰r pÂ rand a,b,c,d,e
--jagarpositioner
-
-vill veta allm‰nt:
--tillgÂng till tabel med kortaste v‰gen mellan omrÂden.
-
-  if (antal_jagare<=antal_omrÂden){
-    designate_boundry(antal_jagare);
-  }else {
-    designate_boundry(antal_omrÂden);
-}
-  int i=0;
-  while(i<antal_jagare){
-    add_geometric_value();
-    *next_move=find_best_cost();
-  }
-  return;
-  */
-
   /*
 -skapa array fˆr varje jagare med fem index, ett fˆr varje flyttbar nod.
 -kˆr adderingsfunktioner och l‰gger v‰rden i varje index enligt algoritm
 -kˆr find_best_cost fˆr att best‰mma vilken nod som varje jagare ska gÂ till (den med hˆgst v‰rde)
 -skicka ut array med pekare till varje nod som jagarna ska gÂ till.
    */
-  /*
+  
   int i=0;
   int row=0;
   int kol=0;
   int hunter_temp[100][5];
   memset(&hunter_temp,0,sizeof(hunter_temp));
   
-
-
-
   printf("valuation\n");
   printf("      ");
-  designate_boundry();
+  designate_boundry(input_greedy,input_val);
   printf("      ");
-  while(i<(*input_greedy).solution[0]){
+  /*  while(i<(*input_greedy).solution[0]){
     row=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*i];
     kol=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*i+1];
     struct Node *position=&(*(*input_greedy).node_matrix[row])[kol];
@@ -1099,7 +1073,7 @@ vill veta allm‰nt:
   return temp;
 }
 
-void designate_boundry(/*antal_att_delegera, boundry, jagare*/){
+void designate_boundry(struct greedy *input_greedy, struct valuation *input_val){
   /*
 -ta en rand
 -ta en jagare
@@ -1110,48 +1084,65 @@ void designate_boundry(/*antal_att_delegera, boundry, jagare*/){
   add_directional_value(antal_att_delegera); // givet de val som finns frÂn make_distance v‰lj b‰sta
   */
   printf("designate_boundry\n");
-  printf("        ");
-  make_distance();
-  printf("        ");
-  add_directional_value();
-  return;
-}
-
-void make_distance(/*boundry, jagare*/){
-  /*
-  int i=0;
-  while (i<antal_boundrys){
-    /*
--get hunter position
--look up distance to all boundries in table
-     
- }
-  return; //the distance for each hunter to each boundry
-*/
-  printf("make_distance, end.\n");
-  return;
-}
-
-void add_directional_value(/*antal_att_delegera, data frÂn make_distance*/){
-  /*
-  solve_knappsack(antal_att_delegera, data frÂn make_distance);
-  int i=0;  
-  while(i<antal_att_delegera){
-    designate_direction(solution_from_knappsack);
-    i++;
-}
-  return;
-  */
-  printf("add_directional_value\n");
   printf("          ");
-  solve_knappsack();
+  solve_assignment(input_greedy, input_val);
   printf("          ");
   designate_direction();
   return;
 }
 
-void solve_knappsack(/*antal_att_delegera, data frÂn make_distance*/){
+
+void solve_assignment(struct greedy *input_greedy, struct valuation *input_val){
   //solve knappsack problem? priorize boundrys of priority 1 or 3 (?)
+
+  //void assignmentoptimal(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(3)double*/int *distMatrixIn, int nOfRows, int nOfColumns)
+  int i=0;
+  int j=0;
+  int m=0;
+  /*output*/  
+  int assignment[(*input_greedy).solution[0]/*antal jagare?*/];
+  int cost; //totala kostnaden... behövs egentligen inte?
+  /*input*/
+  int nOfRows=0;//antal areas? 
+  int nOfCols=(*input_greedy).solution[0]; //antal jagare?
+  int row_pos_hunter=0;
+  int col_pos_hunter=0;
+  while((*input_val).area_collection[i]!=(struct Area *)0){
+    nOfRows++;
+    i++;
+  }
+
+  int **distmatrix;
+  distmatrix = calloc(nOfRows,nOfRows * sizeof(int *));
+	for(i = 0; i < nOfRows; i++){
+	  distmatrix[i] = calloc(nOfCols,nOfCols * sizeof(int));
+	}
+  i=0;
+
+  while(i<nOfRows){
+    j=0;
+    while(j<nOfCols){
+      row_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j];
+      col_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j+1];
+      struct Node from=(*input_greedy).node_matrix[row_pos_hunter][col_pos_hunter]; //hunterposition, hunter number j, är en 
+      struct Area *area_temp=(*input_val).area_collection[i];
+      m=0;
+      while((*area_temp).boundry_nodes[m]!=(struct Node *)0){
+	to
+	m++;
+      }
+/*Node*/ //  to=;  //closest boundry to area number i
+      // distance=;  //best value from hashtable
+      distmatrix[i][j]=3; //distance given by hashtable using key (from, to)
+
+      j++;
+    }
+    i++;
+  }
+
+
+  //  assignmentoptimal();
+
   printf("solve_knappsack, end.\n");
   return;
 }

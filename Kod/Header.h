@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include "hashtab.h"
 
 #define SIZE 20 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
 #define MAX_SIZE_SOLUTION 200 //set to a maximum size of solution array
@@ -21,7 +22,7 @@ struct Node{
 };
 
 struct greedy{
-  int tile_distance[400]; //tabell med avståndet mellan alla nod-par
+  hashtab_t *tile_distance; //hash-tabell med avståndet mellan alla nod-par
   struct Node *total_area[MAX_TOTAL_AREA];  //total_area={totalt antal områden,r1,k1, r2,k2,...}, område1=(r1,k1)
   struct Node *total_vision_zero[MAX_SIZE_TOTAL_VISION];
   struct Node *node_matrix[SIZE][SIZE]; //B[][]
