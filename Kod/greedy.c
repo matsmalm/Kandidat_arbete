@@ -40,6 +40,16 @@ notes to self:
 #define UNIQUE 100
 
 #define MAX_SIZE_AREA_COLLECTION 40
+
+struct a_star_node{
+  int F; //skattad total kostnad
+  int G; //faktisk kostnad hit från start
+  int H; //skattad kostnad till mål
+  struct Node *parent;
+  struct Node *self;
+};
+
+
 struct hash_node{
 	struct Node *from;
 	struct Node *to;
@@ -370,133 +380,84 @@ void create_tables(struct greedy *poutput){
   return;
 }
 
-//---------start dijkstra from http://www.indiastudychannel.com/resources/12984-C-Program-shortest-path-between-two-node.aspx
-
-/* Program of shortest path between two node in graph using Djikstra
-algorithm */
-
-#define MAX 100
-#define TEMP 0
-#define PERM 1
-#define infinity 9999
-
-struct node{
-	int predecessor;
-	int dist; /*minimum distance of node from source*/
-	int status;
-};
-
-int findpath(int s,int d,int (*path)[MAX],int *sdist, int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA]){
-
-	struct node state[MAX];
-	int i, min, count=0, current, newdist, u, v, j=0;
-	*sdist=0;
-	/* Make all nodes temporary */
-	for(j=0;j<MAX_TOTAL_AREA;j++){
-		state[j].predecessor=0;
-		state[j].dist = infinity;
-		state[j].status = TEMP;
+void a_star(struct greedy *input, int from, int to){
+  int s=0;
+  int t=0;
+  int u=0;
+  int best_value=1000;
+  int best_index;
+  int G[MAX_TOTAL_AREA];
+  int F[MAX_TOTAL_AREA];
+  int H[MAX_TOTAL_AREA];
+  int is_in_open[MAX_TOTAL_AREA];
+  int is_in_closed[MAX_TOTAL_AREA];
+  int parent[MAX_TOTAL_AREA];
+  s=0;
+  while(s<MAX_TOTAL_AREA){
+    G[s]=100;
+    s++;
+  }
+  s=0;
+  memset(F,0,sizeof(int)*MAX_TOTAL_AREA);
+  memset(H,0,sizeof(int)*MAX_TOTAL_AREA);
+  memset(is_in_open,0,sizeof(int)*MAX_TOTAL_AREA);
+  memset(is_in_closed,0,sizeof(int)*MAX_TOTAL_AREA);
+  memset(parent,0,sizeof(int)*MAX_TOTAL_AREA);
+  is_in_open[from]=TRUE;
+  G[from]=0;
+  printf("hej\n");
+  while(is_in_open[to]==FALSE){
+  printf("hej1\n");
+    while(s<MAX_TOTAL_AREA){
+        printf("hej2\n");
+      if(is_in_open[s]==TRUE){
+	//hitta det bästa indexet så att vi kan göra jämförelse nedan
+	if(F[s]<F[best_index]){
+	  best_value=F[s];
+	  best_index=s;
 	}
-	/*Source node should be permanent*/
-	state[s].predecessor=0;
-	state[s].dist = 0;
-	state[s].status = PERM;
-	/*Starting from source node until destination is found*/
-	current=s;
-	while(current!=d){
-		for(i=1;i<=MAX_TOTAL_AREA;i++){
-			/*Checks for adjacent temporary nodes */
-			if ( adj[current][i] > 0 && state[i].status == TEMP ){
-				newdist=state[current].dist + adj[current][i];
-				/*Checks for Relabeling*/
-				if( newdist < state[i].dist ){
-					state[i].predecessor = current;
-					state[i].dist = newdist;
-				}
-			}
-		}/*End of for*/
+	if(best_index==to){
+	  //göra något innan return?
+	  
+	  printf("G[to]=%d",G[best_index]);
+	  
+	  return;
+	}else
+	  is_in_open[best_index]=FALSE;
+	  is_in_closed[best_index]=TRUE;
+	  t=0;
+	  while(t<4){
+	      printf("hej3\n");
+	    u=0;
+	    if((*(*input).total_area[best_index]).move[t]==(struct Node *)0){
+	    }else{
+	      while((*input).total_area[u]!=(*(*input).total_area[best_index]).move[t]){
+		u++;
+	      }
+	      if(is_in_closed[u]){
+	      }
+	      else if(is_in_open[u]==FALSE){
+		is_in_open[u]=TRUE;
+		H[u]=abs((*(*input).total_area[from]).name[0]-(*(*input).total_area[u]).name[0])+abs((*(*input).total_area[from]).name[1]-(*(*input).total_area[u]).name[1]);
+		G[u]=1+G[best_index];
+		F[u]=G[u]+H[u];
+		parent[u]=best_index;
+		
+	      }else if(is_in_open[u]==TRUE && G[u]>G[best_index]){
+		G[u]=1+G[best_index];
+		F[u]=G[u]+H[u];
+		parent[u]=best_index;
+	      }
+	    }
+	    t++;
+	  }
+      }
+      s++;
+    }
+  }
 
-		/*Search for temporary node with minimum distand make it current
-		node*/
-		min=infinity;
-		current=0;
-		for(i=1;i<=MAX_TOTAL_AREA;i++){
-			if(state[i].status == TEMP && state[i].dist < min){
-				min = state[i].dist;
-				current=i;
-			}
-		}/*End of for*/
-
-
-		if(current==0) /*If Source or Sink node is isolated*/
-			return 0;
-		state[current].status=PERM;
-	}/*End of while*/
-
-	/* Getting full path in array from destination to source */
-	while( current!=0 ){
-
-		count++;
-		(*path)[count]=current;
-		current=state[current].predecessor;
-			printf("här\n");	
-
-	}
-
-	/*Getting distance from source to destination*/
-	for(i=count;i>1;i--){
-	  u=(*path)[i];
-	  v=(*path)[i-1];
-		*sdist+= adj[u][v];
-	}
-
-	return (count);
-}/*End of findpath()*/
-
-void create_graph(struct greedy *input, int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA]){
-	int edge=0;
-	int k=0;
-	int max_edges=MAX_TOTAL_AREA*(MAX_TOTAL_AREA-1);
-	int origin=0;
-	int destin=0;
-	//int wt;
-	for(edge=0;edge<max_edges;edge++){ // Every edge
-		while((*input).total_area[origin]!=(struct Node *)0){
-			for(k=0;k<4;k++){
-				if((*(*input).total_area[origin]).move[k]!=(struct Node *)0){
-					destin=0;
-					while((*input).total_area[destin]!=(struct Node *)0){
-						if((*input).total_area[destin]==(*(*input).total_area[origin]).move[k]){ 
-							adj[origin][destin]=1;
-							break;
-						}
-						destin++;
-					}
-				}
-			}
-			origin++;
-		}
-	}/*End of for*/
-	return;
-}/*End of create_graph()*/
-
-void dijkstra_indiastudy(struct greedy *input, int from, int to, int *count,int (*path)[MAX] ){
-  //	int path[MAX];
-	int shortdist=0;
-//	int count=0;
-	int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA];
-
-	memset(&adj,0,sizeof(adj));
-
-	create_graph(input, adj);
-	*count=findpath(from,to,path,&shortdist, adj);
-	//printf("Count: %d\n", count);
-			printf("här\n");	
-
-	return;
+  return;
 }
-//___________________end dijkstra-----------------------
-
 
 
 void get_node_distance(struct greedy *output){
@@ -510,15 +471,13 @@ void get_node_distance(struct greedy *output){
 		while((*output).total_area[j]!=(struct Node *)0){
 			if(i!=j){
 				struct Node *key[2]={(*output).total_area[i],(*output).total_area[j]};
-				struct hash_node hash_input[1];
-				(*hash_input).from=(*output).total_area[i];
-				(*hash_input).to=(*output).total_area[j];
 				int *count=0;
-				int (*path)[MAX];
+				//	int (*path)[MAX];
 
 				printf("precis över dijkstra, (i,j)= (%d, %d)\n", i,j);
-				dijkstra_indiastudy(output,i,j,count,path);
+				//	struct hash_node table_input=dijkstra(output,(*output).total_area[i],(*output).total_area[j]);
 
+				a_star(output,i,j);
 				//(*hash_input).distance=distance_temp;
 				//struct Node *direction[3];
 				//(*hash_input).direction[]=
@@ -727,7 +686,7 @@ void get_total_areas(struct greedy *input, struct valuation *output){
   Queue unchecked_queue=CreateQueue(MAX_TOTAL_AREA);
   struct Node *tile;
 
-
+  int j=0;
   int i=0;
   int k=0;
   while ((*input).total_area[i]!=(struct Node *)0){
@@ -747,6 +706,25 @@ void get_total_areas(struct greedy *input, struct valuation *output){
   i=0;
   while ((*output).area_collection[i]!=(struct Area *)0){
     check_boundry_priority((*output).area_collection[i]);
+    if((*(*output).area_collection[i]).area_type==PRIO_VIS_ONE_BOUND){
+      //utöka boundry så att man tar fram alla noder som ser den enda interior-punkten, lättast genom att utgå från dens egna synfält.
+      struct Node *temp=(*(*output).area_collection[i]).interior[0];
+      while((*temp).vision[j]!=(struct Node *)0){
+	k=0;
+	while((*(*output).area_collection[i]).boundry_nodes[k]!=(struct Node*)0){
+	  if((*(*output).area_collection[i]).boundry_nodes[k]==(*temp).vision[j]){
+	    break;
+	  }else if((*(*output).area_collection[i]).boundry_nodes[k]==(struct Node*)0){
+	    (*(*output).area_collection[i]).boundry_nodes[k]=(*temp).vision[j];
+	    break;
+	  } 
+	  k++;
+	}
+	j++;
+      }
+    }else if((*(*output).area_collection[i]).area_type==PRIO_VIS_SEV_BOUND){
+      //utöka boundry så att man tar fram alla noder som kan se hela interior.
+    }
   i++;
   }
   return;
@@ -838,6 +816,13 @@ void check_boundry_priority(struct Area *input){
     while((*(*input).boundry_nodes[0]).vision[k]!=(struct Node *)0){
       if((*input).interior[0]==(*(*input).boundry_nodes[i]).vision[k]){
 	(*input).area_type=PRIO_VIS_ONE_BOUND;
+	k=0;
+	while((*(*input).interior[0]).vision[k]!=(struct Node *)0){
+	  if((*(*input).interior[0]).vision[k]!=(*input).interior[0]){
+	    (*input).boundry_vision[k]=(*(*input).interior[0]).vision[k];
+	  }
+	  k++;
+	}
 	return;
       }
       k++;
@@ -948,7 +933,7 @@ void designate_boundry(struct greedy *input_greedy, struct valuation *input_val)
 
 
 void solve_assignment(struct greedy *input_greedy, struct valuation *input_val){
-  //solve knappsack problem? priorize boundrys of priority 1 or 3 (?)
+  //solve knappsack problem? priorize boundrys of priority 4 or 3 (?)
 
   //void assignmentoptimal(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(3)double*/int *distMatrixIn, int nOfRows, int nOfColumns)
   int i=0;
@@ -962,6 +947,7 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val){
   int nOfCols=(*input_greedy).solution[0]; //antal jagare?
   int row_pos_hunter=0;
   int col_pos_hunter=0;
+  int shortest_boundry_distance=MAX_TOTAL_AREA;
   while((*input_val).area_collection[i]!=(struct Area *)0){
     nOfRows++;
     i++;
@@ -979,16 +965,21 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val){
     while(j<nOfCols){
       row_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j];
       col_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j+1];
-      //struct Node from=(*input_greedy).node_matrix[row_pos_hunter][col_pos_hunter]; //hunterposition, hunter number j, är en 
+      struct Node *from=(*input_greedy).node_matrix[row_pos_hunter][col_pos_hunter]; //hunterposition, hunter number j, är en 
+      struct Node *to;
       struct Area *area_temp=(*input_val).area_collection[i];
       m=0;
       while((*area_temp).boundry_nodes[m]!=(struct Node *)0){
-	//to
+	struct Node *temp=(*area_temp).boundry_nodes[m];
+	struct Node *key[2]={from,temp};
+	struct hash_node *temp_hash= ht_search((*input_greedy).tile_distance, key,sizeof(key));
+	if((*temp_hash).distance<shortest_boundry_distance){
+	  *to=*temp;
+	  shortest_boundry_distance=(*temp_hash).distance;
+	}
 	m++;
       }
-/*Node*/ //  to=;  //closest boundry to area number i
-      // distance=;  //best value from hashtable
-      distmatrix[i][j]=3; //distance given by hashtable using key (from, to)
+      distmatrix[i][j]=shortest_boundry_distance; //distance given by hashtable using key (from, to)
 
       j++;
     }
