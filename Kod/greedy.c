@@ -380,108 +380,80 @@ algorithm */
 #define PERM 1
 #define infinity 9999
 
-struct node
-{
-int predecessor;
-int dist; /*minimum distance of node from source*/
-int status;
+struct node{
+	int predecessor;
+	int dist; /*minimum distance of node from source*/
+	int status;
 };
 
-int findpath(int s,int d,int path[MAX],int *sdist, int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA])
-{
-struct node state[MAX];
-int i;
-int min;
-int count=0;
-int current;
-int newdist;
-int u;
-int v;
-*sdist=0;
-int j=0;
-/* Make all nodes temporary */
-for(j=1;j<=MAX_TOTAL_AREA;j++)
-{
-state[j].predecessor=0;
-state[j].dist = infinity;
-state[j].status = TEMP;
-}
-/*Source node should be permanent*/
-state[s].predecessor=0;
-state[s].dist = 0;
-state[s].status = PERM;
-
-/*Starting from source node until destination is found*/
-current=s;
-while(current!=d)
-{
-for(i=1;i<=MAX_TOTAL_AREA;i++)
-{
-/*Checks for adjacent temporary nodes */
-if ( adj[current][i] > 0 && state[i].status == TEMP )
-{
-newdist=state[current].dist + adj[current][i];
-/*Checks for Relabeling*/
-if( newdist < state[i].dist )
-{
-state[i].predecessor = current;
-state[i].dist = newdist;
-}
-}
-}/*End of for*/
-
-/*Search for temporary node with minimum distand make it current
-node*/
-min=infinity;
-current=0;
-for(i=1;i<=MAX_TOTAL_AREA;i++)
-{
-if(state[i].status == TEMP && state[i].dist < min)
-{
-min = state[i].dist;
-current=i;
-}
-}/*End of for*/
-
-if(current==0) /*If Source or Sink node is isolated*/
-return 0;
-state[current].status=PERM;
-
-}/*End of while*/
-
-/* Getting full path in array from destination to source */
-while( current!=0 )
-{
-count++;
-path[count]=current;
-current=state[current].predecessor;
-}
-
-/*Getting distance from source to destination*/
-for(i=count;i>1;i--)
-{
-u=path[i];
-v=path[i-1];
-*sdist+= adj[u][v];
-}
-printf("count =%d\n",count);
-return (count);
+int findpath(int s,int d,int path[MAX],int *sdist, int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA]){
+	struct node state[MAX];
+	int i, min, count=0, current, newdist, u, v, j=0;
+	*sdist=0;
+	/* Make all nodes temporary */
+	for(j=0;j<MAX_TOTAL_AREA;j++){
+		state[j].predecessor=0;
+		state[j].dist = infinity;
+		state[j].status = TEMP;
+	}
+	/*Source node should be permanent*/
+	state[s].predecessor=0;
+	state[s].dist = 0;
+	state[s].status = PERM;
+	
+	/*Starting from source node until destination is found*/
+	current=s;
+	while(current!=d){
+		for(i=1;i<=MAX_TOTAL_AREA;i++){
+			/*Checks for adjacent temporary nodes */
+			if ( adj[current][i] > 0 && state[i].status == TEMP ){
+				newdist=state[current].dist + adj[current][i];
+				/*Checks for Relabeling*/
+				if( newdist < state[i].dist ){
+					state[i].predecessor = current;
+					state[i].dist = newdist;
+				}
+			}
+		}/*End of for*/
+		/*Search for temporary node with minimum distand make it current
+		node*/
+		min=infinity;
+		current=0;
+		for(i=1;i<=MAX_TOTAL_AREA;i++){
+			if(state[i].status == TEMP && state[i].dist < min){
+				min = state[i].dist;
+				current=i;
+			}
+		}/*End of for*/
+		if(current==0) /*If Source or Sink node is isolated*/
+			return 0;
+		state[current].status=PERM;
+	}/*End of while*/
+	/* Getting full path in array from destination to source */
+	while( current!=0 ){
+		count++;
+		path[count]=current;
+		current=state[current].predecessor;
+	}
+	/*Getting distance from source to destination*/
+	for(i=count;i>1;i--){
+		u=path[i];
+		v=path[i-1];
+		*sdist+= adj[u][v];
+	}
+	return (count);
 }/*End of findpath()*/
 
-
 void create_graph(struct greedy *input, int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA]){
-int i=0;
-int k=0;
-int max_edges=MAX_TOTAL_AREA*(MAX_TOTAL_AREA-1);
-int origin=0;
-int destin=0;
-//int wt;
-
-
-
-	for(i=1;i<=max_edges;i++){
+	int edge=0;
+	int k=0;
+	int max_edges=MAX_TOTAL_AREA*(MAX_TOTAL_AREA-1);
+	int origin=0;
+	int destin=0;
+	//int wt;
+	for(edge=0;edge<max_edges;edge++){ // Every edge
 		while((*input).total_area[origin]!=(struct Node *)0){
-			while(k<4){
+			for(k=0;k<4;k++){
 				if((*(*input).total_area[origin]).move[k]!=(struct Node *)0){
 					destin=0;
 					while((*input).total_area[destin]!=(struct Node *)0){
@@ -492,7 +464,6 @@ int destin=0;
 						destin++;
 					}
 				}
-				k++;
 			}
 			origin++;
 		}
@@ -500,73 +471,20 @@ int destin=0;
 	return;
 }/*End of create_graph()*/
 
-
-
 void dijkstra_indiastudy(struct greedy *input, int from, int to){
-//int n;
-//int i,j;
-//int source,destin;
-int path[MAX];
-int shortdist=0;
-int count=0;
-int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA];
-memset(&adj,0,sizeof(adj));
-memset(&path,0,sizeof(path));
+	int path[MAX];
+	int shortdist=0;
+	int count=0;
+	int adj[MAX_TOTAL_AREA][MAX_TOTAL_AREA];
+	memset(&adj,0,sizeof(adj));
+	memset(&path,0,sizeof(path));
 
-create_graph(input, adj);
-
-//while((*input).total_area[source]!=(struct Node *)0){
-//	while((*input).total_area[destin]!=(struct Node*)0){
-//		if(destin!=source){
-			count=findpath(from,to,path,&shortdist, adj);
-//		}
-//	destin++;
-//	}
-//	source++;
-//}
-return;
+	create_graph(input, adj);
+	count=findpath(from,to,path,&shortdist, adj);
+	//printf("Count: %d\n", count);
+	return;
 }
-//while(1)
-//{
-//printf("Enter source node(0 to quit) : ");
-//scanf("%d",&source);
-//printf("Enter destination node(0 to quit) : ");
-//scanf("%d",&dest);
-
-//if(source==0 || dest==0)
-//exit(1);
-
-//count = findpath(source,dest,path,&shortdist);
-//if(shortdist!=0)
-//{
-//printf("Shortest distance is : %d\n", shortdist);
-//printf("Shortest Path is : ");
-//for(i=count;i>1;i--)
-//printf("%d->",path[i]);
-//printf("%d",path[i]);
-//printf("\n");
-//}
-//else
-//printf("There is no path from source to destination node\n");
-//}/*End of while*/
-//}/*End of main()*/
-
-/*
-display()
-{
-int i,j;
-for(i=1;i<=n;i++)
-{
-for(j=1;j<=n;j++)
-printf("%3d",adj[i][j]);
-printf("\n");
-}
-
-}/*End of display()*/
-
-
-
-//-----------------------------------------------------------
+//___________________end dijkstra-----------------------
 
 
 
@@ -584,26 +502,23 @@ void get_node_distance(struct greedy *output){
 				struct hash_node hash_input[1];
 				(*hash_input).from=(*output).total_area[i];
 				(*hash_input).to=(*output).total_area[j];
-				printf("i,j fore dijkstra: %d, %d,\n", i,j);
-				//	dijkstra_indiastudy(output,i,j);
-				
-	//			(*hash_input).distance=distance_temp;
 
-
-//					struct Node *direction[3];
-	//			(*hash_input).direction[]=
-
-				ht_insert((*output).tile_distance,key, sizeof(key), hash_input ,sizeof(hash_input));
+				//printf("i,j for dijkstra: %d, %d,\n", i,j);
+				dijkstra_indiastudy(output,i,j);
+				//printf("Dijkstra_indiastudy complete\n");
+				//(*hash_input).distance=distance_temp;
+				//struct Node *direction[3];
+				//(*hash_input).direction[]=
+				//ht_insert((*output).tile_distance,key, sizeof(key), hash_input ,sizeof(hash_input));
 			}
-		j++;
+			j++;
 		}
 		j=0;
 		i++;
-		}
-		
-		//struct hash_node *test;
-		//test=ht_search(node_distance, key_test, sizeof(key_test));
-		
+	}		
+	//struct hash_node *test;
+	//test=ht_search(node_distance, key_test, sizeof(key_test));
+	
   /*
 sÂ l‰nge det finns noder i total_area;
 -ta en nod
@@ -615,83 +530,10 @@ sÂ l‰nge det finns noder i total_area;
 -spara i en (Hash?)tabell
 -skriv tabell via pekare till output
 */
-
-
-  return;
+	return;
 }
 
 
-/*
-//---------start dikjstra from http://compprog.files.wordpress.com/2008/01/dijkstra.c --------------
-#include <stdio.h>
-
-#define GRAPHSIZE 2048
-#define INFINITY GRAPHSIZE*GRAPHSIZE
-#define MAX(a, b) ((a > b) ? (a) : (b))
-
-int e; /* The number of nonzero edges in the graph */
-//int n; /* The number of nodes in the graph */
-//long dist[GRAPHSIZE][GRAPHSIZE]; /* dist[i][j] is the distance between node i and j; or 0 if there is no direct connection */
-//long d[GRAPHSIZE]; /* d[i] is the length of the shortest path between the source (s) and node i */
-//int prev[GRAPHSIZE]; /* prev[i] is the node that comes right before i in the shortest path from the source to i*//*
-/*
-void printD() {
-	int i;
-
-	printf("Distances:\n");
-	for (i = 1; i <= n; ++i)
-		printf("%10d", i);
-	printf("\n");
-	for (i = 1; i <= n; ++i) {
-		printf("%10ld", d[i]);
-	}
-	printf("\n");
-}
-*/
-/*
- * Prints the shortest path from the source to dest.
- *
- * dijkstra(int) MUST be run at least once BEFORE
- * this is called
- */
- /*
-void printPath(int dest) {
-	if (prev[dest] != -1)
-		printPath(prev[dest]);
-	printf("%d ", dest);
-}
-
-void dijkstra(int s) {
-	int i, k, mini;
-	int visited[GRAPHSIZE];
-
-	for (i = 1; i <= n; ++i) {
-		d[i] = INFINITY;
-		prev[i] = -1; /* no path has yet been found to i */
-//		visited[i] = 0; /* the i-th element has not yet been visited */
-/*	}
-
-	d[s] = 0;
-
-	for (k = 1; k <= n; ++k) {
-		mini = -1;
-		for (i = 1; i <= n; ++i)
-			if (!visited[i] && ((mini == -1) || (d[i] < d[mini])))
-				mini = i;
-
-		visited[mini] = 1;
-
-		for (i = 1; i <= n; ++i)
-			if (dist[mini][i])
-				if (d[mini] + dist[mini][i] < d[i]) {
-					d[i] = d[mini] + dist[mini][i];
-					prev[i] = mini;
-				}
-	}
-}
-///___________________end dijkstra-----------------------
-
-*/
 
 
 void get_total_area(struct greedy *input){ 
