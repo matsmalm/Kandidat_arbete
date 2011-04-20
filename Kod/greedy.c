@@ -381,82 +381,79 @@ void create_tables(struct greedy *poutput){
 }
 
 void a_star(struct greedy *input, int from, int to){
-  int s=0;
-  int t=0;
-  int u=0;
-  int best_value=1000;
-  int best_index;
-  int G[MAX_TOTAL_AREA];
-  int F[MAX_TOTAL_AREA];
-  int H[MAX_TOTAL_AREA];
-  int is_in_open[MAX_TOTAL_AREA];
-  int is_in_closed[MAX_TOTAL_AREA];
-  int parent[MAX_TOTAL_AREA];
-  s=0;
-  while(s<MAX_TOTAL_AREA){
-    G[s]=100;
-    s++;
-  }
-  s=0;
-  memset(F,0,sizeof(int)*MAX_TOTAL_AREA);
-  memset(H,0,sizeof(int)*MAX_TOTAL_AREA);
-  memset(is_in_open,0,sizeof(int)*MAX_TOTAL_AREA);
-  memset(is_in_closed,0,sizeof(int)*MAX_TOTAL_AREA);
-  memset(parent,0,sizeof(int)*MAX_TOTAL_AREA);
-  is_in_open[from]=TRUE;
-  G[from]=0;
-  printf("hej\n");
-  while(is_in_open[to]==FALSE){
-  printf("hej1\n");
-    while(s<MAX_TOTAL_AREA){
-        printf("hej2\n");
-      if(is_in_open[s]==TRUE){
-	//hitta det bästa indexet så att vi kan göra jämförelse nedan
-	if(F[s]<F[best_index]){
-	  best_value=F[s];
-	  best_index=s;
+	int s=0;
+	int t=0;
+	int u=0;
+	int best_value=1000;
+	int best_index=to;
+	int G[MAX_TOTAL_AREA];
+	int F[MAX_TOTAL_AREA];
+	int H[MAX_TOTAL_AREA];
+	int is_in_open[MAX_TOTAL_AREA];
+	int is_in_closed[MAX_TOTAL_AREA];
+	int parent[MAX_TOTAL_AREA];
+	s=0;
+	while(s<MAX_TOTAL_AREA){
+		G[s]=1000;
+		s++;
 	}
-	if(best_index==to){
-	  //göra något innan return?
-	  
-	  printf("G[to]=%d",G[best_index]);
-	  
-	  return;
-	}else
-	  is_in_open[best_index]=FALSE;
-	  is_in_closed[best_index]=TRUE;
-	  t=0;
-	  while(t<4){
-	      printf("hej3\n");
-	    u=0;
-	    if((*(*input).total_area[best_index]).move[t]==(struct Node *)0){
-	    }else{
-	      while((*input).total_area[u]!=(*(*input).total_area[best_index]).move[t]){
-		u++;
-	      }
-	      if(is_in_closed[u]){
-	      }
-	      else if(is_in_open[u]==FALSE){
-		is_in_open[u]=TRUE;
-		H[u]=abs((*(*input).total_area[from]).name[0]-(*(*input).total_area[u]).name[0])+abs((*(*input).total_area[from]).name[1]-(*(*input).total_area[u]).name[1]);
-		G[u]=1+G[best_index];
-		F[u]=G[u]+H[u];
-		parent[u]=best_index;
-		
-	      }else if(is_in_open[u]==TRUE && G[u]>G[best_index]){
-		G[u]=1+G[best_index];
-		F[u]=G[u]+H[u];
-		parent[u]=best_index;
-	      }
-	    }
-	    t++;
-	  }
-      }
-      s++;
-    }
-  }
-
-  return;
+	s=0;
+	memset(F,0,sizeof(int)*MAX_TOTAL_AREA);
+	memset(H,0,sizeof(int)*MAX_TOTAL_AREA);
+	memset(is_in_open,0,sizeof(int)*MAX_TOTAL_AREA);
+	memset(is_in_closed,0,sizeof(int)*MAX_TOTAL_AREA);
+	memset(parent,0,sizeof(int)*MAX_TOTAL_AREA);
+	is_in_open[from]=TRUE;
+	G[from]=0;
+	while(is_in_closed[to]==FALSE){
+		best_value=1000;
+		for(s=0;s<MAX_TOTAL_AREA;s++){
+			if(is_in_open[s]==TRUE){
+				if(F[s]<best_value){
+					best_value=F[s];
+					best_index=s;
+				}
+			}
+		}
+		//printf("Best index: %d, to: %d\n", best_index, to);
+		if(best_index==to){
+			//printf("From (%d,%d) to (%d,%d), distance is: %d\n",(*(*input).total_area[from]).name[0],(*(*input).total_area[from]).name[1],(*(*input).total_area[to]).name[0],(*(*input).total_area[to]).name[1],G[to]);
+			return;
+		}
+		else{
+			is_in_open[best_index]=FALSE;
+			is_in_closed[best_index]=TRUE;
+			t=0;
+			while(t<4){
+				//printf("hej3\n");
+				u=0;
+				if((*(*input).total_area[best_index]).move[t]==(struct Node *)0){
+				}
+				else{
+					while((*input).total_area[u]!=(*(*input).total_area[best_index]).move[t]){
+						u++;
+					}
+					if(is_in_closed[u]){
+					}
+					else if(is_in_open[u]==FALSE){
+						is_in_open[u]=TRUE;
+						H[u]=abs((*(*input).total_area[from]).name[0]-(*(*input).total_area[u]).name[0])+abs((*(*input).total_area[from]).name[1]-(*(*input).total_area[u]).name[1]);
+						G[u]=1+G[best_index];
+						F[u]=G[u]+H[u];
+						parent[u]=best_index;
+					}
+					else if(is_in_open[u]==TRUE && G[u]>G[best_index]){
+						G[u]=1+G[best_index];
+						F[u]=G[u]+H[u];
+						parent[u]=best_index;
+					}
+				}
+				t++;
+			}
+		}
+		s++;
+	}
+	return;
 }
 
 
@@ -474,7 +471,7 @@ void get_node_distance(struct greedy *output){
 				int *count=0;
 				//	int (*path)[MAX];
 
-				printf("precis över dijkstra, (i,j)= (%d, %d)\n", i,j);
+				//printf("precis över dijkstra, (i,j)= (%d, %d)\n", i,j);
 				//	struct hash_node table_input=dijkstra(output,(*output).total_area[i],(*output).total_area[j]);
 
 				a_star(output,i,j);
