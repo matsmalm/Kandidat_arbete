@@ -3,15 +3,15 @@
 
 /*** Definitions ***/
 #define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
-#define GENETIC_POPULATION_SIZE 100 // Population size, static.
+#define GENETIC_POPULATION_SIZE 250 // Population size, static.
 #define GENETIC_MAX_PURSUERS 20 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
-#define GENETIC_MAX_STEPS 50 // Maximum number of steps, just to allocate enough memory
+#define GENETIC_MAX_STEPS 200 // Maximum number of steps, just to allocate enough memory
 
 /*** Variables ***/
 int GENETIC_PURSUERS = 0; // Only a temporary value.
 int GENETIC_GENERATIONS = 0; // Only a temporary value.
 float GENETIC_CONVERGENCE_PERCENT = 0.95; // fraction of population to be equal to break early.
-float GENETIC_MUTATION_PROBABILITY = 0.15; // fraction of mutation probability.
+float GENETIC_MUTATION_PROBABILITY = 0.10; // fraction of mutation probability.
 int ROWS;
 int COLS;
 
@@ -135,7 +135,13 @@ void getRandom(struct Gene *g, int from){ // Generate random step-sequence from 
 /*** Algorithm ***/
 void genAlg(int *solution) { // Main call function for Genetic Algorithm
 	int currentGeneration=0, currentPopulation=0;
-	printf("Comparing population [0] and [%d]\n", abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT));
+	printf("**** Genetic Algorithm info ****\n");
+	printf("\nPopulation size:\t%d\n", GENETIC_POPULATION_SIZE);
+	printf("Pursuers:\t\t%d\n", GENETIC_PURSUERS);
+	printf("Maximum steps:\t\t%d\n", GENETIC_MAX_STEPS);
+	printf("Maximum generations:\t%d\n", GENETIC_GENERATIONS);
+	printf("Convergence %%:\t\t%d\n", abs(GENETIC_CONVERGENCE_PERCENT*100));
+	printf("Mutation %%:\t\t%d\n\n", abs(GENETIC_MUTATION_PROBABILITY*100));
 	for(currentGeneration = 0; currentGeneration < GENETIC_GENERATIONS; currentGeneration++){
 		/*** New generation ***/
 		for(currentPopulation = 0; currentPopulation < GENETIC_POPULATION_SIZE; currentPopulation++){ // Calculate fitness for every strategy.
@@ -166,22 +172,11 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 		}
 		NewPopLocation=0;
 	}
-	//printf("Fitness: \n");
-	int j;
-	for(j=0;j<GENETIC_POPULATION_SIZE;j++){
-		//printf("%f\n", Population[j].fitnessScore);
-	}
 	printf("%d generations used.\n", currentGeneration);
 	solution[0]=GENETIC_PURSUERS;
 	solution[1]=GENETIC_MAX_STEPS;
-	
 	doDecode(&Population[0], solution);
-	solution[1] = calculateStates(solution); // Number of steps, not fitness!
-	if(getS4() != 0){ // Unsolved
-		solution[1] = -solution[1];
-	}
-	else{
-	}
+	solution[1]=calculateStates(solution);
 	free(Population);
 	free(New_Population);
 	/*** Free memory for NodeMatrix ***/
@@ -199,9 +194,13 @@ void calculateFitness(struct Chromosome *pop){
 	doDecode(&(*pop), calcPath);
 	int temp = calculateStates(calcPath);
 	(*pop).statesSteps[1] = temp;
-	(*pop).statesSteps[0] = getS4();
-	(*pop).fitnessScore = 1000/(1+(*pop).statesSteps[0]+(*pop).statesSteps[1]); // 1 to avoid 0 fitness.
-	//printf("Fitness score: %f\n", (*pop).fitnessScore);
+	if(temp>=0){
+		(*pop).statesSteps[0] = 0;
+	}
+	else{
+		(*pop).statesSteps[0] = getS4();
+	}
+	(*pop).fitnessScore = 1000/(1+(*pop).statesSteps[0]+abs((*pop).statesSteps[1])); // 1 to avoid 0 fitness.
 }
 void scaleFitness(struct Chromosome *pop){
 	int i,tot_fitness=0, s=0.994, avg_fitness = 0, fitness=1;
@@ -313,13 +312,14 @@ void doDecode(struct Chromosome *pop, int *returnPath){ // Decode the best chrom
 		}
 	}
 }
+/*
 int calculateStates(int *path){
 	int currentStep,pursuer;
 	int S[ROWS][COLS], S_u[ROWS][COLS];
 	memset(&S, 0, sizeof(S));
 	memset(&S_u, 0, sizeof(S));
 	int r,c;
-	/*** Set default values for S and S_u ***/
+	// Set default values for S and S_u
 	for(r = 0; r < ROWS; r++){
 		for(c = 0; c < COLS; c++){ // For every node:
 			if(NodeMatrix[r][c].vision[0] == 0){ // Obstacle
@@ -334,16 +334,16 @@ int calculateStates(int *path){
 			}
 		}
 	}
-	/*** For all steps ***/
+	// For all steps
 	for(currentStep = 0; currentStep <= path[1];currentStep++){ // Go through every step, should terminate if no Node is in state 4.
-		/*** Set values in S ***/
+		// Set values in S
 		for(pursuer=0;pursuer < path[0]; pursuer++){ // For each pursuer
-			/*** State 1 ***/
+			// State 1 
 			int r = path[2*(1+currentStep+pursuer)];
 			int c = path[2*(1+currentStep+pursuer)+1];
 			S[r][c] = 1; // Set state for S to 1 for each pursuer
 			NodeMatrix[r][c].state=1;
-			/*** State 2 ***/
+			// State 2
 			int k=0;
 			while((NodeMatrix[r][c].vision[k]) != 0){ // Set state for S to 2 for each visible node not containing a pursuer
 				int S_r = (*NodeMatrix[r][c].vision[k]).name[0];
@@ -364,11 +364,11 @@ int calculateStates(int *path){
 						S_u[r][c] = 4; // Set state 4 as default
 				}
 			}
-			/*** Set S1 for pursuers, S2 for visible ***/
+			// Set S1 for pursuers, S2 for visible
 			for(pursuer=0;pursuer < path[0]; pursuer++){ // For each pursuer
-				/*** State 1 ***/
+				// State 1 
 				S_u[path[2*(1+currentStep+pursuer)]][path[2*(1+currentStep+pursuer)+1]] = 1; // Set state for S_u to 1 if it contains a pursuer
-				/*** State 2 ***/
+				// State 2
 				int k=0;
 				while((NodeMatrix[path[2*(1+currentStep+pursuer)]][path[2*(1+currentStep+pursuer)+1]].vision[k]) != 0){ // Set state for S_u to 2 if it is visible and doesn't contain a pursuer
 					int S_r = (*NodeMatrix[path[2*(1+currentStep+pursuer)]][path[2*(1+currentStep+pursuer)+1]].vision[k]).name[0];
@@ -378,7 +378,7 @@ int calculateStates(int *path){
 					k++;
 				}
 			}
-			/*** Check state 3,4 ***/
+			// Check state 3,4
 			for(r = 0; r < ROWS; r++){
 				for(c = 0; c < COLS; c++){ // For every node:
 					if(S_u[r][c]!=4){} // State has been updated in S_u
@@ -402,20 +402,20 @@ int calculateStates(int *path){
 				}
 			}
 			needUpdate=0;
-			for(r = 0; r < ROWS; r++){ /*** Check if update is needed ***/
+			for(r = 0; r < ROWS; r++){ // Check if update is needed
 				for(c = 0; c < COLS; c++){ // For every node:
 					if(S[r][c] != S_u[r][c]){
 						needUpdate=1;
 					}
 				}
 			}
-			for(r = 0; r < ROWS; r++){ /*** Set S to S_u before new iteration ***/
+			for(r = 0; r < ROWS; r++){ // Set S to S_u before new iteration
 				for(c = 0; c < COLS; c++){ // For every node:
 					S[r][c] = S_u[r][c];
 				}
 			}
 		}
-		/*** Set states in NodeMatrix to S ***/
+		// Set states in NodeMatrix to S
 		for(r = 0; r < ROWS; r++){
 			for(c = 0; c < COLS; c++){ // For every node:
 				NodeMatrix[r][c].state = S[r][c];
@@ -430,6 +430,110 @@ int calculateStates(int *path){
 	}
 	return currentStep;
 }
+*/
+int calculateStates(int *path){
+	int currentStep=0,pursuer=0,r=0,c=0, nrS4=0;
+	int S[ROWS][COLS], S_u[ROWS][COLS]; // Table of current and updated states
+	memset(&S, 0, sizeof(S));
+	memset(&S_u, 0, sizeof(S));
+	for(r = 0; r < ROWS; r++){
+		for(c = 0; c < COLS; c++){ // For every node:
+			if(NodeMatrix[r][c].vision[0] != 0){ // Not obstacle
+				S[r][c]=4;
+				S_u[r][c]=4;
+			}
+		}
+	}
+	for(currentStep = 0; currentStep <= path[1];currentStep++){ // Go through every step, should terminate if no Node is in state 4.
+		nrS4=0;
+		for(pursuer=0;pursuer < path[0]; pursuer++){ // For each pursuer
+			int r = path[2*(1+pursuer+path[0]*currentStep)];
+			int c = path[2*(1+pursuer+path[0]*currentStep)+1];
+			S[r][c] = 1; // Set state for S to 1 for each pursuer
+			int k=0;
+			while((NodeMatrix[r][c].vision[k]) != (struct Node *)0){ // Set state for S to 2 for each visible node not containing a pursuer
+				int S_r = (*NodeMatrix[r][c].vision[k]).name[0];
+				int S_c = (*NodeMatrix[r][c].vision[k]).name[1];
+				if(S[S_r][S_c] != 1) // If not containing a pursuer
+					S[S_r][S_c] = 2;
+				k++;
+			}
+		} // All pursuers step currentStep has been placed in S
+		int needUpdate = 1;
+		while(needUpdate == 1){
+			for(r = 0; r < ROWS; r++){
+				for(c = 0; c < COLS; c++){ // For every node:
+					if(S_u[r][c] != 0)
+						S_u[r][c] = 4; // Set state 4 as default
+					// Do nothing for obstacles
+				}
+			}
+			for(pursuer=0;pursuer < path[0]; pursuer++){ // For each pursuer
+				S_u[path[2*(1+pursuer+path[0]*currentStep)]][path[2*(1+pursuer+path[0]*currentStep)+1]] = 1; // Set state for S_u to 1 if it contains a pursuer
+				int k=0;
+				while((NodeMatrix[path[2*(1+pursuer+path[0]*currentStep)]][path[2*(1+pursuer+path[0]*currentStep)+1]].vision[k]) != 0){ // Set state for S_u to 2 if it is visible and doesn't contain a pursuer
+					int S_r = (*NodeMatrix[path[2*(1+pursuer+path[0]*currentStep)]][path[2*(1+pursuer+path[0]*currentStep)+1]].vision[k]).name[0];
+					int S_c = (*NodeMatrix[path[2*(1+pursuer+path[0]*currentStep)]][path[2*(1+pursuer+path[0]*currentStep)+1]].vision[k]).name[1];
+					if(S_u[S_r][S_c] != 1) // If not containing a pursuer
+						S_u[S_r][S_c] = 2;
+					k++;
+				}
+			}
+			for(r = 0; r < ROWS; r++){
+				for(c = 0; c < COLS; c++){ // For every node:
+					if(S_u[r][c]!=4){} // State has been updated in S_u
+					else if(S[r][c]==1 && S_u[r][c]!=1){} // Did contain pursuer but currently does not.
+					else if(S[r][c]==4){}
+					else{
+						int check = 1, direction;
+						for(direction=0;direction<4;direction++){ // Go left,right,up,down
+							if(NodeMatrix[r][c].move[direction] != (struct Node *)0){ // If it is possible to move
+								int S_r = (*NodeMatrix[r][c].move[direction]).name[0];
+								int S_c = (*NodeMatrix[r][c].move[direction]).name[1];
+								if(S[S_r][S_c] == 4){
+									check = 0;
+									break;
+								}
+							}
+						}
+						if(check==1) // If not in state 4
+							S_u[r][c]=3;
+					}
+				}
+			}
+			needUpdate=0;
+			for(r = 0; r < ROWS; r++){ /*** Check if update is needed ***/
+				for(c = 0; c < COLS; c++){ // For every node:
+					if(S[r][c] != S_u[r][c])
+						needUpdate=1;
+				}
+			}
+			for(r = 0; r < ROWS; r++){ /*** Set S to S_u before new iteration ***/
+				for(c = 0; c < COLS; c++) // For every node:
+					S[r][c] = S_u[r][c];
+			}
+		}
+		for(r = 0; r < ROWS; r++){
+			for(c = 0; c < COLS; c++){ // For every node:
+				if(S[r][c]==4)
+					nrS4++;
+			}
+		}
+		if(nrS4==0){
+			//Solution found, stop taking steps
+			break;
+		}
+	}
+	if(nrS4>0)
+		currentStep = (0-currentStep);
+	for(r = 0; r < ROWS; r++){ // Solution found or all steps used, write to nodeMatrix
+		for(c = 0; c < COLS; c++){
+			NodeMatrix[r][c].state = S[r][c];
+		}
+	}
+	return currentStep;
+}
+
 void sortPopulation(struct Chromosome *pop, int popSize){
 	//qsort((void *) pop, popSize, sizeof(struct Chromosome), (compfn)compare );
 	qsort((void *) pop, popSize, sizeof(struct Chromosome), (compfn)compareFitness );
@@ -442,6 +546,7 @@ void printStates(){
 		}
 		printf("\n");
 	}
+	printf("\n");
 }
 int getS4(){
 	int S4=0,r,c;
