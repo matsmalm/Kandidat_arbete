@@ -10,8 +10,8 @@
 /*** Variables ***/
 int GENETIC_PURSUERS = 0; // Only a temporary value.
 int GENETIC_GENERATIONS = 0; // Only a temporary value.
-float GENETIC_CONVERGENCE_PERCENT = 0.10; // fraction of population to be equal to break early.
-float GENETIC_MUTATION_PROBABILITY = 0.10; // fraction of mutation probability.
+float GENETIC_CONVERGENCE_PERCENT = 0.95; // fraction of population to be equal to break early.
+float GENETIC_MUTATION_PROBABILITY = 0.15; // fraction of mutation probability.
 int ROWS;
 int COLS;
 
@@ -316,6 +316,8 @@ void doDecode(struct Chromosome *pop, int *returnPath){ // Decode the best chrom
 int calculateStates(int *path){
 	int currentStep,pursuer;
 	int S[ROWS][COLS], S_u[ROWS][COLS];
+	memset(&S, 0, sizeof(S));
+	memset(&S_u, 0, sizeof(S));
 	int r,c;
 	/*** Set default values for S and S_u ***/
 	for(r = 0; r < ROWS; r++){
@@ -452,7 +454,7 @@ int getS4(){
 	}
 	return S4;
 }
-int compare(struct Chromosome *chrom1, struct Chromosome *chrom2){ // Compares two pointers to sort by fitness function. Basic code found at http://support.microsoft.com/kb/73853
+/*int compare(struct Chromosome *chrom1, struct Chromosome *chrom2){ // Compares two pointers to sort by fitness function. Basic code found at http://support.microsoft.com/kb/73853
 	if ( chrom1->statesSteps[0] < chrom2->statesSteps[0])
 		return -1;
 	else if ( chrom1->statesSteps[0] > chrom2->statesSteps[0])
@@ -465,7 +467,7 @@ int compare(struct Chromosome *chrom1, struct Chromosome *chrom2){ // Compares t
 		else
 			return 0;
 	}
-}
+}*/
 int compareFitness(struct Chromosome *chrom1, struct Chromosome *chrom2){ // Compares two pointers to sort by fitness function. Basic code found at http://support.microsoft.com/kb/73853
 	if ( chrom1->fitnessScore > chrom2->fitnessScore)
 		return -1;
