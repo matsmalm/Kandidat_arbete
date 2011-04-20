@@ -7,6 +7,7 @@ notes to self:
 -i get_vision(), rad 330 eventuellt uppdatera states sÂ att man skiljer pÂ sedd, och unikt sedd
 -fˆreslÂ SIZE och OBSTACLE som globala, fˆr att kunna s‰tta storlekar pÂ array etc.
 -frigˆr allocerat minne frÂn get_area() mellan itterationer
+-i a_star, det skulle förbättra algoritmen om man tog fram ALLA kortaste vägar och på såvis kunde få flera bra riktningar att vlja mellan.
 */
 //  function call-order:
 
@@ -41,20 +42,11 @@ notes to self:
 
 #define MAX_SIZE_AREA_COLLECTION 40
 
-struct a_star_node{
-  int F; //skattad total kostnad
-  int G; //faktisk kostnad hit från start
-  int H; //skattad kostnad till mål
-  struct Node *parent;
-  struct Node *self;
-};
-
-
 struct hash_node{
 	struct Node *from;
 	struct Node *to;
 	int distance;
-	struct Node *direction[3];
+	struct Node *direction;
 };
 
 struct valuation{
@@ -306,11 +298,12 @@ struct valuation preparation(struct greedy *input);
 /*KLAR*/void get_area();
 /*KLAR*/void check_boundry_priority(/*area, boundry*/);
 void get_hunter_equiv();
+void solve_assignment2();
 struct move valuation(/*int *next_move*/);
 void designate_boundry(/*antal_att_delegera, boundry, jagare*/);
 void make_distance(/*boundry, jagare*/);
 void add_directional_value(/*antal_att_delegera, data frÂn make_distance*/);
-void solve_assignment(struct greedy *input_greedy, struct valuation *input_val);
+void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, int (*best_assignment)[]);
 void designate_direction(/*solution_from_knappsack*/);
 void add_geometric_value();
 void add_close_boundry_value(/*jagare[i]*/);
@@ -417,8 +410,24 @@ void a_star(struct greedy *input, int from, int to){
 		}
 		//printf("Best index: %d, to: %d\n", best_index, to);
 		if(best_index==to){
-			//printf("From (%d,%d) to (%d,%d), distance is: %d\n",(*(*input).total_area[from]).name[0],(*(*input).total_area[from]).name[1],(*(*input).total_area[to]).name[0],(*(*input).total_area[to]).name[1],G[to]);
-			return;
+		  //printf("From (%d,%d) to (%d,%d), distance is: %d\n",(*(*input).total_area[from]).name[0],(*(*input).total_area[from]).name[1],(*(*input).total_area[to]).name[0],(*(*input).total_area[to]).name[1],G[to]);
+		  struct hash_node hash_input;
+		  hash_input.from=(*input).total_area[from];
+		  hash_input.to=(*input).total_area[to];
+		  hash_input.distance=G[to];
+
+		  int temp1=best_index;
+		  int temp2=100;
+		  while(1){
+		    temp2=parent[temp1];
+		    if (temp2==from){
+		      hash_input.direction=(*input).total_area[temp1];
+		    break;
+		    }
+		    temp1=temp2;
+		  }
+		  struct Node *key[2]={(*input).total_area[from],(*input).total_area[to]};
+		  ht_insert((*input).tile_distance, key, sizeof(key),&hash_input, sizeof(hash_input));		       			return;
 		}
 		else{
 			is_in_open[best_index]=FALSE;
@@ -461,45 +470,21 @@ void get_node_distance(struct greedy *output){
   printf("get_node_distance, end.\n");
 
   (*output).tile_distance= ht_init (10*SIZE*SIZE, NULL); // skapa en hashtabel
-    int i=0;
-	int j=0;
-	
-	while((*output).total_area[i]!=(struct Node*)0){
-		while((*output).total_area[j]!=(struct Node *)0){
-			if(i!=j){
-				struct Node *key[2]={(*output).total_area[i],(*output).total_area[j]};
-				int *count=0;
-				//	int (*path)[MAX];
+  int k=0;
+  int m=0;
+  
+  while((*output).total_area[m]!=(struct Node*)0){
+    k=0;
+    while((*output).total_area[k]!=(struct Node *)0){
+      if(m!=k){
+	a_star(output,m,k);
+      }
+      k++;
+    }
 
-				//printf("precis över dijkstra, (i,j)= (%d, %d)\n", i,j);
-				//	struct hash_node table_input=dijkstra(output,(*output).total_area[i],(*output).total_area[j]);
-
-				a_star(output,i,j);
-				//(*hash_input).distance=distance_temp;
-				//struct Node *direction[3];
-				//(*hash_input).direction[]=
-				//ht_insert((*output).tile_distance,key, sizeof(key), hash_input ,sizeof(hash_input));
-			}
-			j++;
-		}
-		j=0;
-		i++;
-	}		
-	//struct hash_node *test;
-	//test=ht_search(node_distance, key_test, sizeof(key_test));
-	
-  /*
-sÂ l‰nge det finns noder i total_area;
--ta en nod
--ber‰kna kortaste avstÂndet till var och en av noderna i total_area
--l‰gg int avstÂnd i index find_distance_index(*from,*to)
-
-
--kˆr A* eller liknande fˆr att ber‰kna kortaste avstÂnd mellan tvÂ omrÂden
--spara i en (Hash?)tabell
--skriv tabell via pekare till output
-*/
-	return;
+    m++;
+  }		
+  return;
 }
 
 
@@ -920,16 +905,129 @@ void designate_boundry(struct greedy *input_greedy, struct valuation *input_val)
   make_distance(boundry, jagare); //r‰kna fram kortaste v‰g fˆr varje jagare till varje rand
   add_directional_value(antal_att_delegera); // givet de val som finns frÂn make_distance v‰lj b‰sta
   */
+  int best_assignment[(*input_greedy).solution[0]];
   printf("designate_boundry\n");
   printf("          ");
-  solve_assignment(input_greedy, input_val);
+  solve_assignment(input_greedy, input_val, &best_assignment);
   printf("          ");
   designate_direction();
   return;
 }
 
+void solve_assignment2(struct valuation *input_val, struct greedy *input_greedy,int **distmatrix, int (*best_assignment)[]){
+  int i=0;
+  int j=0;
+  int total_unsecured=0;
+  struct Area *designate_array[MAX_SIZE_AREA_COLLECTION];
+  memset(designate_array,0,sizeof(designate_array));
+  while((*input_val).area_collection[i]!=(struct Area *)0){
+    if((*(*input_val).area_collection[i]).area_type!=PRIO_SECURED){
+      total_unsecured++;
+      designate_array[j]=(*input_val).area_collection[i];
+      j++;
+    }  
+    i++;
+  }
+  if(total_unsecured>(*input_greedy).solution[0]){
 
-void solve_assignment(struct greedy *input_greedy, struct valuation *input_val){
+    struct Area *prio_array[MAX_TOTAL_AREA];
+    memset(prio_array,0,sizeof(prio_array));
+    int total_prio=0;
+    i=0;
+    j=0;
+    //identifiera prioriterade områden
+    while(i<total_unsecured){
+      if((*(*input_val).area_collection[i]).area_type==PRIO_VIS_ONE_BOUND || (*(*input_val).area_collection[i]).area_type==PRIO_VIS_SEV_BOUND){
+      total_prio++;
+      prio_array[j]=(*input_val).area_collection[i];
+      j++;
+      }
+      i++;
+    }
+    if(total_prio==(*input_greedy).solution[0]){
+      /*
+         square, assigna exakt ett unikt område till varje jagare:
+	    ta fram alla möjliga kombinationer
+	    kolla summan av avstånden för varje komination
+	    välj kombination med lägst summa för att assigna.
+*/
+    }else if(total_prio>(*input_greedy).solution[0]){
+      //ta fram alla möjliga kombinationer man kan välja ett område per jagare unikt.
+      i=0;
+      j=0;
+      int J[(*input_greedy).solution[0]]; //ett index per jagare
+      memset(J,-1,sizeof(J));
+      typedef int ElementType;
+      Queue combination=CreateQueue((int)pow((double)total_prio, (*input_greedy).solution[0]));
+      while (j<total_prio){
+	J[0]=j;
+	//	Enqueue(J,combination); lös problemet med att köa in en array...
+	j++;
+      }
+      i=1;
+      while(i<(*input_greedy).solution[0]){
+	//J=FrontAndDequeue(combination);    fixa kön!!
+	j=0;
+	while(j<total_prio){
+	  if(/*k not in J[]*/TRUE){
+	    J[i]=j;
+	    //Enqueue(J,combination);   fixa kön!!
+	  }
+	  j++;
+	}
+	i++;
+      }
+      //nu ska alla unika kombinationer finnas i kön.
+      int total_cost;
+      int best_cost=100;
+      while(/*combination is not empty*/1){   //   fixa kön!!
+	//	J=FrontAndDequeue(combination);    fixa kön!!
+	i=0;
+	total_cost=0;
+	while (i<(*input_greedy).solution[0]){
+	  total_cost=total_cost+distmatrix[J[i]][i];
+	  if(total_cost<best_cost){
+	    best_cost=total_cost;
+	    // best_assignment=J;   solve this assignment...
+	  }
+	  i++;
+	}
+      }
+      return;
+    }else if(total_prio<(*input_greedy).solution[0]){
+      /*
+          välj exakt ett unikt område per jagare, måste välja alla prioriterade:
+              ta fram alla möjliga kombinationer som innehåller alla prioriterade
+	      kolla summan av avstånden för varje komination
+	      välj kombination med lägst summa för att assigna.
+*/
+    }
+//---------------end   if(total_unsecured>(*input_greedy).solution[0]) -------------------------
+
+  }else if(total_unsecured==(*input_greedy).solution[0]){
+    /*
+ square, assigna exakt ett område till varje jagare:
+        ta fram alla möjliga kombinationer
+	kolla summan av avstånden för varje komination
+	välj kombination med lägst summa för att assigna.
+     */
+
+    //--------------end if(total_unsecured==(*input_greedy).solution[0]) ---------------------
+  }else if(total_unsecured<(*input_greedy).solution[0]){
+    /*
+    varje område måste assignas minst en gång (kan vara mer?):
+       ta fram alla möjliga kombinationer som innehåller alla områden minst en gång
+       kolla summan av avstånden för varje komination
+       välj kombination med lägst summa för att assigna.
+
+    */
+  }
+  // -----------------end if(total_unsecured<(*input_greedy).solution[0]) ------------------------
+  return;
+}
+
+
+void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, int (*best_assignment)[]){
   //solve knappsack problem? priorize boundrys of priority 4 or 3 (?)
 
   //void assignmentoptimal(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(3)double*/int *distMatrixIn, int nOfRows, int nOfColumns)
@@ -950,7 +1048,7 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val){
     i++;
   }
 
-  int **distmatrix;
+  int **distmatrix; //skapa en värdesmatris. varje rad är ett område, i varje kolonn anges avståndet för jagare_j till randen av området.
   distmatrix = calloc(nOfRows,nOfRows * sizeof(int *));
 	for(i = 0; i < nOfRows; i++){
 	  distmatrix[i] = calloc(nOfCols,nOfCols * sizeof(int));
@@ -960,9 +1058,11 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val){
   while(i<nOfRows){
     j=0;
     while(j<nOfCols){
+      shortest_boundry_distance=MAX_TOTAL_AREA;
       row_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j];
       col_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j+1];
-      struct Node *from=(*input_greedy).node_matrix[row_pos_hunter][col_pos_hunter]; //hunterposition, hunter number j, är en 
+      //hunterposition, hunter number j, är en 
+      struct Node *from=(*input_greedy).node_matrix[row_pos_hunter][col_pos_hunter]; 
       struct Node *to;
       struct Area *area_temp=(*input_val).area_collection[i];
       m=0;
@@ -983,8 +1083,8 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val){
     i++;
   }
 
-
-  //  assignmentoptimal();
+  solve_assignment2(input_val, input_greedy, distmatrix, best_assignment);
+  //  assignmentoptimal(int assignment, int cost, int distmatrixin, nofrows, nofcols);
 
   printf("solve_knappsack, end.\n");
   return;
