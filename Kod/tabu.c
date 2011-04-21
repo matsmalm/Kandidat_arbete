@@ -124,9 +124,19 @@ void analys_tabu_solutions_and_update_Tabu_K_list(int *tabu_solution);
 //Hunters
 
 void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
+	
+	/*
 	printf("\n");
 	printf("START preTabu\n");
 	printf("\n");
+	*/
+	printf("max_step_minus_in_L_list \t\t%d\n", max_step_minus_in_L_list);
+	printf("allowed_stat_4_loss \t\t\t%d\n", allowed_stat_4_loss);
+	printf("max_antal_INcomplete_tabu_solutions \t%d\n", max_antal_INcomplete_tabu_solutions);
+	printf("TABU_MAX_LIKA \t\t\t\t%d\n", TABU_MAX_LIKA);
+	
+	
+	
 	int i,j;
 	//Allocate memory for NodeMatrix 
 	NodeMatrix = malloc(SIZE * sizeof(struct Node *));
@@ -180,16 +190,18 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all 
 	//Do actual pre-processing
 	int pursuer,next=2;
 	tabu_solution[0] = Hunters[0];
-	printf("Pursuers: %d\n", tabu_solution[0]);
+	//printf("Pursuers: %d\n", tabu_solution[0]);
 	for(pursuer = 0; pursuer < Hunters[0]; pursuer++){
 		tabu_solution[next] = Hunters[1+pursuer*2];
 		tabu_solution[next+1] = Hunters[1+pursuer*2+1];
-		printf("(%d,%d)", tabu_solution[next],tabu_solution[next+1]);
+		//printf("(%d,%d)", tabu_solution[next],tabu_solution[next+1]);
 		next = next+2;
 	}
+	/*
 	printf("\n");
 	printf("END preTabu\n");
 	printf("\n");
+	*/
 }
 
 // icke tabu from+1 om tabu from= from
@@ -216,7 +228,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			//självförstålig variabel för brytvilkor
 			max_antal_INcomplete_tabu_solutions_in_a_row_counter++;
 			if(max_antal_INcomplete_tabu_solutions==max_antal_INcomplete_tabu_solutions_in_a_row_counter){
-				printf( "RECHT max_antal_INcomplete_tabu_solutions  ALGORITHEM TERMINATED\n");
+				printf( "RECHT max INcomplete solutionsins\n");
 				break;
 			}
 			tabu_solution[1]=0;
@@ -235,6 +247,8 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		}
 		tabu_calculateStates(tabu_solution);
 		if(tabu_getS4() == 0){
+		
+			/*
 			printf( "Nr_of_complete_tabu_solutions: %d\n",nr_of_complete_tabu_solutions);
 			printf( "Using %d steps\n",tabu_solution[1]);
 			int q=0;
@@ -244,15 +258,17 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			}
 			printf("\n");
 			tabu_printStates();
+			
+			*/
 			nr_of_complete_tabu_solutions++;
 			
 			//save_complete_tabu_solution_path(tabu_solution);
 			if(save_complete_tabu_solution_path(tabu_solution)==OK){
-				printf("HALLLELLLUUULLLIIIIAAAAAAAA\n");
+				//printf("HALLLELLLUUULLLIIIIAAAAAAAA\n");
 				break;
 			}
 			tabu_solution[1]=0;
-			//i=0;
+			int q;//i=0;
 			for(q=2*(1+tabu_solution[0]);q<2000;q++){
 				tabu_solution[q]=-1;
 			}
@@ -261,6 +277,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			number_of_stat_4_in_past_step = 0;
 		}
 	}
+	/*
 	printf("\n");
 	printf( "Best complete tabu_solutions: (steps:%d) \n",returned_Tabu_tabu_solution[1]);
 	int i;
@@ -268,6 +285,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		// printar alla stegen 
 		printf("(%d,%d)", returned_Tabu_tabu_solution[i], returned_Tabu_tabu_solution[i+1]);
 	}
+	
 	printf("\n");
 	//returned_Tabu_tabu_solution[1]++;
 	tabu_calculateStates(returned_Tabu_tabu_solution); // denna behövs faktiskt
@@ -283,7 +301,11 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	printf( "antal tabu; %d\n", nr_of_tabus);
 	printf( "\n");
 	//printf("final i: %d\n", i);
+	
 	printf( "\n");
+	
+	*/
+	int i;
 	if(returned_Tabu_tabu_solution[1]<=200){
 		for(i=0;i<2*(1+returned_Tabu_tabu_solution[0]+returned_Tabu_tabu_solution[1]*returned_Tabu_tabu_solution[0]);i++){
 			tabuSolution[i] = returned_Tabu_tabu_solution[i];
@@ -293,7 +315,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		tabuSolution[0] = returned_Tabu_tabu_solution[0];
 		tabuSolution[1] = -returned_Tabu_tabu_solution[1];
 	}
-	printf( "END Tabu\n\n");
+	//printf( "END Tabu\n\n");
 	for(i = 0; i < SIZE; i++){
 		free(NodeMatrix[i]);
 	}
@@ -349,8 +371,7 @@ int check_K_Tabu_list_all_Hunters(int *tabu_solution){
 
 	//int rad = tabu_solution[    2+2*tabu_solution[0]+tabu_solution[1]*(2*tabu_solution[0])+2*k]; 		// raden vi är på nu
 	//int kol = tabu_solution[1 + 2+2*tabu_solution[0]+tabu_solution[1]*(2*tabu_solution[0])+2*k];
-//
-//2+(2*tabu_solution[0]*tabu_solution[1]) +(2*k)
+
 int check_K_Tabu_list_one_Hunter(int *tabu_solution, int k){
 	int rad = tabu_solution[    2+(2*tabu_solution[0]*tabu_solution[1]) +(2*k)]; 		// raden vi är på nu
 	int kol = tabu_solution[1 + 2+(2*tabu_solution[0]*tabu_solution[1]) +(2*k)];	// colonen vi är på nu
@@ -737,7 +758,7 @@ int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 	if(best_step_length == tabu_solution[1]){
 		Tabu_save_number_3++;
 		if(Tabu_save_number_3==TABU_MAX_LIKA){
-			printf("Tabu_save_number_3 == 4\n");
+			printf("TABU_MAX_LIKA BRYT VILKORET\n");
 			int q=2;
 			for(q=2*(1+returned_Tabu_tabu_solution[0]);q<2000;q++){
 				returned_Tabu_tabu_solution[q]=-1;
@@ -808,8 +829,10 @@ void analys_tabu_solutions_and_update_Tabu_K_list(int *tabu_solution){ //verion 
 		cc = tabu_solution[1 +ee];	// colonen vi är på nu
 		tabuMatris[rr][cc]=1;	
 	}
+	/*
 	printf("tabuMatrix 1\n");
 	print_K_matrix();
+	*/
 }
 
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
