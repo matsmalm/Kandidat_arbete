@@ -29,10 +29,10 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxx Viktiga!!! xxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-#define max_step_minus_in_L_list 5 				// hur många tidigare steg vi skall förbjuda att gå på 35
-#define allowed_stat_4_loss 20 						// antalet områden vi får förlora i ett steg
+#define max_step_minus_in_L_list 12 				// hur många tidigare steg vi skall förbjuda att gå på 35
+#define allowed_stat_4_loss 2 						// antalet områden vi får förlora i ett steg
 #define max_antal_INcomplete_tabu_solutions 1000
-#define TABU_MAX_LIKA 5
+#define TABU_MAX_LIKA 10
 //typVÄRDEN:	max_step_minus_in_L_list			antal_områden*0,5	//TABU_ROWS*TABU_COLS*0,5
 //typVÄRDEN:	allowed_stat_4_loss					????			
 //typVÄRDEN:	max_antal_INcomplete_tabu_solutions		rellativt högt

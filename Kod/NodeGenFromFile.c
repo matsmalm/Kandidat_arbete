@@ -351,21 +351,10 @@ int main() {
 		printf("Genetic\n");
 		int geneticSolution[2*(1+Hunters[0]*200)];
 		memset(geneticSolution,-1,sizeof(geneticSolution));
-		preGenetic(&B, &Hunter_static, BREAK, ROWS, COLS);
+		preGenetic(&B, &Hunters, BREAK, ROWS, COLS);
 		genStart = clock(); // Starting time for Genetic
 		genAlg(geneticSolution); // Main Genetic Algorithm program.
 		genEnd = clock(); // Ending time for Genetic
-		/*
-		if(geneticSolution[1]<0)
-			printf("No solution found for %d pursuers\n", geneticSolution[0]);
-		else{
-			printf("Using %d pursuers, a solution of %d steps was obtained:\n", geneticSolution[0], geneticSolution[1]);
-			int i;
-			for(i=2;i<=2*(geneticSolution[0]+geneticSolution[0]*geneticSolution[1]);i+=2)
-				printf(" (%d,%d)", geneticSolution[i], geneticSolution[i+1]);
-			printf("\n");
-		}
-		*/
 		/*** Greedy ***/
 		printf("Greedy\n");
 		struct greedy start=preGreedy(B, &Hunter_static, &BREAK);
@@ -377,7 +366,7 @@ int main() {
 		printf("Tabu\n");
 		int tabuSolution[2*(1+Hunters[0]*200)];
 		memset(tabuSolution,-1,sizeof(tabuSolution));
-		preTabu(&B, &Hunter_static, BREAK, ROWS, COLS);
+		preTabu(&B, &Hunters, BREAK, ROWS, COLS);
 		tabStart = clock(); // Ending time for Genetic
 		Tabu(tabuSolution); // Main Genetic Algorithm program.
 		tabEnd = clock(); // Ending time for Genetic
