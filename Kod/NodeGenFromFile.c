@@ -20,8 +20,10 @@ int getUp(struct Node *b); // Fetch the number of possible steps upwards.
 int getDown(struct Node *b); // Fetch the number of possible steps downwards.
 void setVision(struct Node *b); // Calculate visible nodes.
 int numVisible(struct Node *b); // Calculate how many visible nodes there is from a node.
+void printResult(int *Hunters);
 FILE *fr = NULL;
-int ROWS=0,COLS=0;
+FILE *res = NULL;
+int ROWS=0,COLS=0,OBS=0;
 struct Node B[SIZE][SIZE];
 
 
@@ -254,6 +256,7 @@ int readFromFile() {
 	resetAB();
 	ROWS=0;
 	COLS=0;
+	OBS=0;
 	int tmpcols=0;
 	int currentcol=0;
 	char line[2048]; // Maimum number of columns*2, line length. Should allow about 1025 columns.
@@ -279,6 +282,9 @@ int readFromFile() {
 			for(i=0;i<=COLS;i++){
 				if((line[i] != ' ') && (line[i] != '\n')){ // Will only happen for 0 and 1 in the matrix.
 					A[ROWS-1][currentcol] = (int) strtol(&line[i],NULL,10);
+					if(A[ROWS-1][currentcol]==0){
+						OBS++;
+					}
 					currentcol++;
 				}
 			}
@@ -326,49 +332,119 @@ void getStartPositions(int *Hunters){
 int main() {
 	srand(time(0)); // Resets random.
 	fr = fopen("OK.txt", "r"); // Open file once
+	res = fopen("RESULTS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
 	int numMatrices=0;
+	clock_t genStart,genEnd,greStart,greEnd,tabStart,tabEnd; // Used to calculate running-time for each algorithm
 	while(readFromFile() != -1){
 		numMatrices++;
 		place();
 		int Hunters[21];
 		memset(Hunters,0,sizeof(Hunters));	
-	       	getStartPositions(Hunters);
-
-		int BREAK = 10;
+		getStartPositions(Hunters);
+		printResult(Hunters); // Write all common info to RESULTS.txt
+		int BREAK = 50;
 		int Hunter_static[]={2,2,0,4,4};
 		/****
 		Here we should be able to call our algorithms, since B will contain the graph network.
 		****/
-		int i;
-		for(i = Hunters[0];i>1;i--){
-			Hunters[0] = i;
-			printf("Pursuers: %d\n", Hunters[0]);
-			/*** Genetic ***/
-			//printf("Genetic\n");
-			/*			int geneticSolution[2*(1+Hunters[0]*1000)];
-			preGenetic(&B, &Hunters, BREAK, ROWS, COLS);
-			genAlg(geneticSolution, &Hunters); // Main Genetic Algorithm program.
-			if(geneticSolution[1]<0)
-				printf("No solution found for %d pursuers\n", geneticSolution[0]);
-			else{
-				printf("Using %d pursuers, a solution of %d steps was obtained:\n", geneticSolution[0], geneticSolution[1]);
-				//int i;
-				//for(i=2;i<=2*(geneticSolution[0]+geneticSolution[0]*geneticSolution[1]);i+=2)
-					//printf(" (%d,%d)", geneticSolution[i], geneticSolution[i+1]);
-				//printf("\n");
-			}
-			//printf("Genetic completed\n");*/
-			/*** Greedy ***/
-			printf("Greedy\n");
-			struct greedy start=preGreedy(B, &Hunter_static, &BREAK);
-			greedyAlg(&start);
-			//printf("Greedy completed\n");		
-			/*** Tabu ***/
+		/*** Genetic ***/
+		printf("Genetic\n");
+		int geneticSolution[2*(1+Hunters[0]*200)];
+		memset(geneticSolution,-1,sizeof(geneticSolution));
+		preGenetic(&B, &Hunter_static, BREAK, ROWS, COLS);
+		genStart = clock(); // Starting time for Genetic
+		//genAlg(geneticSolution); // Main Genetic Algorithm program.
+		genEnd = clock(); // Ending time for Genetic
+		/*
+		if(geneticSolution[1]<0)
+			printf("No solution found for %d pursuers\n", geneticSolution[0]);
+		else{
+			printf("Using %d pursuers, a solution of %d steps was obtained:\n", geneticSolution[0], geneticSolution[1]);
+			int i;
+			for(i=2;i<=2*(geneticSolution[0]+geneticSolution[0]*geneticSolution[1]);i+=2)
+				printf(" (%d,%d)", geneticSolution[i], geneticSolution[i+1]);
+			printf("\n");
 		}
+		*/
+		/*** Greedy ***/
+		printf("Greedy\n");
+		struct greedy start=preGreedy(B, &Hunter_static, &BREAK);
+		greStart = clock(); // Ending time for Genetic
+		//greedyAlg(&start);
+		greEnd = clock(); // Ending time for Genetic
+		//printf("Greedy completed\n");		
+		/*** Tabu ***/
+		printf("Tabu\n");
+		int tabuSolution[2*(1+Hunters[0]*200)];
+		memset(tabuSolution,-1,sizeof(tabuSolution));
+		preTabu(&B, &Hunter_static, BREAK, ROWS, COLS);
+		tabStart = clock(); // Ending time for Genetic
+		//Tabu(); // Main Genetic Algorithm program.
+		tabEnd = clock(); // Ending time for Genetic
+		
+		// Print statistics to RESULTS.txt
+		fprintf(res, "Algorithm\t");
+		fprintf(res, "Genetic\t");
+		fprintf(res, "Greedy\t");
+		fprintf(res, "Tabu\n");
+		fprintf(res, "Time\t\t");
+		fprintf(res, "%.2f\t", ((double) (genEnd - genStart)) / CLOCKS_PER_SEC);
+		fprintf(res, "%.2f\t", ((double) (greEnd - greStart)) / CLOCKS_PER_SEC);
+		fprintf(res, "%.2f\n", ((double) (tabEnd - tabStart)) / CLOCKS_PER_SEC);
+		fprintf(res, "Steps\t\t");
+		fprintf(res, "%d\t", geneticSolution[1]);
+		fprintf(res, "%d\t", start.solution[1]);
+		fprintf(res, "%d\t\n", tabuSolution[1]);
+		fprintf(res, "Path");
+		int i,genDone=0,greDone=0,tabDone=0;
+		for(i=2;i<2*(1+Hunters[0]+Hunters[0]*200);i+=2){
+			if(genDone==1 && greDone==1 && tabDone==1){ // Paths for all algorithms has been printed
+				break;
+			}
+			fprintf(res, "\t\t");
+			if(geneticSolution[i] == -1 || i == 2*(1+geneticSolution[0]+geneticSolution[0]*geneticSolution[1]) || genDone==1){
+				fprintf(res, " \t");
+				genDone=1;
+			}else{
+				fprintf(res, "(%d,%d)\t", geneticSolution[i], geneticSolution[i+1]);
+			}
+			if(start.solution[i] == -1 || i == 2*(1+start.solution[0]+start.solution[0]*start.solution[1]) || greDone==1){
+				fprintf(res, " \t");
+				greDone=1;
+			}else{
+				fprintf(res, "(%d,%d)\t", start.solution[i], start.solution[i+1]);
+			}
+			if(tabuSolution[i] == -1 || i == 2*(1+tabuSolution[0]+tabuSolution[0]*tabuSolution[1]) || tabDone==1){
+				fprintf(res, " ");
+				tabDone=1;
+			}else{
+				fprintf(res, "(%d,%d)", tabuSolution[i], tabuSolution[i+1]);
+			}
+			fprintf(res, "\n");
+		}
+		// Write to file competed
 	}
 	printf("There were %d matrices in input file.\n", numMatrices);
 	fclose (fr); // Close file once.
+	fclose(res); // Close the result file once
 	printf("End main\n");
-	printf("End\n");
 	return EXIT_SUCCESS;
+}
+void printResult(int *Hunters){
+	// Prints environment, rows, columns, obstacles to RESULTS.txt
+	int i,j;
+	for(i=0;i<ROWS;i++){
+		for(j=0;j<COLS;j++){
+			fprintf(res, "%d ", A[i][j]);
+		}
+		fprintf(res, "\n");
+	}
+	fprintf(res, "Rows: %d\n", ROWS);
+	fprintf(res, "Columns: %d\n", COLS);
+	fprintf(res, "Obstacles: %d\n", OBS);
+	fprintf(res, "Pursuers: %d\n", Hunters[0]);
+	for(i=1;i<1+2*Hunters[0];i+=2){
+		fprintf(res, "(%d,%d)", Hunters[i], Hunters[i+1]);
+	}
+	fprintf(res, "\n");
 }
