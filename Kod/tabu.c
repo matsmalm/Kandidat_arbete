@@ -41,9 +41,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //FREDRIK:
 int TABU_ROWS = 0;
 int TABU_COLS = 0;
-int tabu_solution[2000];
+int tabu_solution[8500];
 //FELIX:
-int returned_Tabu_tabu_solution[2000];
+int returned_Tabu_tabu_solution[8500];
 int tabuMatris[SIZE][SIZE];  //int tabuMatris[TABU_ROWS][TABU_COLS];
 int Mr_30=1;
 int Mss_30=4;
@@ -233,7 +233,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			}
 			tabu_solution[1]=0;
 			int q=2;
-			for(q=2*(1+tabu_solution[0]);q<2000;q++){
+			for(q=2*(1+tabu_solution[0]);q<8500;q++){
 				tabu_solution[q]=-1;
 			}
 			//nollställer för tabut 30%
@@ -269,7 +269,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			}
 			tabu_solution[1]=0;
 			int q;//i=0;
-			for(q=2*(1+tabu_solution[0]);q<2000;q++){
+			for(q=2*(1+tabu_solution[0]);q<8500;q++){
 				tabu_solution[q]=-1;
 			}
 			//nollställer för tabut 30%
@@ -760,7 +760,7 @@ int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 		if(Tabu_save_number_3==TABU_MAX_LIKA){
 			printf("TABU_MAX_LIKA BRYT VILKORET\n");
 			int q=2;
-			for(q=2*(1+returned_Tabu_tabu_solution[0]);q<2000;q++){
+			for(q=2*(1+returned_Tabu_tabu_solution[0]);q<8500;q++){
 				returned_Tabu_tabu_solution[q]=-1;
 			}
 			//tabu_solution[1]++;
@@ -776,7 +776,7 @@ int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 		Tabu_save_number_3=0;
 		
 		int q=2;
-		for(q=2*(1+returned_Tabu_tabu_solution[0]);q<2000;q++){
+		for(q=2*(1+returned_Tabu_tabu_solution[0]);q<8500;q++){
 			returned_Tabu_tabu_solution[q]=-1;
 		}
 		for(z=0;z<(2+2*tabu_solution[0]+2*tabu_solution[0]*tabu_solution[1]);z++){
