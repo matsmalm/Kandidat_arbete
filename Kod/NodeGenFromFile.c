@@ -353,7 +353,7 @@ int main() {
 		memset(geneticSolution,-1,sizeof(geneticSolution));
 		preGenetic(&B, &Hunter_static, BREAK, ROWS, COLS);
 		genStart = clock(); // Starting time for Genetic
-		//genAlg(geneticSolution); // Main Genetic Algorithm program.
+		genAlg(geneticSolution); // Main Genetic Algorithm program.
 		genEnd = clock(); // Ending time for Genetic
 		/*
 		if(geneticSolution[1]<0)
@@ -379,7 +379,7 @@ int main() {
 		memset(tabuSolution,-1,sizeof(tabuSolution));
 		preTabu(&B, &Hunter_static, BREAK, ROWS, COLS);
 		tabStart = clock(); // Ending time for Genetic
-		//Tabu(); // Main Genetic Algorithm program.
+		Tabu(tabuSolution); // Main Genetic Algorithm program.
 		tabEnd = clock(); // Ending time for Genetic
 		
 		// Print statistics to RESULTS.txt
