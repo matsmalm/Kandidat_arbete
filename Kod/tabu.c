@@ -29,10 +29,10 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxx Viktiga!!! xxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-#define max_step_minus_in_L_list 10 				// hur många tidigare steg vi skall förbjuda att gå på 35
+#define max_step_minus_in_L_list 0 				// hur många tidigare steg vi skall förbjuda att gå på 35
 #define allowed_stat_4_loss 20 						// antalet områden vi får förlora i ett steg
 #define max_antal_INcomplete_tabu_solutions 1000
-#define TABU_MAX_LIKA 10
+#define TABU_MAX_LIKA 5
 //typVÄRDEN:	max_step_minus_in_L_list			antal_områden*0,5	//TABU_ROWS*TABU_COLS*0,5
 //typVÄRDEN:	allowed_stat_4_loss					????			
 //typVÄRDEN:	max_antal_INcomplete_tabu_solutions		rellativt högt
@@ -208,7 +208,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	printf( "START Tabu\n\n");
 	//int tabuMatris[TABU_ROWS][TABU_COLS]
 	// ONE tabu_solution CREATER:
-	int i=0, steps=1000; // step = slutlösningens längd uppdaterade variabel
+	int i=0, steps=2000; // step = slutlösningens längd uppdaterade variabel
 	//tabu_solution[1] atalet steg i lösnignen blir steps/antalet_jagare ex 100/2=50
 	for(i=0;i<steps;i++){
 		//basic brytvilkor testar
@@ -232,19 +232,25 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		tabu_getRandom(tabu_solution); 				// Generate a random step sequence from step 
 		tabu_calculateStates(tabu_solution);
 		// i=check_ALL_Tabu_lists(tabu_solution,i); /TA EJ BORT
+		/*
 		if(check_ALL_Tabu_lists(tabu_solution)==NOT_OK){
 			tabu_solution[1]--;
-			i--;
-			if(tabu_solution[1]<0){
-				tabu_solution[1]=0;
-			}
-			if(i<0){
-				i=0;
-			}
+			tabu_solution[1]=i;
 		}
+		*/
 		if(tabu_getS4() == 0){
-			nr_of_complete_tabu_solutions++;
 			printf( "Nr_of_complete_tabu_solutions: %d\n",nr_of_complete_tabu_solutions);
+			printf( "Using %d steps\n",tabu_solution[1]);
+			for(i=0;i<2*(2+1+tabu_solution[0]+tabu_solution[1]*tabu_solution[0]);i+=2){
+			// printar alla stegen 
+			printf("(%d,%d)", tabu_solution[i], tabu_solution[i+1]);
+			}
+			
+			printf("\n");
+			tabu_printStates();
+			//tabu_solution[1]++;
+			nr_of_complete_tabu_solutions++;
+			
 			//save_complete_tabu_solution_path(tabu_solution);
 			if(save_complete_tabu_solution_path(tabu_solution)==OK){
 				printf("HALLLELLLUUULLLIIIIAAAAAAAA\n");
@@ -265,7 +271,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	printf("\n");
 	//printf("Antal Jagare: %d, Antal steg: %d\n", returned_Tabu_tabu_solution[0], returned_Tabu_tabu_solution[1]);
 	//printf( "nr of complete tabu_solutions: %d\n",nr_of_complete_tabu_solutions);
-	printf( "Best complete tabu_solutions: \n");
+	printf( "Best complete tabu_solutions: (steps:%d) \n",returned_Tabu_tabu_solution[1]);
 	for(i=0;i<2*(1+returned_Tabu_tabu_solution[0]+returned_Tabu_tabu_solution[1]*returned_Tabu_tabu_solution[0]);i+=2){
 		// printar alla stegen 
 		printf("(%d,%d)", returned_Tabu_tabu_solution[i], returned_Tabu_tabu_solution[i+1]);
@@ -286,9 +292,11 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	printf( "\n");
 	printf("final i: %d\n", i);
 	printf( "\n");
+	/*
 	for(i=0;i<2*(1+returned_Tabu_tabu_solution[0]+returned_Tabu_tabu_solution[1]*returned_Tabu_tabu_solution[0]);i++){
 		tabuSolution[i] = returned_Tabu_tabu_solution[i];
 	}
+	*/
 	printf( "END Tabu\n\n");
 	//nr_of_tabus=0;
 	for(i = 0; i < SIZE; i++){
@@ -347,11 +355,15 @@ int check_K_Tabu_list_all_Hunters(int *tabu_solution){
 	return OK;
 }
 
+	//int rad = tabu_solution[    2+2*tabu_solution[0]+tabu_solution[1]*(2*tabu_solution[0])+2*k]; 		// raden vi är på nu
+	//int kol = tabu_solution[1 + 2+2*tabu_solution[0]+tabu_solution[1]*(2*tabu_solution[0])+2*k];
+//
+//2+(2*tabu_solution[0]*tabu_solution[1]) +(2*k)
 int check_K_Tabu_list_one_Hunter(int *tabu_solution, int k){
-	int rad = tabu_solution[    2+2*tabu_solution[0]+tabu_solution[1]*(2*tabu_solution[0])+2*k]; 		// raden vi är på nu
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+tabu_solution[1]*(2*tabu_solution[0])+2*k];	// colonen vi är på nu
+	int rad = tabu_solution[    2+(2*tabu_solution[0]*tabu_solution[1]) +(2*k)]; 		// raden vi är på nu
+	int kol = tabu_solution[1 + 2+(2*tabu_solution[0]*tabu_solution[1]) +(2*k)];	// colonen vi är på nu
 	if(tabuMatris[rad][kol] == 0){
-		int varde = tabuMatris[rad][kol];
+		
 		//printf(" check_K_Tabu_list_one_Hunter NOT_OK: Tabu! (%d,%d) = %d \n", rad, kol, varde);
 		return NOT_OK;
 	}
@@ -386,8 +398,9 @@ int check_30_Tabu_list(int *tabu_solution){
 		Mr_30=0;
 		return OK;
 	}
-	return NOT_OK;
 	//return OK;
+	return NOT_OK;
+	
 }
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXX   30 END   XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -410,7 +423,7 @@ int check_L_Tabu_list(int *tabu_solution){
 						if(Mr_L==Mss_L){
 							printf("Mr_L up\n");
 							Mr_L=0;
-							return OK;
+							//return OK;
 						}
 						return NOT_OK;
 					}
@@ -424,7 +437,7 @@ int check_L_Tabu_list(int *tabu_solution){
 						if(Mr_L==Mss_L){
 							printf("Mr_L right\n");
 							Mr_L=0;
-							return OK;
+							//return OK;
 						}
 						return NOT_OK;
 					}
@@ -438,7 +451,7 @@ int check_L_Tabu_list(int *tabu_solution){
 						if(Mr_L==Mss_L){
 							printf("Mr_L down\n");
 							Mr_L=0;
-							return OK;
+							//return OK;
 						}
 						return NOT_OK;
 					}
@@ -452,7 +465,7 @@ int check_L_Tabu_list(int *tabu_solution){
 						if(Mr_L==Mss_L){
 							printf("Mr_L left\n");
 							Mr_L=0;
-							return OK;
+							//return OK;
 						}
 						return NOT_OK;
 					}
@@ -470,7 +483,7 @@ int check_L_Tabu_list(int *tabu_solution){
 int tabu_up(int *tabu_solution, int k){
 	// vi ska ha positionen innan den vi är i. och se om den är okey innom matrisen
 	int s = tabu_solution[1]-1;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] -1; 	// raden vi är på i förra steget
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k] -1; 	// raden vi är på i förra steget
 	//int kol = tabu_solution[1 + 2+2*tabu_solution[0]+b*(2*tabu_solution[0])+2*k];	// colonen vi är på i förra steget
 	if(rad==-1){
 		//printf("tabu_up NOT_OK\n");
@@ -484,7 +497,7 @@ int tabu_left(int *tabu_solution, int k){
 	// vi ska ha positionen innan den vi är i. och se om den är okey innom matrisen
 	int s = tabu_solution[1]-1;
 	//int rad = tabu_solution[    2+2*tabu_solution[0]+b*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] -1;	// colonen vi är på i förra steget
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k] -1;	// colonen vi är på i förra steget
 	
 	if(kol==-1){
 		//printf("tabu_left NOT_OK\n");
@@ -498,7 +511,7 @@ int tabu_right(int *tabu_solution, int k){
 	// vi ska ha positionen innan den vi är i. och se om den är okey innom matrisen
 	int s = tabu_solution[1]-1;
 	//int rad = tabu_solution[    2+2*tabu_solution[0]+b*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] +1;	// colonen vi är på i förra steget
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k] +1;	// colonen vi är på i förra steget
 	
 	if(kol==TABU_COLS){
 		//printf("tabu_right NOT_OK\n");
@@ -511,7 +524,7 @@ int tabu_right(int *tabu_solution, int k){
 int tabu_down(int *tabu_solution, int k){
 	// vi ska ha positionen innan den vi är i. och se om den är okey innom matrisen
 	int s = tabu_solution[1]-1;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] +1; 	// raden vi är på i förra steget
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k] +1; 	// raden vi är på i förra steget
 	if(rad==TABU_ROWS){
 		//printf("tabu_down NOT_OK\n");
 		return NOT_OK;
@@ -520,12 +533,13 @@ int tabu_down(int *tabu_solution, int k){
 	return OK;
 }
 
+
 int check_K_Tabu_list_one_Hunter_step_up(int *tabu_solution, int k){
 	// backa ett steg sen gå up ett steg och sen kolla om denna tabu mot K listan 
 	int s = tabu_solution[1]-1;
 	int number_of_steps_backward=0;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] -1; 	// raden vi är på i förra steget
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k];	// colonen vi är på i förra steget
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k] -1; 	// raden vi är på i förra steget
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k];	// colonen vi är på i förra steget
 	if(tabuMatris[rad][kol] == 0){
 		//printf(" check_K_Tabu_list_one_Hunter_step_up NOT    L list upp Tabu! (%d,%d) = %d \n", rad, kol, varde);
 		return NOT_OK;
@@ -539,8 +553,8 @@ int check_K_Tabu_list_one_Hunter_step_right(int *tabu_solution, int k){
 	// backa ett steg sen gå right ett steg och sen kolla om denna tabu mot K listan 
 	int s = tabu_solution[1]-1;
 	int number_of_steps_backward=0;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] +1;	// colonen vi är på i förra steget
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k] +1;	// colonen vi är på i förra steget
 	if(tabuMatris[rad][kol] == 0){
 		//printf("check_K_Tabu_list_one_Hunter_step_right NOT_OK    L list right Tabu! (%d,%d) = %d \n", rad, kol, varde);
 		return NOT_OK;
@@ -554,8 +568,8 @@ int check_K_Tabu_list_one_Hunter_step_down(int *tabu_solution, int k){
 	// backa ett steg sen gå down ett steg och sen kolla om denna tabu mot K listan 
 	int s = tabu_solution[1]-1;
 	int number_of_steps_backward=0;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] +1; 	// raden vi är på i förra steget
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k];	// colonen vi är på i förra steget
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k] +1; 	// raden vi är på i förra steget
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k];	// colonen vi är på i förra steget
 	if(tabuMatris[rad][kol] == 0){
 		//printf("check_K_Tabu_list_one_Hunter_step_down NOT_OK    L list right Tabu! (%d,%d) = %d \n", rad, kol, varde);
 		return NOT_OK;
@@ -571,8 +585,8 @@ int check_K_Tabu_list_one_Hunter_step_left(int *tabu_solution, int k){
 	
 	int s = tabu_solution[1]-1;
 	int number_of_steps_backward=0;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] -1;	// colonen vi är på i förra steget
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k] -1;	// colonen vi är på i förra steget
 	if(tabuMatris[rad][kol] == 0){
 		//printf("check_K_Tabu_list_one_Hunter_step_left NOT_OK    L list right Tabu! (%d,%d) = %d \n", rad, kol, varde);
 		return NOT_OK;
@@ -582,19 +596,21 @@ int check_K_Tabu_list_one_Hunter_step_left(int *tabu_solution, int k){
 
 }
 
+
+
 int check_L_Tabu_list_X_past_steps(int *tabu_solution, int k){
 	// denna ska bara kolla om de 4 gamla stegen är tabu för varje jagare.
 	int s=tabu_solution[1],number_of_steps_backward=0;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k]; 	// raden vi är på nu
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k];	// colonen vi är på nu
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k]; 	// raden vi är på nu
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k];	// colonen vi är på nu
 	
 	//kollar "i" antla steg bakot men inte mer än 4
 	for(s=s-1;s>0;s--){
 		if(number_of_steps_backward > max_step_minus_in_L_list){
 			break;
 		}
-		int rad_minus = tabu_solution[    2+2*tabu_solution[0]+(s)*(2*tabu_solution[0])+2*k]; 	// raden s steg bakot från där vi är nu
-		int kol_minus = tabu_solution[1 + 2+2*tabu_solution[0]+(s)*(2*tabu_solution[0])+2*k];	// colonen  s steg bakot från där vi är nu
+		int rad_minus = tabu_solution[    2+(s)*(2*tabu_solution[0])+2*k]; 	// raden s steg bakot från där vi är nu
+		int kol_minus = tabu_solution[1 + 2+(s)*(2*tabu_solution[0])+2*k];	// colonen  s steg bakot från där vi är nu
 		
 		if(rad==rad_minus && kol==kol_minus){
 			//printf("check_L_Tabu_list_X_past_steps NOT_OK\n");
@@ -611,8 +627,8 @@ int check_L_Tabu_list_X_past_steps_up(int *tabu_solution, int k){
 	// backa ett steg sen gå up ett steg och sen kolla om denna tabu mot L listan
 	int s=tabu_solution[1]-1;
 	int number_of_steps_backward=0;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] -1; 	// raden vi är på i förra steget
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k];	// colonen vi är på i förra steget
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k] -1; 	// raden vi är på i förra steget
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k];	// colonen vi är på i förra steget
 	
 	//kollar "i" antla steg bakot men inte mer än 4
 	for(s;s>0;s--){
@@ -620,8 +636,8 @@ int check_L_Tabu_list_X_past_steps_up(int *tabu_solution, int k){
 			break;
 		}
 		
-		int rad_minus = tabu_solution[    2+2*tabu_solution[0]+(s)*(2*tabu_solution[0])+2*k]; 	// raden s steg bakot från där vi är nu
-		int kol_minus = tabu_solution[1 + 2+2*tabu_solution[0]+(s)*(2*tabu_solution[0])+2*k];	// colonen  s steg bakot från där vi är nu
+		int rad_minus = tabu_solution[    2+(s)*(2*tabu_solution[0])+2*k]; 	// raden s steg bakot från där vi är nu
+		int kol_minus = tabu_solution[1 + 2+(s)*(2*tabu_solution[0])+2*k];	// colonen  s steg bakot från där vi är nu
 		
 		if(rad==rad_minus && kol==kol_minus){
 			//printf("check_L_Tabu_list_X_past_steps_up NOT_OK\n");
@@ -637,8 +653,8 @@ int check_L_Tabu_list_X_past_steps_right(int *tabu_solution, int k){
 	// backa ett steg sen gå right ett steg och sen kolla om denna tabu mot L listan
 	int s=tabu_solution[1]-1;
 	int number_of_steps_backward=0;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] +1;	// colonen vi är på i förra steget
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k] +1;	// colonen vi är på i förra steget
 	
 	//kollar "i" antla steg bakot men inte mer än 4
 	for(s;s>0;s--){
@@ -646,8 +662,8 @@ int check_L_Tabu_list_X_past_steps_right(int *tabu_solution, int k){
 			break;
 		}
 		
-		int rad_minus = tabu_solution[    2+2*tabu_solution[0]+(s)*(2*tabu_solution[0])+2*k]; 	// raden s steg bakot från där vi är nu
-		int kol_minus = tabu_solution[1 + 2+2*tabu_solution[0]+(s)*(2*tabu_solution[0])+2*k];	// colonen  s steg bakot från där vi är nu
+		int rad_minus = tabu_solution[    2+(s)*(2*tabu_solution[0])+2*k]; 	// raden s steg bakot från där vi är nu
+		int kol_minus = tabu_solution[1 + 2+(s)*(2*tabu_solution[0])+2*k];	// colonen  s steg bakot från där vi är nu
 		
 		if(rad==rad_minus && kol==kol_minus){
 			//printf("check_L_Tabu_list_X_past_steps_right NOT_OK\n");
@@ -664,8 +680,8 @@ int check_L_Tabu_list_X_past_steps_down(int *tabu_solution, int k){
 	// backa ett steg sen gå down ett steg och sen kolla om denna tabu mot L listan
 	int s = tabu_solution[1]-1;
 	int number_of_steps_backward=0;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k] +1; 	// raden vi är på i förra steget
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k];	// colonen vi är på i förra steget
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k] +1; 	// raden vi är på i förra steget
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k];	// colonen vi är på i förra steget
 	
 	//kollar "i" antla steg bakot men inte mer än 4
 	for(s;s>0;s--){
@@ -673,8 +689,8 @@ int check_L_Tabu_list_X_past_steps_down(int *tabu_solution, int k){
 			break;
 		}
 		
-		int rad_minus = tabu_solution[    2+2*tabu_solution[0]+(s)*(2*tabu_solution[0])+2*k]; 	// raden s steg bakot från där vi är nu
-		int kol_minus = tabu_solution[1 + 2+2*tabu_solution[0]+(s)*(2*tabu_solution[0])+2*k];	// colonen  s steg bakot från där vi är nu
+		int rad_minus = tabu_solution[    2+(s)*(2*tabu_solution[0])+2*k]; 	// raden s steg bakot från där vi är nu
+		int kol_minus = tabu_solution[1 + 2+(s)*(2*tabu_solution[0])+2*k];	// colonen  s steg bakot från där vi är nu
 		
 		if(rad==rad_minus && kol==kol_minus){
 			//printf("check_L_Tabu_list_X_past_steps_down NOT_OK\n");
@@ -691,16 +707,16 @@ int check_L_Tabu_list_X_past_steps_left(int *tabu_solution, int k){ // i = steg 
 	// backa ett steg sen gå left ett steg och sen kolla om denna tabu mot L listan
 	int s = tabu_solution[1]-1;
 	int number_of_steps_backward=0;
-	int rad = tabu_solution[    2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
-	int kol = tabu_solution[1 + 2+2*tabu_solution[0]+s*(2*tabu_solution[0])+2*k]  -1;	// colonen vi är på i förra steget
+	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
+	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k]  -1;	// colonen vi är på i förra steget
 	
 	//kollar "i" antla steg bakot men inte mer än 4
 	for(s;s>0;s--){
 		if(number_of_steps_backward > max_step_minus_in_L_list){
 			break;
 		}
-		int rad_minus = tabu_solution[    2+2*tabu_solution[0]+(s)*(2*tabu_solution[0])+2*k]; 	// raden s steg bakot från där vi är nu
-		int kol_minus = tabu_solution[1 + 2+2*tabu_solution[0]+(s)*(2*tabu_solution[0])+2*k];	// colonen  s steg bakot från där vi är nu
+		int rad_minus = tabu_solution[    2+(s)*(2*tabu_solution[0])+2*k]; 	// raden s steg bakot från där vi är nu
+		int kol_minus = tabu_solution[1 + 2+(s)*(2*tabu_solution[0])+2*k];	// colonen  s steg bakot från där vi är nu
 		
 		if(rad==rad_minus && kol==kol_minus){
 			//printf("check_L_Tabu_list_X_past_steps_left NOT_OK\n");
@@ -725,6 +741,7 @@ void print_K_matrix(){
 		printf("\n");
 	}
 }
+
 int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 	int z;
 	if(best_step_length == tabu_solution[1]){
@@ -735,7 +752,9 @@ int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 			for(q=2*(1+returned_Tabu_tabu_solution[0]);q<2000;q++){
 				returned_Tabu_tabu_solution[q]=-1;
 			}
-			for(z=0;z<2*(1+tabu_solution[0]+tabu_solution[1]*tabu_solution[0]);z++){
+			//ö1 2*(1+tabu_solution[0]+tabu_solution[1]*tabu_solution[0]
+			tabu_solution[1]++;
+			for(z=0;z<(2+2*tabu_solution[0]+2*tabu_solution[0]*tabu_solution[1]);z++){
 				returned_Tabu_tabu_solution[z] = tabu_solution[z];
 			}
 			return OK;
@@ -745,11 +764,13 @@ int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 		max_antal_INcomplete_tabu_solutions_in_a_row_counter=0; 
 		best_step_length = tabu_solution[1];
 		Tabu_save_number_3=0;
+		
 		int q=2;
 		for(q=2*(1+returned_Tabu_tabu_solution[0]);q<2000;q++){
 			returned_Tabu_tabu_solution[q]=-1;
 		}
-		for(z=0;z<2*(1+tabu_solution[0]+tabu_solution[1]*tabu_solution[0]);z++){
+		tabu_solution[1]++;
+		for(z=0;z<(2+2*tabu_solution[0]+2*tabu_solution[0]*tabu_solution[1]);z++){
 			returned_Tabu_tabu_solution[z] = tabu_solution[z];
 		}
 		analys_tabu_solutions_and_update_Tabu_K_list(tabu_solution);
@@ -769,15 +790,34 @@ void analys_tabu_solutions_and_update_Tabu_K_list(int *tabu_solution){ //verion 
 	int ee;
 	int rr;
 	int cc;
+	/*
+	printf("l0sningstegen till tabuMatris under\n");
+	int www;
+	for(www=0;www<2*(1+tabu_solution[0]+tabu_solution[1]*tabu_solution[0]);www+=2){
+		// printar alla stegen 
+		printf("(%d,%d)", tabu_solution[www], tabu_solution[www+1]);
+		
+	}
+	printf("\n");
+	*/
 	
 	for(r = 0; r < TABU_ROWS; r++){
 		for(c = 0; c < TABU_COLS; c++){ // For every node:
 				tabuMatris[r][c]=0;
 		}
 	}
-	for(ee=2; ee<2+2*tabu_solution[0]+tabu_solution[0]*tabu_solution[1]*2;ee+=2){
-		rr = tabu_solution[    ee]; 		// raden vi är på nu
-		cc = tabu_solution[1 + ee];	// colonen vi är på nu
+	
+	
+	/*
+			for(i=0;i<2*(1+2+tabu_solution[0]+tabu_solution[1]*tabu_solution[0]);i+=2){
+			// printar alla stegen 
+			printf("(%d,%d)", tabu_solution[i], tabu_solution[i+1]);
+			}
+	*/
+	//2+2*tabu_solution[0]+
+	for(ee=0; ee<2*(1+2+tabu_solution[0]+tabu_solution[1]*tabu_solution[0]);ee+=2){
+		rr = tabu_solution[2 +ee]; 		// raden vi är på nu
+		cc = tabu_solution[3 +ee];	// colonen vi är på nu
 		tabuMatris[rr][cc]=1;	
 	}
 	printf("tabuMatrix 1\n");
@@ -811,6 +851,7 @@ void tabu_getRandom(int *tabu_solution){ // AV  fredrik och felix  // Generate r
 	}
 	tabu_solution[1]++;
 }
+
 void tabu_printStates(){
 	//printf("tabu_printStates\n");
 	int r,c;
@@ -821,6 +862,7 @@ void tabu_printStates(){
 		printf("\n");
 	}
 }
+
 int tabu_getS4(){
 	//printf("tabu_getS4\n");
 	int S4=0,r,c;
