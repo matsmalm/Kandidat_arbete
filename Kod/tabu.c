@@ -220,10 +220,14 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	printf( "START Tabu\n\n");
 	//int tabuMatris[TABU_ROWS][TABU_COLS]
 	// ONE tabu_solution CREATER:
-	int steps=500; // step = slutlösningens längd uppdaterade variabel
+	int steps=800; // step = slutlösningens längd uppdaterade variabel
 	//tabu_solution[1] atalet steg i lösnignen blir steps/antalet_jagare ex 100/2=50
 	while(tabu_solution[0]<steps){
-		//basic brytvilkor testar
+	
+		if(tabu_solution[0]==steps){
+			break;
+		}
+		
 		if(tabu_solution[1]==best_step_length){ // om lösnignen nått best_step_length så måste vi ju avbryta
 			//självförstålig variabel för brytvilkor
 			max_antal_INcomplete_tabu_solutions_in_a_row_counter++;
