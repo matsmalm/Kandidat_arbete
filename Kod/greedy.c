@@ -53,6 +53,7 @@ struct valuation{
   //solution[solution_iter_index+rj] placerar radindex fˆr jagare j i aktuell iteration.
   struct Node *total_vision[MAX_SIZE_TOTAL_VISION];
   struct Area *area_collection[MAX_SIZE_AREA_COLLECTION];
+  struct Area *designate_array[MAX_SIZE_AREA_COLLECTION];
 };
 
 struct move{
@@ -74,7 +75,7 @@ struct Area{
 
 //-------------------end variabel definitions----------------------
 
-//-------------------defining a queue----------------------
+//-------------------defining a queue of struct hash_node----------------------
 /*
  *  FILE   : queue.h
  *  AUTHOR : Jeffrey Hunter
@@ -89,7 +90,7 @@ struct Area{
 #define Error(Str)        FatalError(Str)
 #define FatalError(Str)   fprintf(stderr, "%s\n", Str), exit(1)
 
-typedef struct Node* ElementType;
+typedef void* ElementType;
 
 #ifndef _Queue_h
 
@@ -227,7 +228,7 @@ void Dequeue(Queue Q) {
 
 ElementType FrontAndDequeue(Queue Q) {
 
-  ElementType X = (struct Node *)0;
+  ElementType X = 0;
 
   if (IsEmpty(Q)) {
     Error("FrontAndDequeue Error: The queue is empty.");
@@ -242,6 +243,8 @@ ElementType FrontAndDequeue(Queue Q) {
 
 
 //-------------------end of queue definition--------------
+
+
 
 
 
@@ -303,7 +306,7 @@ struct move valuation(/*int *next_move*/);
 void designate_boundry(/*antal_att_delegera, boundry, jagare*/);
 void make_distance(/*boundry, jagare*/);
 void add_directional_value(/*antal_att_delegera, data frÂn make_distance*/);
-void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, int (*best_assignment)[]);
+void solve_assignment();
 void designate_direction(/*solution_from_knappsack*/);
 void add_geometric_value();
 void add_close_boundry_value(/*jagare[i]*/);
@@ -477,6 +480,7 @@ void get_node_distance(struct greedy *output){
     k=0;
     while((*output).total_area[k]!=(struct Node *)0){
       if(m!=k){
+
 	a_star(output,m,k);
       }
       k++;
@@ -914,22 +918,81 @@ void designate_boundry(struct greedy *input_greedy, struct valuation *input_val)
   return;
 }
 
-void solve_assignment2(struct valuation *input_val, struct greedy *input_greedy,int **distmatrix, int (*best_assignment)[]){
+void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, int *best_assignment){
+
   int i=0;
   int j=0;
-  int total_unsecured=0;
-  struct Area *designate_array[MAX_SIZE_AREA_COLLECTION];
-  memset(designate_array,0,sizeof(designate_array));
+  int m=0;
+  int k=0;
+  /*output*/  
+  int assignment[(*input_greedy).solution[0]/*antal jagare?*/];
+  /*input*/
+  int total_unsecured=0; //antal areas, svarar mot rader i kostnadsmatris 
+  int total_hunters=(*input_greedy).solution[0]; //antal jagare, svarar mot kolumner i kostnadsmatris
+  int row_pos_hunter=0;
+  int col_pos_hunter=0;
+  int shortest_boundry_distance=MAX_TOTAL_AREA;
+
+
+   //ta fram hur många områden som finns, som inte är säkrade: 
+
+  memset((*input_val).designate_array,0,sizeof((*input_val).designate_array));
+  j=0;
   while((*input_val).area_collection[i]!=(struct Area *)0){
     if((*(*input_val).area_collection[i]).area_type!=PRIO_SECURED){
       total_unsecured++;
-      designate_array[j]=(*input_val).area_collection[i];
+      (*input_val).designate_array[j]=(*input_val).area_collection[i];
       j++;
     }  
     i++;
   }
-  if(total_unsecured>(*input_greedy).solution[0]){
+  i=0;
+  j=0;
 
+//skapa en kostnadsmatris. varje element c_ij svara mot en hash_node.:
+  struct hash_node **costmatrix;
+  costmatrix = calloc(total_unsecured,total_unsecured * sizeof(struct hash_node *));
+  for(i = 0; i <=total_hunters; i++){
+    costmatrix[i] = calloc(total_hunters,total_hunters * sizeof(struct hash_node));
+  }
+
+  //fyll kostnadsmatrisen med rätt hash_nodes:
+  i=0;
+  while(i<total_unsecured){
+    j=0;
+    while(j<total_hunters){
+      shortest_boundry_distance=MAX_TOTAL_AREA;
+      row_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j];
+      col_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j+1];
+      struct Node *from=(*input_greedy).node_matrix[row_pos_hunter][col_pos_hunter]; 
+      struct Node *to=(struct Node *)0;
+      struct Area *area_temp=(*input_val).designate_array[i];
+      m=0;
+      struct hash_node *best_hash;
+      while((*area_temp).boundry_nodes[m]!=(struct Node *)0){
+	struct Node *temp=(*area_temp).boundry_nodes[m];
+	struct Node *key[2]={from,temp};
+	struct hash_node *temp_hash;
+	temp_hash=ht_search((*input_greedy).tile_distance, key,sizeof(key));
+	if((*temp_hash).distance<shortest_boundry_distance){
+	  to=temp;
+	  best_hash=temp_hash;
+	  shortest_boundry_distance=(*temp_hash).distance;
+	}
+	m++;
+      }
+      costmatrix[i][j]=*best_hash; //cost information, given by hashtable using key (from, to)
+      j++;
+    }
+    i++;
+  }
+
+
+  //lös assignmentproblemet, tre olika fall, med ett antal underfall:
+
+  //fall 1:
+  if(total_unsecured>(*input_greedy).solution[0]){
+    printf("total_unsecured>number_of_hunters\n");
     struct Area *prio_array[MAX_TOTAL_AREA];
     memset(prio_array,0,sizeof(prio_array));
     int total_prio=0;
@@ -944,76 +1007,258 @@ void solve_assignment2(struct valuation *input_val, struct greedy *input_greedy,
       }
       i++;
     }
-    if(total_prio==(*input_greedy).solution[0]){
-      /*
-         square, assigna exakt ett unikt område till varje jagare:
-	    ta fram alla möjliga kombinationer
-	    kolla summan av avstånden för varje komination
-	    välj kombination med lägst summa för att assigna.
-*/
-    }else if(total_prio>(*input_greedy).solution[0]){
+      if(total_prio>(*input_greedy).solution[0] || total_prio==(*input_greedy).solution[0]){
+	printf("total_prio>number_of_hunters or total_prio==number_of_hunters\n");
       //ta fram alla möjliga kombinationer man kan välja ett område per jagare unikt.
       i=0;
       j=0;
-      int J[(*input_greedy).solution[0]]; //ett index per jagare
-      memset(J,-1,sizeof(J));
-      typedef int ElementType;
-      Queue combination=CreateQueue((int)pow((double)total_prio, (*input_greedy).solution[0]));
-      while (j<total_prio){
-	J[0]=j;
-	//	Enqueue(J,combination); lös problemet med att köa in en array...
-	j++;
+
+      int max_queue_size=(int)pow((double)total_prio, (*input_greedy).solution[0])+30;
+      Queue combination=CreateQueue(max_queue_size);
+    
+      int *J=calloc((*input_greedy).solution[0]+1,sizeof(int)); //ett index per jagare
+      k=0;
+      while(k<=(*input_greedy).solution[0]){
+	J[k]=-1;
+	k++;
       }
-      i=1;
-      while(i<(*input_greedy).solution[0]){
-	//J=FrontAndDequeue(combination);    fixa kön!!
-	j=0;
-	while(j<total_prio){
-	  if(/*k not in J[]*/TRUE){
-	    J[i]=j;
-	    //Enqueue(J,combination);   fixa kön!!
-	  }
+      Enqueue(J,combination); // lägg in {-1,-1,-1,-1...,-1}
+      
+      i=0;
+      while(i<(*input_greedy).solution[0]){ //för alla jagare
+	int queue_size=(*combination).Size;	
+	for(m=0;m<queue_size;m++){
+	  J=FrontAndDequeue(combination);
+	  j=0;
+	  while(j<total_prio){ //välj ett område j
+	    int not_in_J=TRUE;
+	    k=0;
+	    while(k<(*input_greedy).solution[0]){ //stega igenom hela J och kolla om j redan är valt
+	      if(J[k]==j){
+		not_in_J=FALSE;
+	      }
+	      k++;
+	    }
+	    if(not_in_J==TRUE){
+	      int *J_child=calloc((*input_greedy).solution[0]+1, sizeof(int));
+	      memcpy(J_child,J,((*input_greedy).solution[0]+1)*sizeof(int));
+	      J_child[i]=j;
+	      Enqueue(J_child,combination);
+	    }
 	  j++;
 	}
+	free(J);
+	}
 	i++;
-      }
+	}
+      
       //nu ska alla unika kombinationer finnas i kön.
       int total_cost;
       int best_cost=100;
-      while(/*combination is not empty*/1){   //   fixa kön!!
-	//	J=FrontAndDequeue(combination);    fixa kön!!
+      while(TryIfEmpty(combination)==FALSE){  
+	J=FrontAndDequeue(combination);    
 	i=0;
 	total_cost=0;
 	while (i<(*input_greedy).solution[0]){
-	  total_cost=total_cost+distmatrix[J[i]][i];
+	  total_cost=total_cost+(costmatrix[J[i]][i]).distance;
 	  if(total_cost<best_cost){
 	    best_cost=total_cost;
-	    // best_assignment=J;   solve this assignment...
+	    j=0;
+	    while(j<(*input_greedy).solution[0]){
+	      best_assignment[j]=J[j]; 
+	      j++;
+	    }
+	  }
+	  i++;
+	}
+      }
+      DisposeQueue(combination);
+      return;
+      }else if(total_prio<(*input_greedy).solution[0]){
+	printf("total_prio<number_of_hunters\n");
+	/*
+          välj exakt ett unikt område per jagare, måste välja alla prioriterade:
+	  ta fram alla möjliga kombinationer som innehåller alla prioriterade
+	  kolla summan av avstånden för varje komination
+	  välj kombination med lägst summa för att assigna.
+*/
+      //ta fram alla möjliga kombinationer man kan välja ett område per jagare unikt.
+      i=0;
+      j=0;
+
+      int max_queue_size=(int)pow((double)total_prio, (*input_greedy).solution[0])+30;
+      Queue combination=CreateQueue(max_queue_size);
+    
+      int *J=calloc((*input_greedy).solution[0]+1,sizeof(int)); //ett index per jagare
+      k=0;
+      while(k<=(*input_greedy).solution[0]){
+	J[k]=-1;
+	k++;
+      }
+      Enqueue(J,combination); // lägg in {-1,-1,-1,-1...,-1}
+      
+      i=0;
+      while(i<(*input_greedy).solution[0]){ //för alla jagare
+	int queue_size=(*combination).Size;	
+	for(m=0;m<queue_size;m++){
+	  J=FrontAndDequeue(combination);
+	  j=0;
+	  while(j<total_prio){ //välj ett område j
+	    int not_in_J=TRUE;
+	    k=0;
+	    while(k<(*input_greedy).solution[0]){ //stega igenom hela J och kolla om j redan är valt
+	      if(J[k]==j){
+		not_in_J=FALSE;
+	      }
+	      k++;
+	    }
+	    if(not_in_J==TRUE){
+	      int *J_child=calloc((*input_greedy).solution[0]+1, sizeof(int));
+	      memcpy(J_child,J,((*input_greedy).solution[0]+1)*sizeof(int));
+	      J_child[i]=j;
+	      Enqueue(J_child,combination);
+	    }
+	  j++;
+	}
+	free(J);
+	}
+	i++;
+	}
+      
+      //nu ska alla unika kombinationer finnas i kön.
+      /*
+	kolla hur många prioriterade områden som finns
+	kolla vilka index i designate array som innehåller prioriterade områden.
+	
+       */
+
+
+      i=0;
+      int number_of_priority=0;
+      int priority_index_array[MAX_SIZE_AREA_COLLECTION];
+      for(i=0;i<MAX_SIZE_AREA_COLLECTION;i++){
+	priority_index_array[i]=-1;
+      }
+      i=0;
+      while((*input_val).designate_array[i]!=(struct Area *)0){
+	if((*(*input_val).designate_array[i]).area_type ==PRIO_VIS_ONE_BOUND || (*(*input_val).designate_array[i]).area_type==PRIO_VIS_ONE_BOUND ){
+	  priority_index_array[number_of_priority]=i;
+	  number_of_priority++;
+	}
+	i++;
+      }
+      i=0;
+      printf("number of priority:%d \n", number_of_priority);
+      while(priority_index_array[i]!=-1){
+      printf("priority indices:%d \n", priority_index_array[i]);
+      i++;
+      }
+
+      int total_cost;
+      int best_cost=100;
+      while(TryIfEmpty(combination)==FALSE){  
+	J=FrontAndDequeue(combination);    
+	i=0;
+	total_cost=0;
+	//för detta J kolla att alla prioriterade områden finns med, om inte:
+	// kasta och plocka ett nytt J
+	
+	while (i<(*input_greedy).solution[0]){
+	  total_cost=total_cost+(costmatrix[J[i]][i]).distance;
+	  if(total_cost<best_cost){
+	    best_cost=total_cost;
+	    j=0;
+	    while(j<(*input_greedy).solution[0]){
+	      best_assignment[j]=J[j]; 
+	      j++;
+	    }
 	  }
 	  i++;
 	}
       }
       return;
-    }else if(total_prio<(*input_greedy).solution[0]){
-      /*
-          välj exakt ett unikt område per jagare, måste välja alla prioriterade:
-              ta fram alla möjliga kombinationer som innehåller alla prioriterade
-	      kolla summan av avstånden för varje komination
-	      välj kombination med lägst summa för att assigna.
-*/
-    }
+     }
 //---------------end   if(total_unsecured>(*input_greedy).solution[0]) -------------------------
 
   }else if(total_unsecured==(*input_greedy).solution[0]){
+    	printf("total_unsecured==number_of_hunters\n");
     /*
  square, assigna exakt ett område till varje jagare:
         ta fram alla möjliga kombinationer
 	kolla summan av avstånden för varje komination
 	välj kombination med lägst summa för att assigna.
      */
+      //ta fram alla möjliga kombinationer man kan välja ett område per jagare unikt.
+      i=0;
+      j=0;
+
+      int max_queue_size=(int)pow((double)total_unsecured, (*input_greedy).solution[0])+30;
+      Queue combination=CreateQueue(max_queue_size);
+    
+      int *J=calloc((*input_greedy).solution[0]+1,sizeof(int)); //ett index per jagare
+      k=0;
+      while(k<=(*input_greedy).solution[0]){
+	J[k]=-1;
+	k++;
+      }
+      Enqueue(J,combination); // lägg in {-1,-1,-1,-1...,-1}
+      
+      i=0;
+      while(i<(*input_greedy).solution[0]){ //för alla jagare
+	int queue_size=(*combination).Size;	
+	for(m=0;m<queue_size;m++){
+	  J=FrontAndDequeue(combination);
+	  j=0;
+	  while(j<total_unsecured){ //välj ett område j
+	    int not_in_J=TRUE;
+	    k=0;
+	    while(k<(*input_greedy).solution[0]){ //stega igenom hela J och kolla om j redan är valt
+	      if(J[k]==j){
+		not_in_J=FALSE;
+	      }
+	      k++;
+	    }
+	    if(not_in_J==TRUE){
+	      int *J_child=calloc((*input_greedy).solution[0]+1, sizeof(int));
+	      memcpy(J_child,J,((*input_greedy).solution[0]+1)*sizeof(int));
+	      J_child[i]=j;
+	      Enqueue(J_child,combination);
+	    }
+	  j++;
+	}
+	free(J);
+	}
+	i++;
+	}
+      
+      //nu ska alla unika kombinationer finnas i kön.
+      int total_cost;
+      int best_cost=100;
+      while(TryIfEmpty(combination)==FALSE){  
+	J=FrontAndDequeue(combination);    
+	i=0;
+	total_cost=0;
+	while (i<(*input_greedy).solution[0]){
+	  total_cost=total_cost+(costmatrix[J[i]][i]).distance;
+	  if(total_cost<best_cost){
+	    best_cost=total_cost;
+	    j=0;
+	    while(j<(*input_greedy).solution[0]){
+	      best_assignment[j]=J[j]; 
+	      j++;
+	    }
+	  }
+	  i++;
+	}
+      }
+      DisposeQueue(combination);
+      return;
+
+
 
     //--------------end if(total_unsecured==(*input_greedy).solution[0]) ---------------------
   }else if(total_unsecured<(*input_greedy).solution[0]){
+	printf("total_unsecured<number_of_hunters\n");
     /*
     varje område måste assignas minst en gång (kan vara mer?):
        ta fram alla möjliga kombinationer som innehåller alla områden minst en gång
@@ -1023,68 +1268,9 @@ void solve_assignment2(struct valuation *input_val, struct greedy *input_greedy,
     */
   }
   // -----------------end if(total_unsecured<(*input_greedy).solution[0]) ------------------------
-  return;
-}
 
 
-void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, int (*best_assignment)[]){
-  //solve knappsack problem? priorize boundrys of priority 4 or 3 (?)
 
-  //void assignmentoptimal(/*(3)double*/int *assignment, /*(3)double*/int *cost, /*(3)double*/int *distMatrixIn, int nOfRows, int nOfColumns)
-  int i=0;
-  int j=0;
-  int m=0;
-  /*output*/  
-  int assignment[(*input_greedy).solution[0]/*antal jagare?*/];
-  int cost; //totala kostnaden... behövs egentligen inte?
-  /*input*/
-  int nOfRows=0;//antal areas? 
-  int nOfCols=(*input_greedy).solution[0]; //antal jagare?
-  int row_pos_hunter=0;
-  int col_pos_hunter=0;
-  int shortest_boundry_distance=MAX_TOTAL_AREA;
-  while((*input_val).area_collection[i]!=(struct Area *)0){
-    nOfRows++;
-    i++;
-  }
-
-  int **distmatrix; //skapa en värdesmatris. varje rad är ett område, i varje kolonn anges avståndet för jagare_j till randen av området.
-  distmatrix = calloc(nOfRows,nOfRows * sizeof(int *));
-	for(i = 0; i < nOfRows; i++){
-	  distmatrix[i] = calloc(nOfCols,nOfCols * sizeof(int));
-	}
-  i=0;
-
-  while(i<nOfRows){
-    j=0;
-    while(j<nOfCols){
-      shortest_boundry_distance=MAX_TOTAL_AREA;
-      row_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j];
-      col_pos_hunter=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*j+1];
-      //hunterposition, hunter number j, är en 
-      struct Node *from=(*input_greedy).node_matrix[row_pos_hunter][col_pos_hunter]; 
-      struct Node *to;
-      struct Area *area_temp=(*input_val).area_collection[i];
-      m=0;
-      while((*area_temp).boundry_nodes[m]!=(struct Node *)0){
-	struct Node *temp=(*area_temp).boundry_nodes[m];
-	struct Node *key[2]={from,temp};
-	struct hash_node *temp_hash= ht_search((*input_greedy).tile_distance, key,sizeof(key));
-	if((*temp_hash).distance<shortest_boundry_distance){
-	  *to=*temp;
-	  shortest_boundry_distance=(*temp_hash).distance;
-	}
-	m++;
-      }
-      distmatrix[i][j]=shortest_boundry_distance; //distance given by hashtable using key (from, to)
-
-      j++;
-    }
-    i++;
-  }
-
-  solve_assignment2(input_val, input_greedy, distmatrix, best_assignment);
-  //  assignmentoptimal(int assignment, int cost, int distmatrixin, nofrows, nofcols);
 
   printf("solve_knappsack, end.\n");
   return;
