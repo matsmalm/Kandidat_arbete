@@ -33,18 +33,18 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #define allowed_stat_4_loss 2 						// antalet områden vi får förlora i ett steg
 #define max_antal_INcomplete_tabu_solutions 1000
 #define TABU_MAX_LIKA 10
-//typVÄRDEN:	max_step_minus_in_L_list			antal_områden*0,5	//TABU_ROWS*TABU_COLS*0,5
+//typVÄRDEN:	max_step_minus_in_L_list			antal_områden*0,5	//ROWS*COLS*0,5
 //typVÄRDEN:	allowed_stat_4_loss					????			
 //typVÄRDEN:	max_antal_INcomplete_tabu_solutions		rellativt högt
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxx Varibals xxxxxxxxxxxxxxxxxxxxxxxxxxx
 //FREDRIK:
-int TABU_ROWS = 0;
-int TABU_COLS = 0;
-int tabu_solution[8500];
+int ROWS;
+int COLS;
+int *tabu_solution;
 //FELIX:
-int returned_Tabu_tabu_solution[8500];
-int tabuMatris[SIZE][SIZE];  //int tabuMatris[TABU_ROWS][TABU_COLS];
+int *returned_Tabu_tabu_solution;
+int **tabuMatris;  //int tabuMatris[ROWS][COLS];
 int Mr_30=1;
 int Mss_30=4;
 int Mr_L=1; //vill ta bort Mr & Mss L men vi har dom med för säkerhetskull
@@ -56,6 +56,7 @@ int max_antal_INcomplete_tabu_solutions_in_a_row_counter=0;
 int number_of_stat_4_in_this_step = 0;
 int number_of_stat_4_in_past_step = 0;
 int hundra_raknare1=100;
+int hundra_raknare2=1;
 
 //FELIX versionshantering
 int Tabu_save_number = 1; // sätter man denna till noll händer konstigheter
@@ -124,16 +125,15 @@ void analys_tabu_solutions_and_update_Tabu_K_list(int *tabu_solution);
 //Hunters_static
 //Hunters
 
-void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
+void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, int COLS) { // Do all pre-processing, which is to generate population.
 	
 	// xxxxxxxxxxxxxxxxxxxxx  SÄKERHETSÅTGÄRDER  xxxxxxxxxxxxxxxxxxxxx
 	// variabel sättnig igen för säkerhetskull.
-	TABU_ROWS = 0;
-	TABU_COLS = 0;
+	ROWS = ROWS;
+	COLS = COLS;
 	//tabu_solution[8500];
 	//FELIX:
 	//returned_Tabu_tabu_solution[8500];
-	tabuMatris[SIZE][SIZE];  //int tabuMatris[TABU_ROWS][TABU_COLS];
 	Mr_30=1;
 	Mss_30=4;
 	Mr_L=1; //vill ta bort Mr & Mss L men vi har dom med för säkerhetskull
@@ -145,6 +145,7 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all 
 	number_of_stat_4_in_this_step = 0;
 	number_of_stat_4_in_past_step = 0;
 	hundra_raknare1=100;
+	hundra_raknare2=1;
 
 	//FELIX versionshantering
 	Tabu_save_number = 1; // sätter man denna till noll händer konstigheter
@@ -152,12 +153,10 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all 
 	Tabu_save_number_3 = 1;	
 	
 	
-	int q=0;
-	for(q=0;q<8500;q++){
-		tabu_solution[q]=-1;
-	}
-	for(q=0;q<8500;q++){
-		returned_Tabu_tabu_solution[q]=-1;
+	int q;
+	for(q=2;q<8500;q++){
+		//tabu_solution[q]=-1;
+		//returned_Tabu_tabu_solution[q]=-1;
 	}
 	/*
 	printf("\n");
@@ -174,29 +173,33 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all 
 	printf("max_antal_INcomplete_tabu_solutions \t%d\n", max_antal_INcomplete_tabu_solutions);
 	printf("TABU_MAX_LIKA \t\t\t\t%d\n", TABU_MAX_LIKA);
 	
-	
-	
+	tabuMatris = malloc(ROWS * sizeof(int *));
+	if(tabuMatris == NULL)
+		fprintf(stderr, "tabuMatris out of memory\n");
 	int i,j;
-	//Allocate memory for NodeMatrix 
-	NodeMatrix = malloc(SIZE * sizeof(struct Node *));
-	if(NodeMatrix == NULL)
-		fprintf(stderr, "out of memory\n");
-	for(i = 0; i < SIZE; i++)
+	for(i = 0; i < ROWS; i++)
 	{
-		NodeMatrix[i] = malloc(SIZE * sizeof(struct Node));
-		if(NodeMatrix[i] == NULL)
-			fprintf(stderr, "out of memory\n");
+		tabuMatris[i] = malloc(COLS * sizeof(int));
+		if(tabuMatris[i] == NULL)
+			fprintf(stderr, "tabuMatris[i] out of memory\n");
 	}
-	for(i=0;i<SIZE;i++){
-		for(j=0;j<SIZE;j++){
+	tabu_solution = malloc(8500 * sizeof(int));
+	memset(tabu_solution,0,sizeof(tabu_solution));
+	returned_Tabu_tabu_solution = malloc(8500 * sizeof(int));
+	memset(returned_Tabu_tabu_solution,0,sizeof(returned_Tabu_tabu_solution));
+	/*** Allocate memory for NodeMatrix ***/
+	NodeMatrix = malloc(ROWS * sizeof(struct Node *));
+	if(NodeMatrix == NULL)
+		fprintf(stderr, "NodeMatrix out of memory\n");
+	for(i = 0; i < ROWS; i++)
+	{
+		NodeMatrix[i] = malloc(COLS * sizeof(struct Node));
+		if(NodeMatrix[i] == NULL)
+			fprintf(stderr, "NodeMatrix[i] out of memory\n");
+	}
+	for(i=0;i<ROWS;i++){
+		for(j=0;j<COLS;j++){
 			NodeMatrix[i][j] = NodeMat[i][j];
-			// Check number of rows and columns of B. 
-			if(NodeMatrix[i][j].vision[0] != (struct Node *)0){
-				if(NodeMatrix[i][j].name[0]+1 > TABU_ROWS)
-					TABU_ROWS = 1+NodeMatrix[i][j].name[0];
-				if(NodeMatrix[i][j].name[1]+1 > TABU_COLS)
-					TABU_COLS = 1+NodeMatrix[i][j].name[1];
-			}
 		}
 	}
 	
@@ -205,18 +208,13 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all 
 	
 	// testa för att bli av med stora tal
 	int r,c;
-	for(r = 0; r < TABU_ROWS; r++){
-		for(c = 0; c < TABU_COLS; c++){ // For every node:
-			if(NodeMatrix[r][c].vision[0] == (struct Node *)0){ // Obstacle
-				tabuMatris[r][c]=0;
-			}
-			else{
-				tabuMatris[r][c]=0;
-			}
+	for(r = 0; r < ROWS; r++){
+		for(c = 0; c < COLS; c++){ // For every node:
+			tabuMatris[r][c]=0;
 		}
 	}
-	for(r = 0; r < TABU_ROWS; r++){
-		for(c = 0; c < TABU_COLS; c++){ // For every node:
+	for(r = 0; r < ROWS; r++){
+		for(c = 0; c < COLS; c++){ // For every node:
 			if(NodeMatrix[r][c].vision[0] == (struct Node *)0){ // Obstacle
 				tabuMatris[r][c]=0;
 			}
@@ -257,24 +255,29 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all 
 
 void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat namn Algorithm_Tabu_Search()
 	printf( "START Tabu\n\n");
-	//int tabuMatris[TABU_ROWS][TABU_COLS]
+	//int tabuMatris[ROWS][COLS]
 	// ONE tabu_solution CREATER:
 	int steps=800; // step = slutlösningens längd uppdaterade variabel
 	//tabu_solution[1] atalet steg i lösnignen blir steps/antalet_jagare ex 100/2=50
-
 	while(tabu_solution[0]<steps){ // lite av en oändlig while loop
 		
-		
-		
 		if(tabu_solution[1]==hundra_raknare1){
-			
 			printf(" Antal steg tagna:  %d\n",hundra_raknare1 );
 			hundra_raknare1+=100;
+			if(tabu_solution[1]==steps){
+				hundra_raknare2++;
+				tabu_solution[1]=0;
+				int q;
+				for(q=2*(1+tabu_solution[0]);q<8500;q++){
+					tabu_solution[q]=-1;
+				}
+				if(hundra_raknare2==4){
+					printf(" Recht MAX step, No solution Found\n");
+					break;
+				}
+			}
 		}
-		if(tabu_solution[1]==steps){
-			printf(" Recht MAX step, No solution Found\n");
-			break;
-		}
+		
 		
 		if(tabu_solution[1]==best_step_length){ // om lösnignen nått best_step_length så måste vi ju avbryta
 			//självförstålig variabel för brytvilkor
@@ -292,20 +295,14 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			number_of_stat_4_in_this_step = 0;
 			number_of_stat_4_in_past_step = 0; 
 		}
-		
-		
-		
 		tabu_getRandom(tabu_solution); 				// Generate a random step sequence from step 
 		tabu_calculateStates(tabu_solution);
-		
-		
 		
 		if(check_ALL_Tabu_lists(tabu_solution)==NOT_OK){
 			tabu_solution[1]-=1;
 		}
 		tabu_calculateStates(tabu_solution);
 		if(tabu_getS4() == 0){
-		
 			/* 	TA EJ BORT
 			printf( "Nr_of_complete_tabu_solutions: %d\n",nr_of_complete_tabu_solutions);
 			printf( "Using %d steps\n",tabu_solution[1]);
@@ -324,6 +321,10 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			//save_complete_tabu_solution_path(tabu_solution);
 			if(save_complete_tabu_solution_path(tabu_solution)==OK){
 				//printf("HALLLELLLUUULLLIIIIAAAAAAAA\n");
+				break;
+			}
+			if(tabu_solution[1]==0 || tabu_solution[1]==1){
+				printf("Inga steg krävdes\n");
 				break;
 			}
 			tabu_solution[1]=0;
@@ -375,10 +376,14 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		tabuSolution[1] = -returned_Tabu_tabu_solution[1];
 	}
 	//printf( "END Tabu\n\n");
-	for(i = 0; i < SIZE; i++){
+	for(i = 0; i < ROWS; i++){
 		free(NodeMatrix[i]);
+		free(tabuMatris[i]);
 	}
 	free(NodeMatrix);
+	free(tabuMatris);
+	free(tabu_solution);
+	free(returned_Tabu_tabu_solution);
 	return;
 }
 
@@ -585,7 +590,7 @@ int tabu_right(int *tabu_solution, int k){
 	//int rad = tabu_solution[    2+2*tabu_solution[0]+b*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
 	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*k] +1;	// colonen vi är på i förra steget
 	
-	if(kol==TABU_COLS){
+	if(kol==COLS){
 		//printf("tabu_right NOT_OK\n");
 		return NOT_OK;
 	}
@@ -597,7 +602,7 @@ int tabu_down(int *tabu_solution, int k){
 	// vi ska ha positionen innan den vi är i. och se om den är okey innom matrisen
 	int s = tabu_solution[1]-1;
 	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*k] +1; 	// raden vi är på i förra steget
-	if(rad==TABU_ROWS){
+	if(rad==ROWS){
 		//printf("tabu_down NOT_OK\n");
 		return NOT_OK;
 	}
@@ -804,8 +809,8 @@ int check_L_Tabu_list_X_past_steps_left(int *tabu_solution, int k){ // i = steg 
 void print_K_matrix(){
 	// skriver ut hur K_Tabu_list matrisen ser ut
 	int r,c;
-	for(r = 0; r < TABU_ROWS; r++){
-		for(c = 0; c < TABU_COLS; c++){ // For every node:
+	for(r = 0; r < ROWS; r++){
+		for(c = 0; c < COLS; c++){ // For every node:
 			printf("%d ", tabuMatris[r][c]);
 		}
 		printf("\n");
@@ -869,8 +874,8 @@ void analys_tabu_solutions_and_update_Tabu_K_list(int *tabu_solution){ //verion 
 	printf("\n");
 	*/
 	
-	for(r = 0; r < TABU_ROWS; r++){
-		for(c = 0; c < TABU_COLS; c++){ // For every node:
+	for(r = 0; r < ROWS; r++){
+		for(c = 0; c < COLS; c++){ // For every node:
 				tabuMatris[r][c]=0;
 		}
 	}
@@ -925,8 +930,8 @@ void tabu_getRandom(int *tabu_solution){ // AV  fredrik och felix  // Generate r
 void tabu_printStates(){
 	//printf("tabu_printStates\n");
 	int r,c;
-	for(r = 0; r < TABU_ROWS; r++){
-		for(c = 0; c < TABU_COLS; c++){ // For every node:
+	for(r = 0; r < ROWS; r++){
+		for(c = 0; c < COLS; c++){ // For every node:
 			printf("%d ", NodeMatrix[r][c].state);
 		}
 		printf("\n");
@@ -936,8 +941,8 @@ void tabu_printStates(){
 int tabu_getS4(){
 	//printf("tabu_getS4\n");
 	int S4=0,r,c;
-	for(r = 0; r < TABU_ROWS; r++){
-		for(c = 0; c < TABU_COLS; c++){ // For every node:
+	for(r = 0; r < ROWS; r++){
+		for(c = 0; c < COLS; c++){ // For every node:
 			if(NodeMatrix[r][c].state == 4){
 				S4++;
 			}
@@ -948,11 +953,11 @@ int tabu_getS4(){
 
 int tabu_calculateStates(int *path){ 	// version 2.0
 	int currentStep=0,pursuer=0,r=0,c=0, nrS4=0;
-	int S[TABU_ROWS][TABU_COLS], S_u[TABU_ROWS][TABU_COLS]; // Table of current and updated states
+	int S[ROWS][COLS], S_u[ROWS][COLS]; // Table of current and updated states
 	memset(&S, 0, sizeof(S));
 	memset(&S_u, 0, sizeof(S));
-	for(r = 0; r < TABU_ROWS; r++){
-		for(c = 0; c < TABU_COLS; c++){ // For every node:
+	for(r = 0; r < ROWS; r++){
+		for(c = 0; c < COLS; c++){ // For every node:
 			if(NodeMatrix[r][c].vision[0] != (struct Node *)0){ // Not obstacle
 				S[r][c]=4;
 				S_u[r][c]=4;
@@ -976,8 +981,8 @@ int tabu_calculateStates(int *path){ 	// version 2.0
 		} // All pursuers step currentStep has been placed in S
 		int needUpdate = 1;
 		while(needUpdate == 1){
-			for(r = 0; r < TABU_ROWS; r++){
-				for(c = 0; c < TABU_COLS; c++){ // For every node:
+			for(r = 0; r < ROWS; r++){
+				for(c = 0; c < COLS; c++){ // For every node:
 					if(S_u[r][c] != 0)
 						S_u[r][c] = 4; // Set state 4 as default
 					// Do nothing for obstacles
@@ -994,8 +999,8 @@ int tabu_calculateStates(int *path){ 	// version 2.0
 					k++;
 				}
 			}
-			for(r = 0; r < TABU_ROWS; r++){
-				for(c = 0; c < TABU_COLS; c++){ // For every node:
+			for(r = 0; r < ROWS; r++){
+				for(c = 0; c < COLS; c++){ // For every node:
 					if(S_u[r][c]!=4){} // State has been updated in S_u
 					else if(S[r][c]==1 && S_u[r][c]!=1){} // Did contain pursuer but currently does not.
 					else if(S[r][c]==4){}
@@ -1017,19 +1022,19 @@ int tabu_calculateStates(int *path){ 	// version 2.0
 				}
 			}
 			needUpdate=0;
-			for(r = 0; r < TABU_ROWS; r++){ /*** Check if update is needed ***/
-				for(c = 0; c < TABU_COLS; c++){ // For every node:
+			for(r = 0; r < ROWS; r++){ /*** Check if update is needed ***/
+				for(c = 0; c < COLS; c++){ // For every node:
 					if(S[r][c] != S_u[r][c])
 						needUpdate=1;
 				}
 			}
-			for(r = 0; r < TABU_ROWS; r++){ /*** Set S to S_u before new iteration ***/
-				for(c = 0; c < TABU_COLS; c++) // For every node:
+			for(r = 0; r < ROWS; r++){ /*** Set S to S_u before new iteration ***/
+				for(c = 0; c < COLS; c++) // For every node:
 					S[r][c] = S_u[r][c];
 			}
 		}
-		for(r = 0; r < TABU_ROWS; r++){
-			for(c = 0; c < TABU_COLS; c++){ // For every node:
+		for(r = 0; r < ROWS; r++){
+			for(c = 0; c < COLS; c++){ // For every node:
 				if(S[r][c]==4)
 					nrS4++;
 			}
@@ -1041,8 +1046,8 @@ int tabu_calculateStates(int *path){ 	// version 2.0
 	}
 	if(nrS4>0)
 		currentStep = (0-currentStep);
-	for(r = 0; r < TABU_ROWS; r++){ // tabu_solution found or all steps used, write to nodeMatrix
-		for(c = 0; c < TABU_COLS; c++){
+	for(r = 0; r < ROWS; r++){ // tabu_solution found or all steps used, write to nodeMatrix
+		for(c = 0; c < COLS; c++){
 			NodeMatrix[r][c].state = S[r][c];
 		}
 	}

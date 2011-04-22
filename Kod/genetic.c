@@ -3,15 +3,15 @@
 
 /*** Definitions ***/
 #define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
-#define GENETIC_POPULATION_SIZE 400 // Population size, static.
+#define GENETIC_POPULATION_SIZE 200 // Population size, static.
 #define GENETIC_MAX_PURSUERS 20 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
 #define GENETIC_MAX_STEPS 200 // Maximum number of steps, just to allocate enough memory
 
 /*** Variables ***/
 int GENETIC_PURSUERS = 0; // Only a temporary value.
 int GENETIC_GENERATIONS = 0; // Only a temporary value.
-float GENETIC_CONVERGENCE_PERCENT = 0.95; // fraction of population to be equal to break early.
-float GENETIC_MUTATION_PROBABILITY = 0.20; // fraction of mutation probability.
+float GENETIC_CONVERGENCE_PERCENT = 0.90; // fraction of population to be equal to break early.
+float GENETIC_MUTATION_PROBABILITY = 0.05; // fraction of mutation probability.
 int ROWS;
 int COLS;
 
@@ -21,7 +21,8 @@ struct Gene{ // Gene contains two parts, start[] which is starting position and 
 	int allele[GENETIC_MAX_STEPS];
 };
 struct Chromosome{
-	float statesSteps[2]; // [0] = number of contaminated, [1] = required steps until no contamination.
+	int inS4; // Number of nodes in S4
+	int chrSteps; // Number of steps to reach solution
 	struct Gene gene[GENETIC_MAX_PURSUERS]; // One gene for each pursuer
 	float fitnessScore;
 };
@@ -76,13 +77,6 @@ void preGenetic(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS,
 	for(i=0;i<ROWS;i++){
 		for(j=0;j<COLS;j++){
 			NodeMatrix[i][j] = NodeMat[i][j];
-			/*** Check number of ROWS and columns of B. */
-			if(NodeMatrix[i][j].vision[0] != 0){
-				if(NodeMatrix[i][j].name[0]+1 > ROWS)
-					ROWS = 1+NodeMatrix[i][j].name[0];
-				if(NodeMatrix[i][j].name[1]+1 > COLS)
-					COLS = 1+NodeMatrix[i][j].name[1];
-			}
 		}
 	}
 	/*** Do actual pre-processing ***/
@@ -93,9 +87,9 @@ void preGenetic(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS,
 				Population[i].gene[j].allele[k] = 4;
 			}
 		}
-		Population[i].statesSteps[0]=99; // Reset fitness value (S4)
-		Population[i].statesSteps[1]=99; // Reset fitness value (steps)
-		Population[i].fitnessScore = 99;
+		Population[i].inS4=99; // Reset fitness value (S4)
+		Population[i].chrSteps=99; // Reset fitness value (steps)
+		Population[i].fitnessScore = 9; // Low value = bad solution
 	}
 	for(i = 0; i < GENETIC_POPULATION_SIZE; i++) // Set starting positions for every gene in the population.
 		for(j = 0; j < GENETIC_PURSUERS; j++)
@@ -140,6 +134,7 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 	printf("Mutation %%:\t\t%d\n", abs(GENETIC_MUTATION_PROBABILITY*100));
 	for(currentGeneration = 0; currentGeneration < GENETIC_GENERATIONS; currentGeneration++){
 		/*** New generation ***/
+		
 		for(currentPopulation = 0; currentPopulation < GENETIC_POPULATION_SIZE; currentPopulation++){ // Calculate fitness for every strategy.
 			calculateFitness(&Population[currentPopulation]);
 		}
@@ -158,9 +153,9 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 		for(i = 0; i < GENETIC_POPULATION_SIZE; i++){
 			Population[i] = New_Population[i];
 		}
-		if(Population[0].statesSteps[0] == 0){
-			if((Population[0].statesSteps[0]==Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].statesSteps[0])){ // If 90% of the population has the same fitness, no need to continue to do more generations.
-				if(Population[0].statesSteps[1]==Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].statesSteps[1]){
+		if(Population[0].inS4 == 0){
+			if((Population[0].chrSteps==Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].chrSteps)){ // If 90% of the population has the same fitness, no need to continue to do more generations.
+				if(Population[0].fitnessScore==Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].fitnessScore){
 					break;
 				}
 			}
@@ -170,12 +165,12 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 	printf("%d generations used.\n", currentGeneration);
 	solution[0]=GENETIC_PURSUERS;
 	solution[1]=GENETIC_MAX_STEPS;
-	if(Population[0].statesSteps[1]<=200){
+	if(Population[0].chrSteps<=200){
 		doDecode(&Population[0], solution);
 		solution[1]=calculateStates(solution);
 	}
 	else{
-		solution[1]=Population[0].statesSteps[1];
+		solution[1]=Population[0].chrSteps;
 	}
 	free(Population);
 	free(New_Population);
@@ -193,14 +188,14 @@ void calculateFitness(struct Chromosome *pop){
 	calcPath[1]=GENETIC_MAX_STEPS;
 	doDecode(&(*pop), calcPath);
 	int temp = calculateStates(calcPath);
-	(*pop).statesSteps[1] = temp;
+	(*pop).chrSteps = temp;
 	if(temp>=0){
-		(*pop).statesSteps[0] = 0;
+		(*pop).inS4 = 0;
 	}
 	else{
-		(*pop).statesSteps[0] = getS4();
+		(*pop).inS4 = getS4();
 	}
-	(*pop).fitnessScore = 1000/(1+(*pop).statesSteps[0]+abs((*pop).statesSteps[1])); // 1 to avoid 0 fitness.
+	(*pop).fitnessScore = 1000/(1+(*pop).inS4+abs((*pop).chrSteps)); // 1 to avoid 0 fitness.
 }
 void addToNewPopulation(struct Chromosome chrom){
 	New_Population[NewPopLocation] = chrom;
@@ -292,7 +287,7 @@ int calculateStates(int *path){
 	memset(&S_u, 0, sizeof(S));
 	for(r = 0; r < ROWS; r++){
 		for(c = 0; c < COLS; c++){ // For every node:
-			if(NodeMatrix[r][c].vision[0] != 0){ // Not obstacle
+			if(NodeMatrix[r][c].vision[0] != (struct Node *)0){ // Not obstacle
 				S[r][c]=4;
 				S_u[r][c]=4;
 			}
@@ -387,7 +382,6 @@ int calculateStates(int *path){
 	}
 	return currentStep;
 }
-
 void sortPopulation(struct Chromosome *pop, int popSize){
 	qsort((void *) pop, popSize, sizeof(struct Chromosome), (compfn)compareFitness );
 }
@@ -418,9 +412,9 @@ int compareFitness(struct Chromosome *chrom1, struct Chromosome *chrom2){ // Com
 	else if ( chrom1->fitnessScore < chrom2->fitnessScore)
 		return 1;
 	else{		
-		if ( chrom1->statesSteps[0] < chrom2->statesSteps[0])
+		if ( chrom1->inS4 < chrom2->inS4)
 			return -1;
-		else if (chrom1->statesSteps[0] > chrom2->statesSteps[0])
+		else if (chrom1->inS4 > chrom2->inS4)
 			return 1;
 		else
 			return 0;
