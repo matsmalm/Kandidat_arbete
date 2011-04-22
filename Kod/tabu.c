@@ -55,6 +55,7 @@ int nr_of_complete_tabu_solutions = 0;
 int max_antal_INcomplete_tabu_solutions_in_a_row_counter=0;
 int number_of_stat_4_in_this_step = 0;
 int number_of_stat_4_in_past_step = 0;
+int hundra_raknare1=100;
 
 //FELIX versionshantering
 int Tabu_save_number = 1; // sätter man denna till noll händer konstigheter
@@ -124,6 +125,33 @@ void analys_tabu_solutions_and_update_Tabu_K_list(int *tabu_solution);
 //Hunters
 
 void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all pre-processing, which is to generate population.
+	
+	// xxxxxxxxxxxxxxxxxxxxx  SÄKERHETSÅTGÄRDER  xxxxxxxxxxxxxxxxxxxxx
+	// variabel sättnig igen för säkerhetskull.
+	TABU_ROWS = 0;
+	TABU_COLS = 0;
+	//tabu_solution[8500];
+	//FELIX:
+	//returned_Tabu_tabu_solution[8500];
+	tabuMatris[SIZE][SIZE];  //int tabuMatris[TABU_ROWS][TABU_COLS];
+	Mr_30=1;
+	Mss_30=4;
+	Mr_L=1; //vill ta bort Mr & Mss L men vi har dom med för säkerhetskull
+	Mss_L=100;
+	nr_of_tabus = 0;
+	best_step_length=1000;
+	nr_of_complete_tabu_solutions = 0;
+	max_antal_INcomplete_tabu_solutions_in_a_row_counter=0;
+	number_of_stat_4_in_this_step = 0;
+	number_of_stat_4_in_past_step = 0;
+	hundra_raknare1=100;
+
+	//FELIX versionshantering
+	Tabu_save_number = 1; // sätter man denna till noll händer konstigheter
+	Tabu_save_number_2 = 1;
+	Tabu_save_number_3 = 1;	
+	
+	
 	int q=0;
 	for(q=0;q<8500;q++){
 		tabu_solution[q]=-1;
@@ -136,6 +164,11 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK) { // Do all 
 	printf("START preTabu\n");
 	printf("\n");
 	*/
+	// xxxxxxxxxxxxxxxxxxxxx  SÄKERHET SLUT        xxxxxxxxxxxxxxxxxxxxx
+	
+	
+	
+	// FÅ PRINTS
 	printf("max_step_minus_in_L_list \t\t%d\n", max_step_minus_in_L_list);
 	printf("allowed_stat_4_loss \t\t\t%d\n", allowed_stat_4_loss);
 	printf("max_antal_INcomplete_tabu_solutions \t%d\n", max_antal_INcomplete_tabu_solutions);
@@ -228,17 +261,17 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	// ONE tabu_solution CREATER:
 	int steps=800; // step = slutlösningens längd uppdaterade variabel
 	//tabu_solution[1] atalet steg i lösnignen blir steps/antalet_jagare ex 100/2=50
-	int hundra_raknare2=0;
+
 	while(tabu_solution[0]<steps){ // lite av en oändlig while loop
 		
-		int hundra_raknare1=100;
 		
-		if(tabu_solution[0]==hundra_raknare1){
-			hundra_raknare2++;
-			printf(" Antal steg tagna:  %d\n",hundra_raknare1*hundra_raknare2 );
+		
+		if(tabu_solution[1]==hundra_raknare1){
 			
+			printf(" Antal steg tagna:  %d\n",hundra_raknare1 );
+			hundra_raknare1+=100;
 		}
-		if(tabu_solution[0]==steps){
+		if(tabu_solution[1]==steps){
 			printf(" Recht MAX step, No solution Found\n");
 			break;
 		}
@@ -259,15 +292,21 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			number_of_stat_4_in_this_step = 0;
 			number_of_stat_4_in_past_step = 0; 
 		}
+		
+		
+		
 		tabu_getRandom(tabu_solution); 				// Generate a random step sequence from step 
 		tabu_calculateStates(tabu_solution);
+		
+		
+		
 		if(check_ALL_Tabu_lists(tabu_solution)==NOT_OK){
 			tabu_solution[1]-=1;
 		}
 		tabu_calculateStates(tabu_solution);
 		if(tabu_getS4() == 0){
 		
-			/*
+			/* 	TA EJ BORT
 			printf( "Nr_of_complete_tabu_solutions: %d\n",nr_of_complete_tabu_solutions);
 			printf( "Using %d steps\n",tabu_solution[1]);
 			int q=0;
@@ -279,6 +318,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			tabu_printStates();
 			
 			*/
+			
 			nr_of_complete_tabu_solutions++;
 			
 			//save_complete_tabu_solution_path(tabu_solution);
