@@ -222,9 +222,21 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	// ONE tabu_solution CREATER:
 	int steps=800; // step = slutlösningens längd uppdaterade variabel
 	//tabu_solution[1] atalet steg i lösnignen blir steps/antalet_jagare ex 100/2=50
-	while(tabu_solution[0]<steps){
 	
+	while(tabu_solution[0]<steps){ // lite av en oändlig while loop
+		
+		int hundra_raknare1=100;
+		int hundra_raknare2=0;
+		if(tabu_solution[0]==hundra_raknare1){
+			hundra_raknare2++
+			printf(" Antal steg tagna:  %d\n",hundra_raknare1*hundra_raknare2 );
+			
+		}
+		
+		
+		if
 		if(tabu_solution[0]==steps){
+			printf(" Recht MAX step, No solution Found\n");
 			break;
 		}
 		
