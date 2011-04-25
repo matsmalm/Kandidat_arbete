@@ -33,10 +33,26 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 #define allowed_stat_4_loss 2 						// antalet områden vi får förlora i ett steg
 #define max_antal_INcomplete_tabu_solutions 1000
 #define TABU_MAX_LIKA 10
+
+#define MAX_TABU_STEPS 800							//VIKTIGT steps får inte va för hög ty 2*(jagare=5)*800 = 8000 < int tabu_solution[8500]
+#define START_FROM_THE_BEGINING_AGEN_NUMBER 4 		//antalet gånger man når MAX_TABU_STEPS innan man besetämeer att ingen lösning finns
+
+
+#define to_easy_problem_problem_adjustment_set_nr_steps_to 5				//sätt denna till noll så blir du av med detta
+#define to_easy_problem_problem_adjustment_go_agen_nr 5			// om 2 körs den två gånger
+
+
+
+
+//int MAX_TABU_STEPS=800;
+// MAX_TABU_STEPS = slutlösningens längd uppdaterade variabel 
+//VIKTIGT steps får inte va för hög ty 2*(jagare=5)*800 = 8000 < int tabu_solution[8500] 
+
+
+
 //typVÄRDEN:	max_step_minus_in_L_list			antal_områden*0,5	//ROWS*COLS*0,5
 //typVÄRDEN:	allowed_stat_4_loss					????			
 //typVÄRDEN:	max_antal_INcomplete_tabu_solutions		rellativt högt
-
 //xxxxxxxxxxxxxxxxxxxxxxxxxxx Varibals xxxxxxxxxxxxxxxxxxxxxxxxxxx
 //FREDRIK:
 int ROWS;
@@ -57,6 +73,7 @@ int number_of_stat_4_in_this_step = 0;
 int number_of_stat_4_in_past_step = 0;
 int hundra_raknare1=100;
 int hundra_raknare2=1;
+int tabu_algorithem_agen_number=0;
 
 //FELIX versionshantering
 int Tabu_save_number = 1; // sätter man denna till noll händer konstigheter
@@ -128,7 +145,7 @@ void analys_tabu_solutions_and_update_Tabu_K_list(int *tabu_solution);
 void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, int COLS) { // Do all pre-processing, which is to generate population.
 	
 	// xxxxxxxxxxxxxxxxxxxxx  SÄKERHETSÅTGÄRDER  xxxxxxxxxxxxxxxxxxxxx
-	// variabel sättnig igen för säkerhetskull.
+	// variabel sättnig igen för säkerhetskull.	
 	ROWS = ROWS;
 	COLS = COLS;
 	//tabu_solution[8500];
@@ -139,13 +156,17 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, in
 	Mr_L=1; //vill ta bort Mr & Mss L men vi har dom med för säkerhetskull
 	Mss_L=100;
 	nr_of_tabus = 0;
-	best_step_length=1000;
+	best_step_length=1000; //ahhhhaaaaaaaaaa
 	nr_of_complete_tabu_solutions = 0;
 	max_antal_INcomplete_tabu_solutions_in_a_row_counter=0;
 	number_of_stat_4_in_this_step = 0;
 	number_of_stat_4_in_past_step = 0;
 	hundra_raknare1=100;
 	hundra_raknare2=1;
+	tabu_algorithem_agen_number=0;
+	
+	
+
 
 	//FELIX versionshantering
 	Tabu_save_number = 1; // sätter man denna till noll händer konstigheter
@@ -158,15 +179,21 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, in
 	printf("\n");
 	*/
 	// xxxxxxxxxxxxxxxxxxxxx  SÄKERHET SLUT        xxxxxxxxxxxxxxxxxxxxx
+
 	
+	// "FÅ" PRINTS
 	
+	printf("ALL TABU PARAMETERS: \n");
+	printf("max_step_minus_in_L_list \t\t\t\t%d\n", max_step_minus_in_L_list);
+	printf("allowed_stat_4_loss \t\t\t\t\t%d\n", allowed_stat_4_loss);
+	printf("max_antal_INcomplete_tabu_solutions \t\t\t%d\n", max_antal_INcomplete_tabu_solutions);
+	printf("TABU_MAX_LIKA \t\t\t\t\t\t%d\n", TABU_MAX_LIKA);
+	printf("MAX_TABU_STEPS\t\t\t\t\t\t%d\n", MAX_TABU_STEPS);
+	printf("START_FROM_THE_BEGINING_AGEN_NUMBER\t\t\t%d\n", START_FROM_THE_BEGINING_AGEN_NUMBER);
+	printf("to_easy_problem_problem_adjustment_set_nr_steps_to \t%d\n", to_easy_problem_problem_adjustment_set_nr_steps_to);
+	printf("to_easy_problem_problem_adjustment_go_agen_nr \t\t%d\n", to_easy_problem_problem_adjustment_go_agen_nr);
 	
-	// FÅ PRINTS
-	printf("max_step_minus_in_L_list \t\t%d\n", max_step_minus_in_L_list);
-	printf("allowed_stat_4_loss \t\t\t%d\n", allowed_stat_4_loss);
-	printf("max_antal_INcomplete_tabu_solutions \t%d\n", max_antal_INcomplete_tabu_solutions);
-	printf("TABU_MAX_LIKA \t\t\t\t%d\n", TABU_MAX_LIKA);
-	printf("TABU_Pursuers \t\t\t\t%d\n", Hunters[0]);
+	printf("TABU_Pursuers \t\t\t\t\t\t%d\n", Hunters[0]);
 	
 	tabuMatris = malloc(ROWS * sizeof(int *));
 	if(tabuMatris == NULL)
@@ -249,27 +276,52 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, in
 
 
 void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat namn Algorithm_Tabu_Search()
+	
 	printf( "START Tabu\n\n");
-	//int tabuMatris[ROWS][COLS]
-	// ONE tabu_solution CREATER:
-	int steps=800; // step = slutlösningens längd uppdaterade variabel
-	//tabu_solution[1] atalet steg i lösnignen blir steps/antalet_jagare ex 100/2=50
-	while(tabu_solution[0]<steps){ // lite av en oändlig while loop
+	
+	int GOOO = 1;
+	int STOOOP = 1;
+	
+	//START FUL FIX:  						//för om noll steget är en lösning:
+	
+	tabu_calculateStates(tabu_solution);
+	if(tabu_getS4() == 0){
+		//saves solution
+		int q=2;
+		int zz=0;
+		for(q=2*(1+returned_Tabu_tabu_solution[0]);q<8500;q++){
+			returned_Tabu_tabu_solution[q]=-1;
+		}
+		for(zz=0;zz<(2+2*tabu_solution[0]+2*tabu_solution[0]*tabu_solution[1]);zz++){
+			returned_Tabu_tabu_solution[zz] = tabu_solution[zz];
+		}
+		//ignorerar algoritmen
+		STOOOP = 0;
+	
+	}
+	//END FUL FIX
+	
+	// ALGORITMEN:
+
+	//while(tabu_solution[0]<steps){ // lite av en oändlig while loop
+	while(GOOO==STOOOP){ // lite av en oändlig while loop
 		
 		if(tabu_solution[1]==hundra_raknare1){
 			printf(" Antal steg tagna:  %d\n",hundra_raknare1 );
 			hundra_raknare1+=100;
-			if(tabu_solution[1]==steps){
-				printf("tabu_solution[1]==steps\n");
+			if(tabu_solution[1]==MAX_TABU_STEPS){
+				printf("tabu_solution[1]==MAX_TABU_STEPS\n");
 				hundra_raknare2++;
 				tabu_solution[1]=0;
 				hundra_raknare1=0;
+				
 				int q=2+2*tabu_solution[0];
 				for(q=2+2*tabu_solution[0];q<8500;q++){
 					tabu_solution[q]=-1;
 				}
-				if(hundra_raknare2==4){
-					printf(" Recht MAX step, No solution Found\n");
+				
+				if(hundra_raknare2==START_FROM_THE_BEGINING_AGEN_NUMBER){
+					printf(" Recht MAX step 3 times, No solution Found\n");
 					break;
 				}
 			}
@@ -321,10 +373,11 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 				break;
 			}
 			
-			if(tabu_solution[1]==0 || tabu_solution[1]==1){
-				printf("Inga steg krävdes\n");
+			if(tabu_solution[1]==0 || tabu_solution[1]==1){ //nödvändig?
+				//printf("Inga steg krävdes\n");
 				break;
 			}
+			
 			tabu_solution[1]=0;
 			int q=2+2*tabu_solution[0];
 			for(q=2+2*tabu_solution[0];q<8500;q++){
@@ -830,6 +883,50 @@ int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 			for(z=0;z<2*(1+tabu_solution[0]+tabu_solution[0]*tabu_solution[1]);z++){
 				returned_Tabu_tabu_solution[z] = tabu_solution[z];
 			}
+			//nytt tänk för att få bort dåliga lösnigar på lätta områden
+			//vad ska ända här?: 
+			//svar:om lösningen är kortare än 4 kör algoritmen igen
+			if(tabu_solution[1]<=to_easy_problem_problem_adjustment_set_nr_steps_to){
+				
+				/*
+				int to_easy_problem_problem_adjustment_set_nr_steps_to=5;
+				int to_easy_problem_problem_adjustment_go_agen_nr=1; // om 2 körs den två gånger
+				int tabu_algorithem_agen_number=0;
+				*/
+				
+				tabu_algorithem_agen_number++;
+				if(tabu_algorithem_agen_number<=to_easy_problem_problem_adjustment_go_agen_nr){
+				
+
+					// räkanre
+					// nollställa matrisen //sätter alla till noll.
+					//skriva in hinder till
+					
+					int r,c;
+					for(r = 0; r < ROWS; r++){
+						for(c = 0; c < COLS; c++){ // For every node:
+							tabuMatris[r][c]=0;
+						}
+					}
+					for(r = 0; r < ROWS; r++){
+						for(c = 0; c < COLS; c++){ // For every node:
+							if(NodeMatrix[r][c].vision[0] == (struct Node *)0){ // Obstacle
+								tabuMatris[r][c]=0;
+							}
+							else{
+								tabuMatris[r][c]=1;
+							}
+						}
+					}				
+					
+					return NOT_OK;
+
+	
+				}
+			}
+			
+			
+			//nytt tänk för att få bort dåliga lösnigar på lätta områden
 			return OK;
 		}
 	}
@@ -850,6 +947,7 @@ int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 	else if(tabu_solution[1] > best_step_length){
 		Tabu_save_number_3=0;
 	}
+	
 	return NOT_OK;
 }
 
