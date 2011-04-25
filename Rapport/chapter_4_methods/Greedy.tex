@@ -1,10 +1,69 @@
 \section{Greedy algorithm}
 Greedy.
 \subsection{Description}
-A description of what Greedy is.
+
+A greedy algorithm obtains an solution to a problem itteratively. For each itteration there must ofcourse some decision point, how to to push the algorithm towards the solution. A so called "cost function" designates a cost to all possible alternatives at the decision point. The alternative with the best cost, be it maximum or minimun, is choosen at the decision point. It is not guaranteed in general that greedy algorithms provide optimal solutions. Also there is no general way of determining wether an greedy algorithm provides an optimal solution or not, but there are two very important properties that usually helps to determine if an optimal solution can be provided. these are the greedy-choice property and the optimal substructure property (referens till bok enligt googlebooks addres ovan kap 16.2). the greedy choice property states that an global optimal solution can be arrived at by making locally optimal choices. in other words, at each decision point a choice can be made without reconsidering previous decision points.  the optimal substructure  property states that an optimal solution can be expressed as a sum of solutions to subproblems. these two properties are nessecary to be able to construct a optimal solution by summing optimal subsolutions. 
+
+very often the greedy algorithms are recursive. suppose we have a optimization problem P, and that there exists an optimal solution S. Also, suppose that P has optimal substructure and greedy choice properties. then the solution S is given by the optimal subsolution $p_0$ plus the solution to the remainding problem P'. following this thought line again for P' one gets that $S=p_0 +p_1 + solution (P'') =>S=sum(p_i)$
+
+the problematics, as alwyas with recursion, is to find a proper generic question. so that it is solvable, and so that it actually returns the answer we excpect to find.
+  
+when constructing the algorithm for a problem P one starts out by finding some part of the solution. formulate this as a generic step and loop. This is exactly how the algorithm for the multi pursuer problem has been constructed.
+
+\subsection{Development process}
+as mentioned above one problem with constructing greedy algorithms is to find a correct generic question. an example to describe this is the sceduling problem. say you have a very special machine in a lab and there are a lot of scientists who wants to use it. the problem is to schedule in as many scientists as possible in a given frame. there are several ways to approach this problem but most of them return a probable, but incorrect solution. 
+
+The over all approach to creating the algorithm assumes that it is possible to find the best movement strategy by locally finding the best next step until we arrive at a totally secured state of the enviroment. so the generic question would informally be "what is the best next step for the pursuer team?". In the search for this question there has been a couple of ideas, where at last only one seemed like a good choice, presented in section 3.
+
+the first idea "alorithm 1" was to make the secured area our target function. in each itteration the local movement strategy which gave the largest increase in secured area would be the strategy chosen. we would then have a target function and constraints due to the enviroment and pursuer positions. this ought to be possible to solve as some sort of linear programming problem. After consideration this approach presented several drawbacks. first off, for many enviroments it is sometimes nessecary to let go of secured areas. this could not be alowed by the algorithm 1 with a greedy approach. also there are a lot of cases where the best move is not an increase in secured area, but rather guarding or transportation to strategic positions. this was allowed, but not very likely to be chosen by the algorithm. it was thus realized that the algorithm somehow must look further than just the head on approach of targeting the secured area.
+
+the next step was to extend the formulation of algorithm 1 to have more dynamic constraints, hereon called algorithm 2. the idea was to introduce some sort of tactics to the pursuer team. this meant that each pursuer was looked at and given a certain over all tactic. In order to be able to give more constraints, we needed more information. here the idea of introducing different areas was first met. this is dynamic information about the enviroment, thus giving dynamic constraints. the different choices of tactics were guard, split areas, secure areas, merge areas. in this case it was problematic to find a generall formulation of how to choose tactics. there were to many special cases and intuition involved for a possible implementation.
+
+
+for the third algorithm the goal was to find something that combined the features of the two earlier atempts. the simplicity of an easy to understand goal function but also the versatile tactic approach. Here the idea of giving each tile a value arouse. each hunter can in general move to at most four tiles or stand still. thus by giving each of these five alternatives a value that states how good the move is we will find the best over all strategy of the team. the goal function for each itteration is to maximize the sum of the tiles to move into. so how does one quantify what  a good tile is? from algorithm 2 the idea of finding areas was taken. if we assign one area for each pursuer to move towards they will all spread out and secure the enviroment. thus we add a value to the tiles that give the shortest path for a pursuer to approach its designated boundry. but by also adding values to all tiles depending on their geometric propertis and their unique guarding properties of secured areas. the algorithm will implicit create its own tactics, given that the added values are correctly adjusted. 
+
+this idea is what was used for the final algorithm. to arrive at the algorithm presented in section 3 several examples has been tested on paper. trying to delete all human intuition from the algorithm and strictly quantify the valuation of the tiles with simple numbers or questions, suitable for a computer.  a more in depth explanation of the algorithm is given in the next section.
+ 
 \subsection{Algorithm}
-A description of the algorithm.
+
+%-punkta upp pseudokod fšr en itteration
+
+1- find the total vision of the pursuers.
+2- identify all elements of the set  A, where each element is an unseen area of the map.
+3 - for each component in A identify its boundrys, and its priority
+	a- only one bound, visible, contamined
+	b- only one bound, not visible, contamined
+	c- several bounds, visible, contamined
+	d-several bounds, not visible, contamined
+	e- secured area.
+4- extend the boundrys of areas with priority a,c,e so that every tile where you can see the whole interior is part of the boundry.
+(5- check if any hunter can make a move without changing the current conditions. if so, create  a fictional hunter int this position. (this is really the same thing as mergeing tiles)
+6- create a table. each row is a contamined area , each column is a hunter. each element $c_ij$i n the table is the shortes distance for hunter j to the boundry of area i.
+7- if the number of hunters is equal to or less than the number of columns. choose exactly one element from each row and column so that the sum is minimized. also areas of priority a,c must be choosen before areas of priorit d and b. this will assign a hunter to each area. add a value alpha in the first tile part of the shortest path to that area boundry for each hunter.
+8- for each hunter add a value beta to the tile closest to a boundry of contamined area.
+9- for each hunter add a value gamma to the tiles where the hunter still can see boundrys that are uniquley seen by this hunter.
+10- for each hunter add a value delta to the tiles with largest vision.
+11- if one or more tiles have the exact same value at this point, add a small value epsilon to the tile that is furthest away from the other hunters.
+12 - move each hunter to the tile with the highest value, (this could also mean to stand still)
+
+
+
+beskriv hur min algorithm fungerar
 \subsection{Implementation}
 A description of how the algorithm is implemented.
-\subsection{Development process}
-How the development of the algorithm have proceeded.
+
+before starting the algorithm all static conditions are evaluated and stored. this is done in a so called pre-function. the pre-function for the greedy algorithm runs the A-star algorithm to find the shortest path and distance between any two tiles in the map and stores this information in a hash table. also all the information from the graph network presented in chapter three is given. The pre prefunction also puts the hunters in their starting positions and evaluates the starting states of all tiles.
+
+due to a combination of time pressure and shortcommings in programming with the C language, the implementation of the greedy algorithm was not finnished. but the outline is as follows:
+
+given the data from the prefunction:
+test if the enviroment is cleared. if not
+test if the given break condition is reached. if not
+run the function oneitteration().
+ 
+the function oneitteration is in turn divided into three smaller functions preparations, valuation, execute.
+int the preparation function. the algorithm  completes step one to five, given in the previous subsection.
+in the valuation function it completes step six to eleven in the previous subsection.
+at last in the execute function it moves each pursuer to the most valuated tile and uppdates the states of the enviroment.
+
+
