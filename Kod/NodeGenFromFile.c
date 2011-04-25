@@ -2,6 +2,7 @@
 #include "Header.h"
 #include "genetic.h"
 #include "greedy.h"
+#include <sys/time.h>
 
 //#define SIZE 10 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
 int A[SIZE][SIZE]; // The matrix of the area to create a network from.
@@ -9,7 +10,6 @@ int A[SIZE][SIZE]; // The matrix of the area to create a network from.
 #define RIGHT 1
 #define UP 2
 #define DOWN 3
-
 
 void place(); // For each allowed position (a_ij=1 i A), give B values at position b_ij.
 void setMove(struct Node *b); // Give element b_ij moveable elements in B.
@@ -24,8 +24,10 @@ void printArea(void);
 void printCommon(int *Hunters);
 FILE *fr = NULL;
 FILE *res = NULL;
+FILE *purPaths = NULL;
 int ROWS=0,COLS=0,OBS=0;
 struct Node B[SIZE][SIZE];
+int *Hunters;
 
 
 struct Path{
@@ -335,13 +337,15 @@ int main() {
 	fr = fopen("OK.txt", "r"); // Open file once
 	int numMatrices=0;
 	clock_t genStart,genEnd,greStart,greEnd,tabStart,tabEnd; // Used to calculate running-time for each algorithm
+	struct timeval beforeGen, beforeTab, afterGen, afterTab;
 	while(readFromFile() != -1){
 		numMatrices++;
 		place();
-		int Hunters[21];
+		Hunters = malloc(21*sizeof(int));
 		res = fopen("RESULTS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
+		purPaths = fopen("PATHS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
 		printArea();
-		int Hunter_static[]={2,2,0,4,4};
+		//int Hunter_static[]={2,2,0,4,4};
 		int BREAK = 50;
 		int envLoop=0;
 		for(envLoop=0;envLoop<4;envLoop++){ // Same area 4 times, with different start positions
@@ -349,7 +353,6 @@ int main() {
 			getStartPositions(Hunters);
 			fprintf(res, "Algorithm\t");
 			fprintf(res, "Genetic  \t");
-			fprintf(res, "Greedy   \t");
 			fprintf(res, "Tabu     \n");
 			printf("Using %d pursuers\n", Hunters[0]);
 			/****
@@ -363,71 +366,62 @@ int main() {
 				printCommon(Hunters); // Write all common info to RESULTS.txt
 				int sameEnv=0;
 				for(sameEnv=0;sameEnv<4;sameEnv++){ // Loop with same parameters 4 times
-					printf("Loop %d of 2 in sameEnv\n", sameEnv);
+					fprintf(res, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
+					printf("Loop %d of 4 in sameEnv\n", sameEnv);
 					printf("Genetic\n");
 					int geneticSolution[2*(1+Hunters[0]*200)];
 					memset(geneticSolution,-1,sizeof(geneticSolution));
-					preGenetic(&B, &Hunters, BREAK, ROWS, COLS);
+					preGenetic(&B, Hunters, BREAK, ROWS, COLS);
 					genStart = clock(); // Starting time for Genetic
+					gettimeofday(&beforeGen, NULL);
 					genAlg(geneticSolution); // Main Genetic Algorithm program.
 					genEnd = clock(); // Ending time for Genetic
-					/*** Greedy ***/
-					printf("Greedy\n");
-					struct greedy start=preGreedy(B, &Hunter_static, &BREAK);
-					greStart = clock(); // Ending time for Genetic
-					//greedyAlg(&start);
-					greEnd = clock(); // Ending time for Genetic
-					//printf("Greedy completed\n");		
+					gettimeofday(&afterGen, NULL);
 					/*** Tabu ***/
 					printf("Tabu\n");
 					int tabuSolution[2*(1+Hunters[0]*200)];
 					memset(tabuSolution,-1,sizeof(tabuSolution));
-					preTabu(&B, &Hunters, BREAK, ROWS, COLS);
+					preTabu(&B, Hunters, BREAK, ROWS, COLS);
 					tabStart = clock(); // Ending time for Genetic
+					gettimeofday(&beforeTab, NULL);
 					Tabu(tabuSolution); // Main Genetic Algorithm program.
 					tabEnd = clock(); // Ending time for Genetic
+					gettimeofday(&afterTab, NULL);
+					printf("Tabu End\n");
 					// Print statistics to RESULTS.txt
-					fprintf(res, "Time     \t");
+					/*fprintf(res, "Time     \t");
 					fprintf(res, "%.2f     \t", ((double) (genEnd - genStart)) / CLOCKS_PER_SEC);
-					fprintf(res, "%.2f     \t", ((double) (greEnd - greStart)) / CLOCKS_PER_SEC);
-					fprintf(res, "%.2f     \n", ((double) (tabEnd - tabStart)) / CLOCKS_PER_SEC);
+					fprintf(res, "%.2f     \n", ((double) (tabEnd - tabStart)) / CLOCKS_PER_SEC);*/
+					fprintf(res, "Time     \t");
+					fprintf(res, "%.4f     \t", ((double) (afterGen.tv_sec - beforeGen.tv_sec)*1000 + (afterGen.tv_usec-beforeGen.tv_usec)/1000)/1000);
+					fprintf(res, "%.4f     \t\n", ((double) (afterTab.tv_sec - beforeTab.tv_sec)*1000 + (afterTab.tv_usec-beforeTab.tv_usec)/1000)/1000);
 					fprintf(res, "Steps    \t");
 					fprintf(res, "%d       \t", geneticSolution[1]);
-					fprintf(res, "%d       \t", start.solution[1]);
 					fprintf(res, "%d       \n", tabuSolution[1]);
-					/*
-					fprintf(res, "Path");
-					int i,genDone=0,greDone=0,tabDone=0;
-					for(i=2;i<2*(1+Hunters[0]+Hunters[0]*200);i+=2){
-						if(genDone==1 && greDone==1 && tabDone==1){ // Paths for all algorithms has been printed
-							break;
+					// Print path to separate file (PATHS.txt)
+					fprintf(purPaths, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
+					int i,genDone=0,greDone=0,tabDone=0,pur=0;
+					fprintf(purPaths, "Genetic: \n");
+					for(pur=0;pur<Hunters[0];pur++){
+						for(i=2*(1+pur);i<2*(1+Hunters[0]+Hunters[0]*geneticSolution[1]);i+=2*Hunters[0]){
+							fprintf(purPaths, "(%d,%d) ", geneticSolution[i], geneticSolution[i+1]);
 						}
-						fprintf(res, "\t\t");
-						if(geneticSolution[i] == -1 || i == 2*(1+geneticSolution[0]+geneticSolution[0]*geneticSolution[1]) || genDone==1){
-							fprintf(res, " \t");
-							genDone=1;
-						}else{
-							fprintf(res, "(%d,%d)\t", geneticSolution[i], geneticSolution[i+1]);
-						}
-						if(start.solution[i] == -1 || i == 2*(1+start.solution[0]+start.solution[0]*start.solution[1]) || greDone==1){
-							fprintf(res, " \t");
-							greDone=1;
-						}else{
-							fprintf(res, "(%d,%d)\t", start.solution[i], start.solution[i+1]);
-						}
-						if(tabuSolution[i] == -1 || i == 2*(1+tabuSolution[0]+tabuSolution[0]*tabuSolution[1]) || tabDone==1){
-							fprintf(res, " ");
-							tabDone=1;
-						}else{
-							fprintf(res, "(%d,%d)", tabuSolution[i], tabuSolution[i+1]);
-						}
-						fprintf(res, "\n");
+						fprintf(purPaths, "\n");
 					}
-					* */
+					fprintf(purPaths, "Tabu: \n");
+					for(pur=0;pur<Hunters[0];pur++){
+						for(i=2*(1+pur);i<2*(1+Hunters[0]+Hunters[0]*tabuSolution[1]);i+=2*Hunters[0]){
+							fprintf(purPaths, "(%d,%d) ", tabuSolution[i], tabuSolution[i+1]);
+						}
+						fprintf(purPaths, "\n");
+					}
+					fprintf(purPaths, "\n");
 				}
 			}
 		}
+		fclose(purPaths); // Close the result file once
 		fclose(res); // Close the result file once
+		free(Hunters);
 	}
 	printf("There were %d matrices in input file.\n", numMatrices);
 	fclose (fr); // Close file once.
@@ -436,7 +430,7 @@ int main() {
 }
 void printCommon(int *Hunters){
 	int i;
-	fprintf(res, "         \t         \t         \t         \tPursuers \t%d         \t", Hunters[0]);
+	fprintf(res, "         \t         \t         \tPursuers \t%d         \t", Hunters[0]);
 	for(i=1;i<1+2*Hunters[0];i+=2){
 		fprintf(res, "(%d,%d)", Hunters[i], Hunters[i+1]);
 	}
