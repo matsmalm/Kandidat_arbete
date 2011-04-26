@@ -337,7 +337,7 @@ int main() {
 	fr = fopen("OK.txt", "r"); // Open file once
 	int numMatrices=0;
 	clock_t genStart,genEnd,greStart,greEnd,tabStart,tabEnd; // Used to calculate running-time for each algorithm
-	struct timeval beforeGen, beforeTab, afterGen, afterTab;
+	struct timeval beforeGen, beforeTab, beforeGre, afterGen, afterTab, afterGre;
 	while(readFromFile() != -1){
 		numMatrices++;
 		place();
@@ -345,7 +345,7 @@ int main() {
 		res = fopen("RESULTS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
 		purPaths = fopen("PATHS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
 		printArea();
-		//int Hunter_static[]={2,2,0,4,4};
+		int Hunter_static[]={2,2,0,4,4};
 		int BREAK = 50;
 		int envLoop=0;
 		for(envLoop=0;envLoop<4;envLoop++){ // Same area 4 times, with different start positions
@@ -377,6 +377,12 @@ int main() {
 					genAlg(geneticSolution); // Main Genetic Algorithm program.
 					genEnd = clock(); // Ending time for Genetic
 					gettimeofday(&afterGen, NULL);
+					/*** Greedy ***/
+					struct greedy start;
+					start = preGreedy(&B, &Hunters, &BREAK);
+					gettimeofday(&beforeGre, NULL);
+					greedyAlg(start);
+					gettimeofday(&afterGre, NULL);
 					/*** Tabu ***/
 					printf("Tabu\n");
 					int tabuSolution[2*(1+Hunters[0]*200)];
@@ -394,9 +400,11 @@ int main() {
 					fprintf(res, "%.2f     \n", ((double) (tabEnd - tabStart)) / CLOCKS_PER_SEC);*/
 					fprintf(res, "Time     \t");
 					fprintf(res, "%.4f     \t", ((double) (afterGen.tv_sec - beforeGen.tv_sec)*1000 + (afterGen.tv_usec-beforeGen.tv_usec)/1000)/1000);
+					fprintf(res, "%.4f     \t", ((double) (afterGre.tv_sec - beforeGre.tv_sec)*1000 + (afterGre.tv_usec-beforeGre.tv_usec)/1000)/1000);
 					fprintf(res, "%.4f     \t\n", ((double) (afterTab.tv_sec - beforeTab.tv_sec)*1000 + (afterTab.tv_usec-beforeTab.tv_usec)/1000)/1000);
 					fprintf(res, "Steps    \t");
 					fprintf(res, "%d       \t", geneticSolution[1]);
+					fprintf(res, "%d       \t", start.solution[1]);
 					fprintf(res, "%d       \n", tabuSolution[1]);
 					// Print path to separate file (PATHS.txt)
 					fprintf(purPaths, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
