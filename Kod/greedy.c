@@ -323,6 +323,7 @@ void update_states();
 
 //===========********======PREGREEDY========**********=============
 struct greedy preGreedy(struct Node NodeMat[SIZE][SIZE], int *Hunters, int *BREAK){
+  // printf("preGreedy start\n");
   struct greedy output;
   int i=0;
   int j=0;
@@ -354,6 +355,7 @@ struct greedy preGreedy(struct Node NodeMat[SIZE][SIZE], int *Hunters, int *BREA
   //fill solution[]={number of pursuers, number of itterations, starting pos.,{-1}}
   output.solution[0]=*p1;
   output.solution[1]=0;
+
   while(i<Hunters[0]*2){
     output.solution[i+2]=*(p1+i+1);
     i++; 
@@ -362,13 +364,13 @@ struct greedy preGreedy(struct Node NodeMat[SIZE][SIZE], int *Hunters, int *BREA
   create_tables(poutput); //skriv in tabeller i output struct
 
   printf("\n\n");
-
+  printf("pregreedy, done\n");
   return output;
 }
 
 void create_tables(struct greedy *poutput){
-  printf("create_tables\n");
-  printf("    ");
+  // printf("create_tables\n");
+  // printf("    ");
   get_total_area(poutput);
   get_node_distance(poutput);
 
@@ -377,6 +379,7 @@ void create_tables(struct greedy *poutput){
 }
 
 void a_star(struct greedy *input, int from, int to){
+
 	int s=0;
 	int t=0;
 	int u=0;
@@ -438,12 +441,14 @@ void a_star(struct greedy *input, int from, int to){
 			t=0;
 			while(t<4){
 				//printf("hej3\n");
+
 				u=0;
 				if((*(*input).total_area[best_index]).move[t]==(struct Node *)0){
 				}
 				else{
 					while((*input).total_area[u]!=(*(*input).total_area[best_index]).move[t]){
 						u++;
+
 					}
 					if(is_in_closed[u]){
 					}
@@ -465,12 +470,13 @@ void a_star(struct greedy *input, int from, int to){
 		}
 		s++;
 	}
+
 	return;
 }
 
 
 void get_node_distance(struct greedy *output){
-  printf("get_node_distance, end.\n");
+  //  printf("get_node_distance, end.\n");
 
   (*output).tile_distance= ht_init (10*SIZE*SIZE, NULL); // skapa en hashtabel
   int k=0;
@@ -537,12 +543,12 @@ void get_total_area(struct greedy *input){
 void greedyAlg(struct greedy *input){
   printf("greedyAlg\n");
   (*input).solution_iter_index=2;
-  while (run(input)==TRUE){
+  //  while (run(input)==TRUE){
     (*input).solution_iter_index=(*input).solution_iter_index+2*(*input).solution[0]*(*input).solution[1];
     one_iteration(input);
     (*input).Break[0]=(*input).Break[0]+1;
     ((*input).solution[1])++;
-  }
+    //}
   return;   //output ska vara samma som input, men vi har trixat med structen.  
 }
 
@@ -557,10 +563,8 @@ int run(struct greedy *input){
 
 int enviroment_cleared(struct greedy *input){
   int i=0;
-  int correct_size=22;
-  struct Node *temp=(*input).total_area[0];
-  while (/*(*temp).vision[0]!=(struct Node *)0*/i<correct_size){
-    if((*temp).state==4){
+  while ((*input).total_area[i]!=(struct Node *)0){
+    if((*(*input).total_area[i]).state==4){
       printf("enviroment_cleared return: FALSE\n");
       return FALSE;
     }
@@ -594,7 +598,7 @@ void one_iteration(struct greedy *input){
 /*===================one_iteration(): Phase one, Preparations================================*/
 struct valuation preparation(struct greedy *input){ //tar fram alla startdata fˆr en iteration
  
-  printf("preparation\n");
+  // printf("preparation\n");
   struct valuation output;
 
   memset(&output, 0, sizeof(output));
@@ -606,13 +610,16 @@ struct valuation preparation(struct greedy *input){ //tar fram alla startdata f�
 }
 
 void get_conditions(struct greedy *input, struct valuation *output){ //fastst‰ll vilka omrÂden som finns utanfˆr synf‰lt, namnge och definiera r‰nder
+  // printf("get_conditions\n");
   get_vision(input, output); //skriv in gruppens sikt som states i NodeMatrix
   get_total_areas(input, output);
   return;
 }
 
 void get_vision(struct greedy *input, struct valuation *output){
+  // printf("get_vision\n");
   //find the total sight of the team, update states correspondingly
+
   int j=0;
   int k=0;
   int i=0;
@@ -621,7 +628,7 @@ void get_vision(struct greedy *input, struct valuation *output){
 
   struct Node *temp2;
   Queue vision=CreateQueue(MAX_TOTAL_AREA);
- 
+   printf("TEST!!");
 
   while(j<(*input).solution[0]){
     row=(*input).solution[(*input).solution_iter_index+2*j];
@@ -652,6 +659,7 @@ void get_vision(struct greedy *input, struct valuation *output){
 }
 
 int is_in_vision(struct valuation *input, struct Node *tile){
+  // printf("is_in_vision\n");
   int i=0;
   while (1==1){
     if((*input).total_vision[i]==tile){
@@ -668,6 +676,7 @@ void get_total_areas(struct greedy *input, struct valuation *output){
   /*  struct Node *checked_tiles[MAX_SIZE_TOTAL_VISION];
   memset(checked_tiles, 0, sizeof(checked_tiles));
   */
+  //  printf("get_total_areas\n");
 
   Queue unchecked_queue=CreateQueue(MAX_TOTAL_AREA);
   struct Node *tile;
@@ -862,7 +871,7 @@ void get_hunter_equiv(){
 
   return;
   */
-  printf("get_hunter_equiv, end.\n");
+  //  printf("get_hunter_equiv, end.\n");
   return;
 }
 
@@ -883,10 +892,10 @@ struct move valuation(struct valuation *input_val, struct greedy *input_greedy){
   int hunter_temp[100][5];
   memset(&hunter_temp,0,sizeof(hunter_temp));
   
-  printf("valuation\n");
-  printf("      ");
+  //  printf("valuation\n");
+  // printf("      ");
   designate_boundry(input_greedy,input_val);
-  printf("      ");
+  // printf("      ");
   /*  while(i<(*input_greedy).solution[0]){
     row=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*i];
     kol=(*input_greedy).solution[(*input_greedy).solution_iter_index+2*i+1];
@@ -910,16 +919,16 @@ void designate_boundry(struct greedy *input_greedy, struct valuation *input_val)
   add_directional_value(antal_att_delegera); // givet de val som finns frÂn make_distance v‰lj b‰sta
   */
   int best_assignment[(*input_greedy).solution[0]];
-  printf("designate_boundry\n");
-  printf("          ");
+  // printf("designate_boundry\n");
+  // printf("          ");
   solve_assignment(input_greedy, input_val, &best_assignment);
-  printf("          ");
+  // printf("          ");
   designate_direction();
   return;
 }
 
 void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, int *best_assignment){
-
+  // printf("HEJJE!!\n");
   int i=0;
   int j=0;
   int m=0;
@@ -992,7 +1001,7 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, 
 
   //fall 1:
   if(total_unsecured>(*input_greedy).solution[0]){
-    printf("total_unsecured>number_of_hunters\n");
+    // printf("total_unsecured>number_of_hunters\n");
     struct Area *prio_array[MAX_TOTAL_AREA];
     memset(prio_array,0,sizeof(prio_array));
     int total_prio=0;
@@ -1008,7 +1017,7 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, 
       i++;
     }
       if(total_prio>(*input_greedy).solution[0] || total_prio==(*input_greedy).solution[0]){
-	printf("total_prio>number_of_hunters or total_prio==number_of_hunters\n");
+	//	printf("total_prio>number_of_hunters or total_prio==number_of_hunters\n");
       //ta fram alla möjliga kombinationer man kan välja ett område per jagare unikt.
       i=0;
       j=0;
@@ -1075,7 +1084,7 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, 
       DisposeQueue(combination);
       return;
       }else if(total_prio<(*input_greedy).solution[0]){
-	printf("total_prio<number_of_hunters\n");
+	//	printf("total_prio<number_of_hunters\n");
 	/*
           välj exakt ett unikt område per jagare, måste välja alla prioriterade:
 	  ta fram alla möjliga kombinationer som innehåller alla prioriterade
@@ -1148,9 +1157,9 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, 
 	i++;
       }
       i=0;
-      printf("number of priority:%d \n", number_of_priority);
+      //      printf("number of priority:%d \n", number_of_priority);
       while(priority_index_array[i]!=-1){
-      printf("priority indices:%d \n", priority_index_array[i]);
+	//   printf("priority indices:%d \n", priority_index_array[i]);
       i++;
       }
 
@@ -1181,7 +1190,7 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, 
 //---------------end   if(total_unsecured>(*input_greedy).solution[0]) -------------------------
 
   }else if(total_unsecured==(*input_greedy).solution[0]){
-    	printf("total_unsecured==number_of_hunters\n");
+    //	printf("total_unsecured==number_of_hunters\n");
     /*
  square, assigna exakt ett område till varje jagare:
         ta fram alla möjliga kombinationer
@@ -1258,7 +1267,7 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, 
 
     //--------------end if(total_unsecured==(*input_greedy).solution[0]) ---------------------
   }else if(total_unsecured<(*input_greedy).solution[0]){
-	printf("total_unsecured<number_of_hunters\n");
+    //	printf("total_unsecured<number_of_hunters\n");
     /*
     varje område måste assignas minst en gång (kan vara mer?):
        ta fram alla möjliga kombinationer som innehåller alla områden minst en gång
@@ -1272,13 +1281,13 @@ void solve_assignment(struct greedy *input_greedy, struct valuation *input_val, 
 
 
 
-  printf("solve_knappsack, end.\n");
+  //  printf("solve_knappsack, end.\n");
   return;
 }
 
 void designate_direction(/*solution_from_knappsack*/){
   //given a hunter and a path to a boundry, add the amount designatedirection to the first step in the path.
-  printf("designate_direction, end.\n");  
+  // printf("designate_direction, end.\n");  
 return;
 }
 
@@ -1293,40 +1302,40 @@ void add_geometric_value(int (*input)[5], struct Node *position){
   }
   return;
   */
-  printf("add_geometric_value\n");
-  printf("        ");
+  //  printf("add_geometric_value\n");
+  // printf("        ");
   add_close_boundry_value();
-  printf("        ");
+  // printf("        ");
   add_unique_guarding_value();
-  printf("        ");
+  //printf("        ");
   add_priority_guarding_value();
-  printf("        ");
+  //printf("        ");
   add_big_vision_value(input, position);
   return;
 }
 
 void add_close_boundry_value(/*jagare[i]*/){
   //addera v‰rdet close pÂ den/de flyttbara noder med kortast avstÂnd till nÂgon rand
-  printf("add_close_boundry_value,end.\n");
+  // printf("add_close_boundry_value,end.\n");
   return;
 
 }
 
 void add_unique_guarding_value(/*jagare[i]*/){
   //addera v‰rdet unique pÂ den/de flyttbara noder som ser unika rand-omrÂden
-  printf("add_unique_guarding_value, end.\n");
+  //printf("add_unique_guarding_value, end.\n");
   return;
 }
 
 void add_priority_guarding_value(/*jagare[i]*/){
   //addera v‰rdet priority pÂ den/de flyttbara noder som ser unika prioritetsomrÂden
-  printf("add_priority_guarding_value, end.\n");
+  //printf("add_priority_guarding_value, end.\n");
   return;
 }
 
 void add_big_vision_value(int (*input)[5], struct Node *position){
   //addera v‰rdet big_vision pÂ den/de flyttbara noder som ser mest
-  printf("add_big_vision_value, end.\n");
+  //printf("add_big_vision_value, end.\n");
   return;
 }
 
@@ -1335,7 +1344,7 @@ void find_best_cost(){
 fˆr varje jagare:
 -l‰s av vilken ruta som har hˆgst v‰rde
    */ 
-  printf("find_best_cost, end.\n");
+  //printf("find_best_cost, end.\n");
   return; //pekare pÂ vilken nod som har hˆgsta v‰rde
 }
 
@@ -1356,14 +1365,14 @@ void move(struct greedy *input, struct move *input_valuation){ //anv‰nder data
   update_states(); //j‰mfˆr tillstÂnd fˆr fˆrflyttning med efter, uppdaterar tillstÂnds‰ndringar
   return;
   */
-  printf("move\n");
-  printf("      ");
+  //printf("move\n");
+  //printf("      ");
   get_hunter();
-  printf("      ");
+  //printf("      ");
   get_best_move();
-  printf("      ");
+  //printf("      ");
   put_movestrat();
-  printf("      ");
+  //printf("      ");
   update_states();
   return;
 }
@@ -1378,7 +1387,7 @@ int antaljagare= input.solution[0];
   int k=input.solution[kindex];
   return input.NodeMatrix.[r][k];
   */
-  printf("get_hunter, end.\n");
+  //  printf("get_hunter, end.\n");
   return;
 }
 
@@ -1390,7 +1399,7 @@ void /*struct Node*/ get_best_move(/*from*/){
    
  return to
  */
-  printf("get_best_move, end.\n");
+  //  printf("get_best_move, end.\n");
   return;
 }
 
@@ -1401,7 +1410,7 @@ void put_movestrat(/*int startindex,struct Node *from, struct Node *to*/){
 -l‰gg in jagarnas nya positionerpositioner i slutet pÂ solution[]
 -addera ett till solution [1] (antal steg gjorda)
   */
-  printf("put_movestrat, end.\n");
+  // printf("put_movestrat, end.\n");
   return;
 }
 
@@ -1411,7 +1420,7 @@ void update_states(){
 -j‰mfˆr fˆrhÂllande fˆre och efter fˆrflyttning
 -updatera de states som har fˆr‰ndrats.
    */
-  printf("update_states, end.\n");
+  //printf("update_states, end.\n");
   return;
 }
 

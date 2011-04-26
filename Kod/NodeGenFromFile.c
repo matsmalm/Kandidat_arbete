@@ -374,23 +374,27 @@ int main() {
 					preGenetic(&B, Hunters, BREAK, ROWS, COLS);
 					genStart = clock(); // Starting time for Genetic
 					gettimeofday(&beforeGen, NULL);
+
 					genAlg(geneticSolution); // Main Genetic Algorithm program.
 					genEnd = clock(); // Ending time for Genetic
 					gettimeofday(&afterGen, NULL);
+
 					/*** Greedy ***/
+
 					struct greedy start;
-					start = preGreedy(&B, &Hunters, &BREAK);
+					start = preGreedy(&B, Hunters, &BREAK);
 					gettimeofday(&beforeGre, NULL);
-					greedyAlg(start);
+					greedyAlg(&start);
 					gettimeofday(&afterGre, NULL);
 					/*** Tabu ***/
+
 					printf("Tabu\n");
 					int tabuSolution[2*(1+Hunters[0]*200)];
 					memset(tabuSolution,-1,sizeof(tabuSolution));
-					preTabu(&B, Hunters, BREAK, ROWS, COLS);
+				       	preTabu(&B, Hunters, BREAK, ROWS, COLS);
 					tabStart = clock(); // Ending time for Genetic
 					gettimeofday(&beforeTab, NULL);
-					Tabu(tabuSolution); // Main Genetic Algorithm program.
+				       	Tabu(tabuSolution); // Main Genetic Algorithm program.
 					tabEnd = clock(); // Ending time for Genetic
 					gettimeofday(&afterTab, NULL);
 					printf("Tabu End\n");
