@@ -21,16 +21,49 @@ When constructing a greedy algorithm one often starts by finding some part of th
 \\For the third candidate the idea was to use the extra enviromental information about the non visible areas and somehow apply this to a simple greedy cost function. By designating costs to each tile it would be easy to make a greedy choice. By construction each hunter can in general move to at most four tiles or stand still. Thus by giving each of these five alternatives a value that quantifies how good the move is we'll find the best over all strategy of the team. With this setup the objective function for each itteration is to maximize the sum of the tile-values that each pursuer moves into. So, how does one quantify what  a good tile is? The obvious answers such as field of vision and state are, by them self, insufficent information for a good algorithm. But by using the dynamic information of the areas resulting from the pursuers vision, we can find more parameters to quantify the best move. In order for the pursuer team to spread out and cooperate we designate a unique area for each pursuer to approach. This is done by adding a value to the tiles that give the shortest path for a specific pursuer to approach its designated boundry. Furthermore we add a value to all moveable tiles depending on their unique guarding properties of priorized areas. The algorithm will now make good tactical descisions, given that the added values are correctly adjusted. 
 \\
 \\This last candidate is was used as a basis for the final algorithm.To arrive at the algorithm presented in section 3 several examples has been tested manualy on random enviroments. In the manual execution the aim was to delete all human intuition from the algorithm and strictly quantify the valuation of the tiles with simple numbers or questions, suitable for a computer. A more in depth explanation of the algorithm is given in the next section.
- \pagebreak
+
 \subsection{The greedy algorithm for our problem}
-In this section the final greedy algorithm will be explained in detail, step by step. We see in Figure 4.1 a flow chart of the algorithm. Before the algorithm is started a prefunction is executed to find all static information on the enviroment. since these static conditions only need to be evaluated once, and can be evaluated at any time they are not an interesting part of the algorithm.
-\begin{wrapfigure}{L}{0.6\textwidth}
-  \centering
-  \includegraphics[width=0.6\textwidth]{chapter_4_methods/greedy_uml2.jpg}
-  \caption[Flow chart of greedy algorithm]
-  {Flow chart of greedy algorithm}
-\end{wrapfigure}
--punkta upp pseudokod fšr en itteration
+In this section the final greedy algorithm will be explained in detail, step by step. Before the algorithm is started a prefunction is executed to find all static information on the enviroment. Since these static conditions only need to be evaluated once, and can be evaluated at any time they are not an interesting part of the algorithm itself but will be described in the section 4.1.4 concerning the implementation.
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\textwidth]{chapter_4_methods/greedy_uml3.jpg}
+  	\caption[Flow chart of greedy algorithm]
+  	{Flow chart of greedy algorithm}
+\end{figure}
+
+The algorithm is written in an itterative way, and a overview is given by the flow chart in figure 4.1. In each itteration the algorithm finds and executes the best move for each pursuer. Each step will now be described in detail.
+%\begin{wrapfigure}{r}{0.4\textwidth}
+%\centering
+%\includegraphics[width=0.4\textwidth]{chapter_4_methods/Example_enviroment1.jpg}
+%\caption{Text wrap around figure}
+%\noindent
+%\hrulefill
+%\label{test}
+%\end{wrapfigure} 
+
+\begin{enumerate}
+\item{} The input for each itteration is the path taken so far. For the first itteration this corresponds only to the starting positions of the pursuers.
+\item{} At the beginning of each itteration a decision is made whether to make another itteration or not. An itteration should be executed if the enviroment is not all cleared and if the breaking conditions are not met. The breaking conditions are given by the main program running the algorithm, so that if no solution can be found the algorithm will abort in due time.   
+\item{} Here we find the total field of vision of the pursuers team. This will divide the enviroment in seen and unseen areas as in figure 4.2.   
+\item{} All areas not visible by the pursuer team are given a priority, a boundry and if possible an extended boundry. The priority is determined by the geometric properties of the area. If the area is secured it is only relevant to guard its boundries, thus secured areas are not to be designated in the preceeding steps. Contamined areas can be categorised in four different types. In ascending order of priority there are:
+\begin{itemize} 
+\item{}Areas with only one boundry, where the whole area can be seen from the boundry tile.
+\item{}Areas with several boundries, where the whole area can be seen from some boundry tile. 
+\item{}Areas with only one boundry tile, but who can not be fully seen from the boundry.
+\item{}Other areas.
+\end{itemize}
+\item{}
+\item{}
+\item{}
+\item{}
+\item{}
+\item{}
+\item{}
+\item{}
+
+\end{enumerate}
+
+
 
 1- find the total vision of the pursuers.
 2- identify all elements of the set  A, where each element is an unseen area of the map.
