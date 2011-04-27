@@ -18,13 +18,19 @@ When constructing a greedy algorithm one often starts by finding some part of th
 \\
 \\The next candidate was an attempt to extend the formulation of algorithm 1 to have dynamic constraints, hereon called algorithm 2. The idea was to introduce some sort of tactics to the pursuer team, and thus make the group cooperate in a favorable manor. For each pursuer a certain tactic would be given, corresponding to constraints to the objective function. In order to formulate these constraints, we needed more information. Here the idea of introducing different areas was first met. The common vision of the pursuer team divides the enviroment into several subareas, not visible by the team. Depending on the state and geometry of these subareas each hunter was supposed to either guard, secure or divide a given subarea. This is dynamic information about the current enviroment, thus giving dynamic constraints for each pursuer. In this case it was problematic to find a general formulation of how to choose a tactic, and how to formulate these tactics as constraints for the objective function. Also there were to many special cases and intuition involved for a possible implementation.
 \\%fram hit har jag kollat....
-\\for the third algorithm the goal was to find something that combined the features of the two earlier atempts. the simplicity of an easy to understand goal function but also the versatile tactic approach. Here the idea of giving each tile a value arouse. each hunter can in general move to at most four tiles or stand still. thus by giving each of these five alternatives a value that states how good the move is we will find the best over all strategy of the team. the goal function for each itteration is to maximize the sum of the tiles to move into. so how does one quantify what  a good tile is? from algorithm 2 the idea of finding areas was taken. if we assign one area for each pursuer to move towards they will all spread out and secure the enviroment. thus we add a value to the tiles that give the shortest path for a pursuer to approach its designated boundry. but by also adding values to all tiles depending on their geometric propertis and their unique guarding properties of secured areas. the algorithm will implicit create its own tactics, given that the added values are correctly adjusted. 
+\\For the third candidate the idea was to use the extra enviromental information about the non visible areas and somehow apply this to a simple greedy cost function. By designating costs to each tile it would be easy to make a greedy choice. By construction each hunter can in general move to at most four tiles or stand still. Thus by giving each of these five alternatives a value that quantifies how good the move is we'll find the best over all strategy of the team. With this setup the objective function for each itteration is to maximize the sum of the tile-values that each pursuer moves into. So, how does one quantify what  a good tile is? The obvious answers such as field of vision and state are, by them self, insufficent information for a good algorithm. But by using the dynamic information of the areas resulting from the pursuers vision, we can find more parameters to quantify the best move. In order for the pursuer team to spread out and cooperate we designate a unique area for each pursuer to approach. This is done by adding a value to the tiles that give the shortest path for a specific pursuer to approach its designated boundry. Furthermore we add a value to all moveable tiles depending on their unique guarding properties of priorized areas. The algorithm will now make good tactical descisions, given that the added values are correctly adjusted. 
 \\
-\\this idea is what was used for the final algorithm. to arrive at the algorithm presented in section 3 several examples has been tested on paper. trying to delete all human intuition from the algorithm and strictly quantify the valuation of the tiles with simple numbers or questions, suitable for a computer.  a more in depth explanation of the algorithm is given in the next section.
- 
+\\This last candidate is was used as a basis for the final algorithm.To arrive at the algorithm presented in section 3 several examples has been tested manualy on random enviroments. In the manual execution the aim was to delete all human intuition from the algorithm and strictly quantify the valuation of the tiles with simple numbers or questions, suitable for a computer. A more in depth explanation of the algorithm is given in the next section.
+ \pagebreak
 \subsection{The greedy algorithm for our problem}
-
-%-punkta upp pseudokod fšr en itteration
+In this section the final greedy algorithm will be explained in detail, step by step. We see in Figure 4.1 a flow chart of the algorithm. Before the algorithm is started a prefunction is executed to find all static information on the enviroment. since these static conditions only need to be evaluated once, and can be evaluated at any time they are not an interesting part of the algorithm.
+\begin{wrapfigure}{L}{0.6\textwidth}
+  \centering
+  \includegraphics[width=0.6\textwidth]{chapter_4_methods/greedy_uml2.jpg}
+  \caption[Flow chart of greedy algorithm]
+  {Flow chart of greedy algorithm}
+\end{wrapfigure}
+-punkta upp pseudokod fšr en itteration
 
 1- find the total vision of the pursuers.
 2- identify all elements of the set  A, where each element is an unseen area of the map.
@@ -46,7 +52,6 @@ When constructing a greedy algorithm one often starts by finding some part of th
 
 
 
-beskriv hur min algorithm fungerar
 \subsection{Our implementation of the greedy algorithm.}
 A description of how the algorithm is implemented.
 
