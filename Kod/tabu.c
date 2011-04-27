@@ -29,18 +29,18 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxx Viktiga!!! xxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-#define max_step_minus_in_L_list 12 				// hur många tidigare steg vi skall förbjuda att gå på 35
-#define allowed_stat_4_loss 2 						// antalet områden vi får förlora i ett steg
+#define max_step_minus_in_L_list 0 				// hur många tidigare steg vi skall förbjuda att gå på 35
+#define allowed_stat_4_loss 10 						// antalet områden vi får förlora i ett steg
 #define max_antal_INcomplete_tabu_solutions 1000
-#define TABU_MAX_LIKA 10
+#define TABU_MAX_LIKA 50
 
-#define MAX_TABU_STEPS 800							//VIKTIGT steps får inte va för hög ty 2*(jagare=5)*800 = 8000 < int tabu_solution[8500]
-#define START_FROM_THE_BEGINING_AGEN_NUMBER 4 		//antalet gånger man når MAX_TABU_STEPS innan man besetämeer att ingen lösning finns
+#define MAX_TABU_STEPS 200							//VIKTIGT steps får inte va för hög ty 2*(jagare=5)*800 = 8000 < int tabu_solution[8500]
+#define START_FROM_THE_BEGINING_AGEN_NUMBER 5 		//antalet gånger man når MAX_TABU_STEPS innan man besetämeer att ingen lösning finns
 
 
-#define to_easy_problem_problem_adjustment_set_nr_steps_to 4				//sätt denna till noll så blir du av med detta
-#define to_easy_problem_problem_adjustment_go_agen_nr 2			// om 2 körs den två gånger
-#define Mss_L_fuck_up 600
+#define to_easy_problem_problem_adjustment_set_nr_steps_to 0				//sätt denna till noll så blir du av med detta
+#define to_easy_problem_problem_adjustment_go_agen_nr 0			// om 2 körs den två gånger
+#define Mss_L_fuck_up 50
 
 
 
@@ -320,11 +320,12 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 				for(q=2+2*tabu_solution[0];q<8500;q++){
 					tabu_solution[q]=-1;
 				}
-				
+				printf("Snabb 1?\n");
 				if(hundra_raknare2==START_FROM_THE_BEGINING_AGEN_NUMBER){
 					printf(" Recht MAX step 3 times, No solution Found\n");
 					break;
 				}
+				printf("Snabb 2?\n");
 			}
 		}
 		if(tabu_solution[1]==best_step_length){ // om lösnignen nått best_step_length så måste vi ju avbryta
@@ -349,8 +350,10 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		tabu_calculateStates(tabu_solution);
 		
 		if(check_ALL_Tabu_lists(tabu_solution)==NOT_OK){
-			tabu_solution[1]-=1;
+			//printf("Snabb 3?\n");
+			tabu_solution[1]--;
 		}
+		//printf("\n");
 		tabu_calculateStates(tabu_solution);
 		if(tabu_getS4() == 0){
 			/* 	TA EJ BORT
@@ -951,7 +954,7 @@ int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 		analys_tabu_solutions_and_update_Tabu_K_list(tabu_solution);
 	}
 	else if(tabu_solution[1] > best_step_length){
-		Tabu_save_number_3=0;
+		//Tabu_save_number_3=0;
 	}
 	
 	return NOT_OK;

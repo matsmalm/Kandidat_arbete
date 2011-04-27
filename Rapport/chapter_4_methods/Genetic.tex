@@ -1,51 +1,81 @@
-\section{Genetic algorithm}
+\pagebreak
+\section{The genetic algorithm approach}
 Genetic algorithms are based on the idea of evolution, that the most suited individuals tend to live longer and reproduce. 
-\subsection{Description}
-In Genetic Algorithms, or GAs, a population is simulated in an artificial world using a combination of reproduction, gene crossover and mutation, with a given goal for the population to achieve.\cite{GAHandbook1}\\
+\subsection{Description of genetic algorithm}
+In Genetic Algorithms, or GAs, a population is simulated in an artificial world using a combination of reproduction, gene crossover and mutation, with a given goal for the population to achieve.
 \\
 Due to the need to simulate the population and evaluate individuals, often multiple times, GAs are not well suited for all kind of problems. When there exists an analytical solution it may be better to use that. However, if the problem can be simulated, both problems without analytical solutions and problem with complicated analytical solutions can be handled by GAs, although it is never guaranteed to give an optimal solution.\\
 \\
-As in nature, a population consisting of individuals are used. Each individual has one or more chromosomes, each with one or more genes. During each generation, individuals are selected and paired for reproduction, often with higher selection pressure on more fit individuals, and their genes are combined to form new children. Also, as in the real world, mutations can occur.\\
+As in nature, a population consisting of individuals are used. As a simplification, each individual has one chromosome, containing one or more genes. During each generation, individuals are selected and paired for reproduction, and their genes are combined to form new children.\\
 \\
 %% Generational / Steady-state
 GAs can either be steady-state or generational, where steady-state means that the current population is altered, and generational is when a new generation is created and replaces the old.\\
-\\ 
-%% Pseudo-code
-\\Pseudo-code for Genetic Algorithm:
+\\
+A GA can be described by the following steps:
 \begin{enumerate}
-\item Start with an initial population
-\item Select parents for reproduction
-\subitem Perform crossover
-\subitem Do mutation
-\subitem Replace parents in new generation
-\item Repeat from step 2
+\item Initial population
+\item Repeat:
+\subitem Evaluation
+\subitem Breeding
+\subsubitem Selection
+\subsubitem Crossing
+\subsubitem Mutation
+\subsubitem Replacement
+\subitem Search Termination
 \end{enumerate}
-\begin{figure}[hb]
-  \centering
-  \includegraphics[width=6in]{chapter_4_methods/GeneticFlowChart.jpg}
-  \caption[Flow chart of genetic algorithm]%
-  {Flow chart of genetic algorithm}
-\end{figure}
+%% Fitness function
+To be able to compare different individuals, a fitness function is used. The fitness function should calculate a score for an individual, depending on how fit the individual is in relation to the goal.
+
+%% Breeding
+To make sure that evolution is performed, a breeding step is used, during which two individuals are selected and used to create two new individuals. The creation is done first by crossover and then by mutation.\\
 %% Selection (parents)
-There are several ways to choose parents, but four methods are Fitness Proportionate Selection, Random Selection, Fit-Fit and Fit-Weak. In Fitness Proportionate Selection the probability of choosing a more fit individual is higher than to select a less fit individual. Roulette selection is one common method of selection that fits under this category. Random selection is another method, in which the probability to choose a certain individual is equal for all individuals.\\
-%% Mutation
-\\Mutation is important in GAs since it makes sure that all the search space can be reached, even if the initial population did not cover all of it.\\
+There are different procedures that can be used for each step of the algorithm, for selection five different methods are Fitness Proportionate Selection, Random Selection, Fit-Fit, Fit-Weak and Elite selection.\\
+In Fitness Proportionate Selection, of which Roulette Selection is one example, the probability of choosing a more fit individual is higher than to select a less fit individual.\\
+In Random Selection, the probability to be selected is equal for all individuals. \\
+With Fit-fit, the two most fit individuals are selected, and thereafter the two next most fit are selected.\\
+With Fit-Weak, the most fit and the least fit individual are selected.\\
+In Elite selection the best individual is chosen. This selection procedure should be used in combination with another selection method.\\
+\\
 %% Crossover
-\\There are different methods for crossover, a few of those are n-point shuffle crossover, uniform crossover and variable crossover.\\
+For Crossover there are different methods, a few of those are n-point shuffle crossover, uniform crossover and variable crossover.\\
+\\
+%% Mutation
+\\Mutation is important in GAs since it makes sure that all the search space can be reached, even if the initial population did not cover all of it. It can be implemented as 'bit-flip', if the gene is binary encoded, where a 0 is changed to 1 and 1 to 0.\\
+\\
 %% Replacement
-\\When reproduction has been completed, in order to not increase the population size, a replacement has to be performed. For this there are several methods, such as Weak Parent, Both Parents, Weakest Individual and Random.\\
+When breeding has been completed, in order to not increase the population size, a replacement has to be performed. For this there are several methods, such as Weak Parent, Both Parents, Weakest Individual and Random.\\
 In Weak Parent, a weaker parent is replaced by a stronger child.\\
-In Both Parents, the child replaces the parent.\\
+In Both Parents, the children replaces the parents.\\
 In Weakest Individual, the children replaces the two weakest individuals in the population, if the children are fitter.\\
 In Random, the children replaces random individuals in the population.\\
+\\
 %% Termination
-\\To make sure the algorithm ends at some point, a termination condition has to be used. It can be a maximum number of generations, a limit in fitness sum, a median fitness, best individual or worst individual.\\
+To make sure the algorithm ends at some point, a termination condition has to be used. It can be a maximum number of generations, a limit in fitness sum, a median fitness, best individual or worst individual.\\
 With Fitness sum, the algorithm will terminate when the sum of the fitness for the population is less than or equal to a specified value.\\
 With Median fitness, a range for the fitness is specified.\\
 With best individual, the algorithm will terminate when the minimum fitness drops below a convergence value and thereby guarantee at least one good solution while saving time.\\
 With Worst Individual, the algorithm will terminate when all individuals in the population has a fitness value lower than the convergence value.\\
-\subsection{Development process}
-How the development of the algorithm have proceeded.\\
+%%%% Development process of the genetic algorithm
+\subsection{Development process of the genetic algorithm}
+The first idea to use  was to use an existing framework for Genetic Algorithms, such as LibGA or GAUL, to save time on programming. Due to the implementation of the libraries, for this application it was determined to be faster to write a new implementation.\\
+%% Random
+\\After reading the parts of the source code of the existing libraries and Johan Thunberg's Boolean Control software, for ideas, a first attempt to a program was written. The first version was a boolean control network, where feasible solutions were generated by using a random function to generate numbers between 0 and 4 to indicate if the pursuer were to move left, right, up, down or stand still.\\
+%% Encoding
+\\To encode the genes, an integer based encoding was used. According to literature \cite{GAHandbook1}, binary encoding is faster, but as this is an attempt to implement heuristic methods and an integer encoding is easier to debug, it was used instead. Each integer in the gene is called an allele.\\
+%% Generational
+\\Generational GA was used, because of easier implementation and a more clear termination condition in number of generations.\\
+%% Fitness
+\\The fitness function was set to 1000/(1+S4+steps), where S4 is the number of nodes that remains in state 4 (contaminated) and steps are the total number of steps taken to solve the problem, or to reach the current number of nodes in state 4.\\
+%% Selection
+\\For selection, the choice was between Random and Fitness Proportionate Selection, both in combination with elite selection to avoid loosing the best solution found. Random selection is easier to implement, but does not give better solutions an advantage, which may prevent the population from converging. Fitness Proportionate Selection gives more fit solutions an advantage, which helps the population to converge, and was chosen because no other discrimination of less fit individuals was made. Elite selection makes sure the two best solutions are added to the new population.\\
+%% Crossover
+\\To make the crossover operation easy to implement, a version of n-point crossover was used. One path from each pursuer was used alternating from each parent.\\
+%% Mutation
+\\Due to the integer encoding, and node network representation, 'bit-flip' was not possible. Instead a random selected allele from a random selected gene is replaced, as well as all following alleles for the pursuer.\\
+%% Replacement
+\\To make sure the overall fitness of the population increases, weak parent replacement is used, so that the two most fit individuals of the selected parents and children are used.\\
+%% Parameters
+\\Population size was set to 400, since that was a size that after many test runs seemed to work. Mutation frequency was set to 5\% after testing different values, which is more than the often used value in literature \cite{GAHandbook2} of 1-2\%, but still not very large.
 %%\\
 %%Parameters was set according to:\\
 %%Cromosome length was set to \begin{math}n^2\end{math}, to be able to cover the entire environment.\\
@@ -53,7 +83,9 @@ How the development of the algorithm have proceeded.\\
 %%Instance size was set to ...\\
 %%Number of generations was set to ...\\
 
-\subsection{Algorithm}
+\subsection{The genetic algorithm of our problem}
+
+
 The algorithm consists of four parts, first an initial set of genes for each pursuer is generated and combined to form individuals in the population. When an initial population has been generated, the following is repeated until either a maximum number of generations has been reached or a the population has converged to a solution:\\
 \begin{itemize}
 \item Initial population
@@ -68,6 +100,6 @@ During reproduction, which is also called crossover, new individuals are created
 %%Crossover: \\
 %%Mutation: To make sure that all solutions can be obtained, mutations is used. However, to make sure that it will not only be a random search, the chance of mutation was 1% at crossover and 0% in all other cases.\\
 
-\subsection{Implementation}
+\subsection{Our implementation of the genetic algorithm}
 The algorithm is implemented using C. Previous written libraries for Genetic Algorithm was used as a reference, e.g. LibGA.
 
