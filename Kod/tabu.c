@@ -347,10 +347,12 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 				break;
 			}
 			tabu_solution[1]=0;
+			/*
 			int qq=2+2*tabu_solution[0];
 			for(qq=2+2*tabu_solution[0];qq<8500;qq++){
 				tabu_solution[qq]=-1;
 			}
+			*/
 			//nollställer för tabut 30%
 			number_of_stat_4_in_this_step = 0;
 			number_of_stat_4_in_past_step = 0; 
@@ -384,7 +386,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		}
 		tabu_calculateStates(tabu_solution);
 		if(tabu_getS4() == 0){
-			 	//TA EJ BORT
+			 /*	//TA EJ BORT
 			printf( "Nr_of_complete_tabu_solutions: %d\n",nr_of_complete_tabu_solutions);
 			printf( "Using %d steps\n",tabu_solution[1]);
 			int hh=0;
@@ -397,6 +399,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			printf("\n");
 			tabu_printStates();
 			printf("\n");
+			*/
 			
 			
 			
