@@ -117,8 +117,6 @@ int getRight(struct Node *b) {
 		return s;
 	}else{
 		int s = getRight(getMove(&(*b), RIGHT))+1;
-		if(s>=9){
-		}
 		return s;
 	}
 	printf("Something went very wrong.\n");
@@ -249,7 +247,7 @@ void setVision(struct Node *b) {
 int numVisible(struct Node *b) {
 	int i,visible = 0;
 	for(i=0;i<(SIZE*SIZE);i++){
-		if((&((*b).vision[i]))!=0){
+		if((((*b).vision[i]))!=(struct Node *)0){
 			visible++;
 		}
 	}
@@ -313,13 +311,13 @@ int resetAB() {
 	}
 }
 void getStartPositions(int *Hunters){
-	Hunters[0] = 3;
+	Hunters[0] = 5;
 	int i;
 	for(i=1;i<1+2*Hunters[0];i+=2){
 		while(1==1){
 			int r = (int)((double)rand() / ((double)RAND_MAX + 1)*ROWS);
 			int c = (int)((double)rand() / ((double)RAND_MAX + 1)*COLS);
-			if(B[r][c].vision[0] != 0){
+			if(B[r][c].vision[0] != (struct Node *)0){
 				Hunters[i]=r;
 				Hunters[i+1]=c;
 				break;
@@ -347,7 +345,7 @@ int main() {
 		//int Hunter_static[]={2,2,0,4,4};
 		int BREAK = 100;
 		int envLoop=0;
-		for(envLoop=0;envLoop<1;envLoop++){ // Same area 4 times, with different start positions
+		for(envLoop=0;envLoop<4;envLoop++){ // Same area 4 times, with different start positions
 			memset(Hunters,0,sizeof(Hunters));
 			getStartPositions(Hunters);
 			fprintf(res, "Algorithm\t");
@@ -365,7 +363,7 @@ int main() {
 				printf("Hunters[0]: %d\n", Hunters[0]);
 				printCommon(Hunters); // Write all common info to RESULTS.txt
 				int sameEnv=0;
-				for(sameEnv=0;sameEnv<1;sameEnv++){ // Loop with same parameters 4 times
+				for(sameEnv=0;sameEnv<4;sameEnv++){ // Loop with same parameters 4 times
 					fprintf(res, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
 					printf("Loop %d of 4 in sameEnv\n", sameEnv);
 					printf("Genetic\n");
@@ -373,7 +371,6 @@ int main() {
 					memset(geneticSolution,-1,sizeof(geneticSolution));
 					preGenetic(&B, Hunters, BREAK, ROWS, COLS);
 					gettimeofday(&beforeGen, NULL);
-
 					genAlg(geneticSolution); // Main Genetic Algorithm program.
 					gettimeofday(&afterGen, NULL);
 
@@ -403,8 +400,10 @@ int main() {
 					fprintf(res, "%.4f     \t\n", ((double) (afterTab.tv_sec - beforeTab.tv_sec)*1000 + (afterTab.tv_usec-beforeTab.tv_usec)/1000)/1000);
 					fprintf(res, "Steps    \t");
 					fprintf(res, "%d       \t", geneticSolution[1]);
+					printf("Genetic: %d\n", geneticSolution[1]);
 					fprintf(res, "%d       \t", start.solution[1]);
 					fprintf(res, "%d       \n", tabuSolution[1]);
+					printf("Tabu: %d\n", tabuSolution[1]);
 					// Print path to separate file (PATHS.txt)
 					fprintf(purPaths, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
 					int i,genDone=0,greDone=0,tabDone=0,pur=0;

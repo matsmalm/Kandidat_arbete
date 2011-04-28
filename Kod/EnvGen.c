@@ -201,11 +201,11 @@ int main(){
 	fileEJOK=fopen("notOK.txt", "a+");
 	
 	
-	int numberOfEnv=5; // Number of matrices to be created
-	int obstaclesPerCent = 15; // How many percent of the environment should be obstacles?
+	int numberOfEnv=100; // Number of matrices to be created
+	int obstaclesPerCent = 25; // How many percent of the environment should be obstacles?
 	int multiplier = 5; // Scales the environments. 5 gives 5x5, 10x10, 15x15 and so on.
-	int startAtLoop = 12; // Counter to keep track of which turn in the loop it is, starts at one since 0x0-maps aren't fun.
-	int stopAtLoop = 20; // Will create environments ranging in size between "multiplier*startAtLoop" and "multiplier*stopAtLoop".
+	int startAtLoop = 1; // Counter to keep track of which turn in the loop it is, starts at one since 0x0-maps aren't fun.
+	int stopAtLoop = 1; // Will create environments ranging in size between "multiplier*startAtLoop" and "multiplier*stopAtLoop".
 	
 	for(;startAtLoop<=stopAtLoop;startAtLoop++){
 		height = multiplier*startAtLoop;
