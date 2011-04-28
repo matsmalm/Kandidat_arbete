@@ -313,7 +313,7 @@ int resetAB() {
 	}
 }
 void getStartPositions(int *Hunters){
-	Hunters[0] = 5;
+	Hunters[0] = 3;
 	int i;
 	for(i=1;i<1+2*Hunters[0];i+=2){
 		while(1==1){
@@ -336,7 +336,6 @@ int main() {
 	srand(time(0)); // Resets random.
 	fr = fopen("OK.txt", "r"); // Open file once
 	int numMatrices=0;
-	clock_t genStart,genEnd,greStart,greEnd,tabStart,tabEnd; // Used to calculate running-time for each algorithm
 	struct timeval beforeGen, beforeTab, beforeGre, afterGen, afterTab, afterGre;
 	while(readFromFile() != -1){
 		numMatrices++;
@@ -345,14 +344,15 @@ int main() {
 		res = fopen("RESULTS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
 		purPaths = fopen("PATHS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
 		printArea();
-		int Hunter_static[]={2,2,0,4,4};
-		int BREAK = 50;
+		//int Hunter_static[]={2,2,0,4,4};
+		int BREAK = 100;
 		int envLoop=0;
-		for(envLoop=0;envLoop<4;envLoop++){ // Same area 4 times, with different start positions
+		for(envLoop=0;envLoop<1;envLoop++){ // Same area 4 times, with different start positions
 			memset(Hunters,0,sizeof(Hunters));
 			getStartPositions(Hunters);
 			fprintf(res, "Algorithm\t");
 			fprintf(res, "Genetic  \t");
+			fprintf(res, "Greedy   \t");
 			fprintf(res, "Tabu     \n");
 			printf("Using %d pursuers\n", Hunters[0]);
 			/****
@@ -365,37 +365,32 @@ int main() {
 				printf("Hunters[0]: %d\n", Hunters[0]);
 				printCommon(Hunters); // Write all common info to RESULTS.txt
 				int sameEnv=0;
-				for(sameEnv=0;sameEnv<4;sameEnv++){ // Loop with same parameters 4 times
+				for(sameEnv=0;sameEnv<1;sameEnv++){ // Loop with same parameters 4 times
 					fprintf(res, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
 					printf("Loop %d of 4 in sameEnv\n", sameEnv);
 					printf("Genetic\n");
 					int geneticSolution[2*(1+Hunters[0]*200)];
 					memset(geneticSolution,-1,sizeof(geneticSolution));
 					preGenetic(&B, Hunters, BREAK, ROWS, COLS);
-					genStart = clock(); // Starting time for Genetic
 					gettimeofday(&beforeGen, NULL);
 
 					genAlg(geneticSolution); // Main Genetic Algorithm program.
-					genEnd = clock(); // Ending time for Genetic
 					gettimeofday(&afterGen, NULL);
 
 					/*** Greedy ***/
-
 					struct greedy start;
-					start = preGreedy(&B, Hunters, &BREAK);
+					//start = preGreedy(&B, Hunters, &BREAK);
 					gettimeofday(&beforeGre, NULL);
-					greedyAlg(&start);
+					//greedyAlg(&start);
 					gettimeofday(&afterGre, NULL);
 					/*** Tabu ***/
 
 					printf("Tabu\n");
 					int tabuSolution[2*(1+Hunters[0]*200)];
 					memset(tabuSolution,-1,sizeof(tabuSolution));
-				       	preTabu(&B, Hunters, BREAK, ROWS, COLS);
-					tabStart = clock(); // Ending time for Genetic
+				    preTabu(&B, Hunters, BREAK, ROWS, COLS);
 					gettimeofday(&beforeTab, NULL);
-				       	Tabu(tabuSolution); // Main Genetic Algorithm program.
-					tabEnd = clock(); // Ending time for Genetic
+				    Tabu(tabuSolution); // Main Genetic Algorithm program.
 					gettimeofday(&afterTab, NULL);
 					printf("Tabu End\n");
 					// Print statistics to RESULTS.txt

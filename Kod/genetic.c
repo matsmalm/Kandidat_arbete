@@ -3,14 +3,14 @@
 
 /*** Definitions ***/
 #define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
-#define GENETIC_POPULATION_SIZE 100 // Population size, static.
+#define GENETIC_POPULATION_SIZE 400 // Population size, static.
 #define GENETIC_MAX_PURSUERS 20 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
-#define GENETIC_MAX_STEPS 200 // Maximum number of steps, just to allocate enough memory
+#define GENETIC_MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
 
 /*** Variables ***/
 int GENETIC_PURSUERS = 0; // Only a temporary value.
 int GENETIC_GENERATIONS = 0; // Only a temporary value.
-float GENETIC_CONVERGENCE_PERCENT = 0.01; // fraction of population to be equal to break early.
+float GENETIC_CONVERGENCE_PERCENT = 0.95; // fraction of population to be equal to break early.
 float GENETIC_MUTATION_PROBABILITY = 0.05; // fraction of mutation probability.
 int ROWS;
 int COLS;
@@ -82,9 +82,9 @@ void preGenetic(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS,
 			for(k=0;k<GENETIC_MAX_STEPS;k++)
 				Population[i].gene[j].allele[k] = 4;
 				
-		Population[i].inS4=99; // Reset fitness value (S4)
-		Population[i].chrSteps=99; // Reset fitness value (steps)
-		Population[i].fitnessScore = 9; // Low value = bad solution
+		Population[i].inS4=999; // Reset fitness value (S4), just set to high value
+		Population[i].chrSteps=999; // Reset fitness value (steps), set to high value
+		Population[i].fitnessScore = 1; // Low value = bad solution, must be positive
 	}
 	for(i = 0; i < GENETIC_POPULATION_SIZE; i++) // Set starting positions for every gene in the population.
 		for(j = 0; j < GENETIC_PURSUERS; j++)
@@ -132,7 +132,6 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 		calculateFitness(&Population[currentPopulation]);
 	}
 	sortPopulation(Population, GENETIC_POPULATION_SIZE); // Sort the population after fitness
-	
 	for(currentGeneration = 0; currentGeneration < GENETIC_GENERATIONS; currentGeneration++){
 		/*** New generation ***/
 		addToNewPopulation(Population[0]); // Elite selection
@@ -142,12 +141,17 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 		sortPopulation(New_Population, GENETIC_POPULATION_SIZE); // Sort the new population after fitness
 		/*** Swap populations ***/
 		int i;
-		for(i = 0; i < GENETIC_POPULATION_SIZE; i++)
+		for(i = 0; i < GENETIC_POPULATION_SIZE;i++)
 			Population[i] = New_Population[i]; // Overwrite old population with new
-		if(Population[0].inS4 == 0) // If a complete solution has been found, check if convergence level is reached
-			if((Population[0].chrSteps==Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].chrSteps)) // If 90% of the population has the same number of steps, no need to continue to do more generations.
-				if(Population[0].fitnessScore==Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].fitnessScore) // Redundant check, check fitness score
-					break;
+		memcpy(Population, New_Population, sizeof New_Population);
+		if(currentGeneration%10==0){
+			printf("Best Fitness: %f, States: %d, steps: %d\n", Population[0].fitnessScore, Population[0].inS4, Population[0].chrSteps);
+			printf("Compare Fitness: %f, States: %d, steps: %d\n", Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].fitnessScore, Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].inS4, Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].chrSteps);
+		}
+		if(Population[0].inS4 == 0 && Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].inS4 == 0) // If a complete solution has been found, check if convergence level is reached
+				if((Population[0].chrSteps==Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].chrSteps)) // If 90% of the population has the same number of steps, no need to continue to do more generations.
+					if(Population[0].fitnessScore==Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].fitnessScore) // Redundant check, check fitness score
+						break;
 		NewPopLocation=0;
 	}
 	printf("%d generations used.\n", currentGeneration);
@@ -164,9 +168,10 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 	free(New_Population);
 	/*** Free memory for NodeMatrix ***/
 	int i;
-	for(i = 0; i < ROWS; i++)
+	for(i = 0; i < ROWS;i++)
 		free(NodeMatrix[i]);
 	free(NodeMatrix);
+	
 	return;
 }
 void calculateFitness(struct Chromosome *pop){
@@ -180,7 +185,8 @@ void calculateFitness(struct Chromosome *pop){
 		(*pop).inS4 = 0; // If number of steps was positive, no nodes were in state 4
 	else
 		(*pop).inS4 = getS4(); // Write number of nodes in state 4
-	(*pop).fitnessScore = 1000/(1+(*pop).inS4+abs((*pop).chrSteps)); // Set fitness to 1000/(1+S4+steps), 1000 to scale fitness, 1+ to avoid division by 0.
+	//(*pop).fitnessScore = 1000/(1+(*pop).inS4+abs((*pop).chrSteps)); // Set fitness to 1000/(1+S4+steps), 1000 to scale fitness, 1+ to avoid division by 0.
+	(*pop).fitnessScore = (ROWS*COLS+GENETIC_MAX_STEPS-(*pop).inS4-abs((*pop).chrSteps)); // Better fitness function? Nr of nodes in S123 + nr of steps not used.
 }
 void addToNewPopulation(struct Chromosome chrom){ // Adds a new individual to the new population
 	New_Population[NewPopLocation] = chrom;
@@ -192,7 +198,7 @@ void doReproduce(){
 	XoverPop[1] = Population[selectParent()]; // Select parent 2
 	/*** Crossover ***/
 	int GeneNr;
-	for(GeneNr = 0; GeneNr < GENETIC_PURSUERS; GeneNr++){ // Take one gene from each parent
+	for(GeneNr = 0; GeneNr < GENETIC_PURSUERS;GeneNr++){ // Take one gene from each parent
 		XoverPop[2].gene[GeneNr  ] = XoverPop[0].gene[GeneNr];
 		XoverPop[3].gene[GeneNr  ] = XoverPop[1].gene[GeneNr];
 		XoverPop[2].gene[GeneNr+1] = XoverPop[1].gene[GeneNr+1];
@@ -223,8 +229,8 @@ int selectParent(){ // Return position in Population for the chromosome that was
 	}
 }
 void doMutation(struct Chromosome *child){ // Mutate Chromosome
-	int randomFrom = ((int)((double)rand() / ((double)RAND_MAX + 1)*GENETIC_MAX_STEPS));// Random step between 0 and current max steps
 	int randomGene = ((int)((double)rand() / ((double)RAND_MAX + 1)*GENETIC_PURSUERS)); // Random number between 0 and GENETIC_PURSUERS
+	int randomFrom = ((int)((double)rand() / ((double)RAND_MAX + 1)*(*child).chrSteps));// Random step between 0 and current max steps
 	int randomValue = ((int)((double)rand() / ((double)RAND_MAX + 1)*100)); // Random number between 0 and 99
 	if(randomValue < GENETIC_MUTATION_PROBABILITY*100)
 		getRandom(&(*child).gene[randomGene], randomFrom); // Generate part of new gene
