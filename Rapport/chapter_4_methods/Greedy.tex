@@ -17,11 +17,11 @@ When constructing a greedy algorithm one often starts by finding some part of th
 \\The first candidate "alorithm 1" was to make the secured area our objective function. In each itteration we consider the next move for each hunter in the team, and try to move the whole group so that we maximize the secured area (the objective function). We would then have a objective function and constraints due to the enviroment and pursuer positions. This ought to be possible to solve as some sort of linear programming problem. After consideration this approach presented several drawbacks. First off, for many enviroments it is sometimes nessecary to let go of secured areas. This could not be alowed by algorithm 1 with a greedy approach. Also there are a lot of cases where the best move is not an increase in secured area, but rather guarding or transportation to strategic positions. This was allowed, but not very likely to be chosen by the algorithm due to the greedy approach. It was thus realized that the algorithm somehow must look further than just the head on approach of targeting the secured area.
 \\
 \\The next candidate was an attempt to extend the formulation of algorithm 1 to have dynamic constraints, hereon called algorithm 2. The idea was to introduce some sort of tactics to the pursuer team, and thus make the group cooperate in a favorable manor. For each pursuer a certain tactic would be given, corresponding to constraints to the objective function. In order to formulate these constraints, we needed more information. Here the idea of introducing different areas was first met. The common vision of the pursuer team divides the enviroment into several subareas, not visible by the team. Depending on the state and geometry of these subareas each hunter was supposed to either guard, secure or divide a given subarea. This is dynamic information about the current enviroment, thus giving dynamic constraints for each pursuer. In this case it was problematic to find a general formulation of how to choose a tactic, and how to formulate these tactics as constraints for the objective function. Also there were to many special cases and intuition involved for a possible implementation.
-\\%fram hit har jag kollat....
+\\
 \\For the third candidate the idea was to use the extra enviromental information about the non visible areas and somehow apply this to a simple greedy cost function. By designating costs to each tile it would be easy to make a greedy choice. By construction each hunter can in general move to at most four tiles or stand still. Thus by giving each of these five alternatives a value that quantifies how good the move is we'll find the best over all strategy of the team. With this setup the objective function for each itteration is to maximize the sum of the tile-values that each pursuer moves into. So, how does one quantify what  a good tile is? The obvious answers such as field of vision and state are, by them self, insufficent information for a good algorithm. But by using the dynamic information of the areas resulting from the pursuers vision, we can find more parameters to quantify the best move. In order for the pursuer team to spread out and cooperate we designate a unique area for each pursuer to approach. This is done by adding a value to the tiles that give the shortest path for a specific pursuer to approach its designated boundry. Furthermore we add a value to all moveable tiles depending on their unique guarding properties of priorized areas. The algorithm will now make good tactical descisions, given that the added values are correctly adjusted. 
 \\
 \\This last candidate is was used as a basis for the final algorithm.To arrive at the algorithm presented in section 3 several examples has been tested manualy on random enviroments. In the manual execution the aim was to delete all human intuition from the algorithm and strictly quantify the valuation of the tiles with simple numbers or questions, suitable for a computer. A more in depth explanation of the algorithm is given in the next section.
-
+%fram hit har jag kollat....
 \subsection{The greedy algorithm for our problem}
 In this section the final greedy algorithm will be explained in detail, step by step. Before the algorithm is started a prefunction is executed to find all static information on the enviroment. Since these static conditions only need to be evaluated once, and can be evaluated at any time they are not an interesting part of the algorithm itself but will be described in the section 4.1.4 concerning the implementation.
 \begin{figure}[!h]
@@ -45,48 +45,43 @@ The algorithm is written in an itterative way, and a overview is given by the fl
 \item{} The input for each itteration is the path taken so far. For the first itteration this corresponds only to the starting positions of the pursuers.
 \item{} At the beginning of each itteration a decision is made whether to make another itteration or not. An itteration should be executed if the enviroment is not all cleared and if the breaking conditions are not met. The breaking conditions are given by the main program running the algorithm, so that if no solution can be found the algorithm will abort in due time.   
 \item{} Here we find the total field of vision of the pursuers team. This will divide the enviroment in seen and unseen areas as in figure 4.2.   
-\item{} All areas not visible by the pursuer team are given a priority, a boundry and if possible an extended boundry. The priority is determined by the geometric properties of the area. If the area is secured it is only relevant to guard its boundries, thus secured areas are not to be designated in the preceeding steps. Contamined areas can be categorised in four different types. In ascending order of priority there are:
+\item{} All areas not visible by the pursuer team are given a priority, a boundry and if possible an extended boundry. The priority is determined by the geometric properties of the area. If the area is secured it is only relevant to guard its boundries, thus secured areas are not to be designated in any of the preceeding steps. Contamined areas can be categorised in four different types. In ascending order of priority there are:
 \begin{itemize} 
 \item{}Areas with only one boundry, where the whole area can be seen from the boundry tile.
 \item{}Areas with several boundries, where the whole area can be seen from some boundry tile. 
 \item{}Areas with only one boundry tile, but who can not be fully seen from the boundry.
 \item{}Other areas.
 \end{itemize}
-\item{}
-\item{}
-\item{}
-\item{}
-\item{}
-\item{}
-\item{}
-\item{}
-
+A boundry to an area is by construction seen by some pursuer. If the area can be seen from a boundry we can also extend this boundry so that all tiles from which the whole area can be seen are part of the "extended boundry".  
+\item{} In this step a table of possible choices for the pursuers is created. As mentioned above the secured areas should not be a part of the table. The extended boundries are to be used when measuring the shortest distance to a boundry for a pursuer. This is because our aim is to \emph{see} the area, and the extended boundries usually provides shorter distances for the pursuers.
+\item{} Given the table created we now want to choose as many elements as there are columns, since the columns corresponds to pursuers. The choice is to be made in such a way that there is at most one element chosen from each row and column and so that the sum of the chosen elements is minimized. Also there is a constraint that the rows corresponding to areas that can be fully seen from their boundries must be chosen if possible. A chosen element $c_{i,j}$ corresponds to designating the area of row i to the pursuer of column j. If there are more pursuers than areas, an area can be designate to more than one pursuer but all areas must be designated to at least one pursuer. 
+\item{} Given the designation made in the previous step, for each pursuer there is at least one path of shortest distance to the designated boundry. For each pursuer,  add a value $\alpha$ to the tiles being the first step of the paths with the shortest possible distance to the designated boundry.
+\item{} For each pursuer:
+\begin{itemize}
+\item{} Add a value $\beta$ the tile being closest to any contamined area. 
+\item{} Add a value $\gamma$ to the tiles where the boundries that are uniquely seen by this pursuer can still be seen. Here the secured areas are to be considered as well.
+\item{} Add a value $\delta$ to the tiles where the boundries to areas that are secured, or that can be seen from its boundries, are still seen by the pursuer.
+\item{} Add a value $\epsilon$ to the tiles where the pursuers has the largest field of vision.
+\end{itemize}
+\item{} In the previous steps we have now added at most five values to each tile in the proximity of each pursuer. For each pursuer find the tile with the largest sum and move the pursuer into this tile.
+\item{} When the movement is made, update the states of the enviroment correspodingly. save the path taken so far. Return the updated states and the path taken so far to the start of the algorithm. 
 \end{enumerate}
-
-
-
-1- find the total vision of the pursuers.
-2- identify all elements of the set  A, where each element is an unseen area of the map.
-3 - for each component in A identify its boundrys, and its priority
-	a- only one bound, visible, contamined
-	b- only one bound, not visible, contamined
-	c- several bounds, visible, contamined
-	d-several bounds, not visible, contamined
-	e- secured area.
-4- extend the boundrys of areas with priority a,c,e so that every tile where you can see the whole interior is part of the boundry.
-(5- check if any hunter can make a move without changing the current conditions. if so, create  a fictional hunter int this position. (this is really the same thing as mergeing tiles)
-6- create a table. each row is a contamined area , each column is a hunter. each element $c_ij$i n the table is the shortes distance for hunter j to the boundry of area i.
-7- if the number of hunters is equal to or less than the number of columns. choose exactly one element from each row and column so that the sum is minimized. also areas of priority a,c must be choosen before areas of priorit d and b. this will assign a hunter to each area. add a value alpha in the first tile part of the shortest path to that area boundry for each hunter.
-8- for each hunter add a value beta to the tile closest to a boundry of contamined area.
-9- for each hunter add a value gamma to the tiles where the hunter still can see boundrys that are uniquley seen by this hunter.
-10- for each hunter add a value delta to the tiles with largest vision.
-11- if one or more tiles have the exact same value at this point, add a small value epsilon to the tile that is furthest away from the other hunters.
-12 - move each hunter to the tile with the highest value, (this could also mean to stand still)
-
-
-
 \subsection{Our implementation of the greedy algorithm.}
-A description of how the algorithm is implemented.
+declare that the algorithm is not readily implemented, and why. 
+make a flowchart? 
+
+pregreedy:
+a-star to find the distance and the path between any two tiles. describe complexity
+hashtable to access shortest distance in a fast manor, key: (from to)
+descride the greedy struct contents and motivate.
+
+algorithm
+describe the breadth first used to find interiors of areas. complexity
+describe the assignment, hungarian, motivate why not to use the hungarian
+motivate the queue implementation instead.
+describe the book keeping of the tile value adding 
+describe the implementation of finding the values from step 8
+
 
 before starting the algorithm all static conditions are evaluated and stored. this is done in a so called pre-function. the pre-function for the greedy algorithm runs the A-star algorithm to find the shortest path and distance between any two tiles in the map and stores this information in a hash table. also all the information from the graph network presented in chapter three is given. The pre prefunction also puts the hunters in their starting positions and evaluates the starting states of all tiles.
 
