@@ -411,16 +411,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 				break;
 			}
 			
-			if(tabu_solution[1]==0 || tabu_solution[1]==1){ //nödvändig?
-				//printf("Inga steg krävdes\n");
-				tabu_solution[1]=0;
-				int qqq=2+2*tabu_solution[0];
-				for(qqq=2+2*tabu_solution[0];qqq<8500;qqq++){
-					tabu_solution[qqq]=-1;
-				}
-				break;
-			}
-			
+
 			tabu_solution[1]=0;
 			int qqqq=2+2*tabu_solution[0];
 			for(qqqq=2+2*tabu_solution[0];qqqq<8500;qqqq++){
@@ -477,7 +468,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	}
 	else{
 		tabuSolution[0] = returned_Tabu_tabu_solution[0];
-		tabuSolution[1] = -returned_Tabu_tabu_solution[1];
+		//tabuSolution[1] = -returned_Tabu_tabu_solution[1];
 	}
 	//printf( "END Tabu\n\n");
 	for(i = 0; i < ROWS; i++){
@@ -487,6 +478,13 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	free(NodeMatrix);
 	free(tabuMatris);
 	free(tabu_solution);
+	/*
+	int hhh=0;
+			for(hhh=0;hhh<2*(3+returned_Tabu_tabu_solution[0]+returned_Tabu_tabu_solution[1]*returned_Tabu_tabu_solution[0]);hhh+=2){
+				// printar alla stegen 
+				printf("(%d,%d)", returned_Tabu_tabu_solution[hhh], returned_Tabu_tabu_solution[hhh+1]);
+			}
+	*/		
 	free(returned_Tabu_tabu_solution);
 	return;
 }
@@ -694,7 +692,7 @@ int tabu_right(int *tabu_solution, int kk){
 	//int rad = tabu_solution[    2+2*tabu_solution[0]+b*(2*tabu_solution[0])+2*k]; 	// raden vi är på i förra steget
 	int kol = tabu_solution[1 + 2+s*(2*tabu_solution[0])+2*kk] +1;	// colonen vi är på i förra steget
 	
-	if(kol==COLS){
+	if(kol+1==COLS){
 		//printf("tabu_right NOT_OK\n");
 		return NOT_OK;
 	}
@@ -706,7 +704,7 @@ int tabu_down(int *tabu_solution, int kk){
 	// vi ska ha positionen innan den vi är i. och se om den är okey innom matrisen
 	int s = tabu_solution[1]-1;
 	int rad = tabu_solution[    2+s*(2*tabu_solution[0])+2*kk] +1; 	// raden vi är på i förra steget
-	if(rad==ROWS){
+	if(rad+1==ROWS){
 		//printf("tabu_down NOT_OK\n");
 		return NOT_OK;
 	}
