@@ -1,9 +1,4 @@
 \chapter{Problem formulation}
-%The essentials of our problem formulation today is "To test implementation of greedy approach, tabu search and genetic programming check!
-%and evaluation." The exact formulation is in progress...
-%- presentera multi pursuer pursuit and evasion problem\\ check!
-% fˆrklara svÂrigheterna givet att problemet ‰r NP-svÂrt. En av svÂrighterna som vi belyser extra ‰r den ytterligare dimensionen av obest‰mt antal jagare.
-%- motivera nyttan och konsekvenserna av att angripa problemet med heuristik
 This paper is an extension of the paper ``A Boolean Control Network Approach to Pursuit Evasion Problems in Polygonal Enviroments'' \cite{paper1}. Our main purpose is to use three conceptualy different heuristic methods to try and construct algorithms that efficiently solves the problem stated in the previous chapter, section 1.4.4. We will also try to implement these algorithms in ANSI C to evaluate the quality and efficency of the algorithms. The efficency is quantified as the run time needed for the algorithm to construct a solution. The quality of the solution is quantified in terms of path length. We will also discuss how the efficency and quality of the solutions depend on the enviroment's size and the number of pursuers.
 
 \section{Our problem formulation}
@@ -25,40 +20,9 @@ The work can be divided into six subtasks, each will be discussed in more detail
 \item[-] Evaluate the data and draw conclusions.
 \end{enumerate}
 
-%inläsning och val av heuristik
-	%belys att det finns flera möjliga metoder, motivera varför vi valt våra tre.
-
 As mentioned in chapter one, section 1.4.5. there are a vast amount of different heuristics. In this report we decided to use the heuristic concepts from greedy methods, tabu search and genetic programming to construct the algorithms. Greedy methods are local and deterministic in their approach. Both tabu search and genetic algorithms are stocastic and global in their approach, but they differ significantly in how they examine and construct feasible solutions. We have intentionally chosen our methods so that each method strongly differs in its characteristics from the other two. The reason for this descision was that we wanted to see if some conclusion could be made about if any specific characteristics would be favorable for solving our problem.\\
 \\The subtask to construct the algorithms is selfexplanatory in what it means. More information about the process is given in chapter four.\\
 \\Since the problem is NP-hard and the algorithms are heuristic the need for an simulation enviroment is obvious. All implementations are made in ANSI C, due to computational efficency. The requirements on the simulation enviroment is to construct random feasible enviroments of specified size for the problem, run all algorithms on the enviroment and print the results into a file. A more indepth description of how the simulation enviroment is implemented can be read in chapter three.\\
 \\The subtask of implementating the algorithms is also self explanatory in what it means. More information about the implementation of the algorithms is found in chapter four.\\
 \\Once all the implementations are done, simulations will be executed to collect data. The output data collected is runtime and solution path from each algorithm. Also the enviroments' size, density and number of pursuers is known for each execution. The results are presented and discussed in chapter five and six.
  
-
-%skapa algoritmer
-	%motivera varför heuristic är intressant, belys NP-svårt
-%skapa simuleringsmiljö
-	%specificera vad som krävs av miljön
-%implementera algoritmer
-
-%kör implementerade algorithmer, samla data
-	%motivera vilken data vi samlar och varför?
-%sammanställ resultat från körningar.
-
-
-%Given the multi pursuer problem and the simulation environment, the next subtask is to create the algorithms and run the simulation. We have decided to implement three fundamentally different algorithms, so that one could outline under what circumstances each one of them excels, or fails. Using ideas from acknowledged heuristic methods we have chosen the following three concepts as our guidelines when creating our algorithms: Greedy, Genetic programming and Tabu search.
-%\\ \textbf{Greedy (G):} In G one creates a cost function to describe how good a specific move is. in each iteration the algorithm is supposed to use this function to determine the best possible move for each step, thus giving a local approach to the finding of an optimal solution. 
-%\\ \textbf{Genetic Programming (GP):} The main idea is to generate a big population of possible (not necessarily good) solutions called populations. In each iteration the algorithm compares the quality of the solution and takes the best 
-%\\ \textbf{Tabu search (TS):} The main idea of TS is that it keeps a dynamic list of "bad decisions". For each iteration it makes "good decisions" by comparing with the tabu list. TS is in some sense a merge of GS (global searching) and G (local searching)
-%\\Further information on how the algorithms are implemented and more in depth theory is found in chapter 4. 
-
-%As outlined above the approach as a whole is heuristic, and thus the need for a testing environment is essential. We have decided to implement an environment using C, due to the computational efficiency of the language and because it is more or less the standard language in computations of this type. We have two main specifications on the environment. First, it should be able to, in a stand alone application, create a large amount of randomly generated maps with obstacles (the rate of obstacle versus total area is here on called density) and store these in a file. Second, we want the simulation environment to read a map from a file, run the specified algorithms and store desired data in an output file. For further details on how the simulation environment is implemented read chapter 3. \\
-
-
-%So the three different algorithms under consideration are in their approaches fundamentally different, in how they assess the problem. There are of course many other heuristic approaches that could provide similar results, but by comparison we decided that these three are relatively easy to implement on our problem and covers a large aspect of different approaches.\\
-%In order to evaluate how well the algorithms' results are we need to compare them in some sense. Given a specific environment, number of pursuers and density we decided to compare the following data for each execution of the simulation:
-%\begin {itemize}
-%\item computational time
-%\item the path length of the pursuers
-%\end {itemize}
-%The results are presented in chapter 5 - 6, followed by a discussion in chapter 7 
