@@ -3,7 +3,7 @@
 
 /*** Definitions ***/
 #define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
-#define GENETIC_POPULATION_SIZE 200 // Population size, static.
+#define GENETIC_POPULATION_SIZE 100 // Population size, static.
 #define GENETIC_MAX_PURSUERS 20 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
 #define GENETIC_MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
 
@@ -173,7 +173,6 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 	for(i = 0; i < ROWS;i++)
 		free(NodeMatrix[i]);
 	free(NodeMatrix);
-	
 	return;
 }
 void calculateFitness(struct Chromosome *pop){
@@ -290,7 +289,7 @@ int calculateStates(int *path){
 			int c = path[2*(1+pursuer+path[0]*currentStep)+1];
 			S[r][c] = 1; // Set state for S to 1 for each pursuer
 			int k=0;
-			while((NodeMatrix[r][c].vision[k]) != 0){ // Set state for S to 2 for each visible node not containing a pursuer
+			while((NodeMatrix[r][c].vision[k]) != (struct Node *)0){ // Set state for S to 2 for each visible node not containing a pursuer
 				int S_r = (*NodeMatrix[r][c].vision[k]).name[0];
 				int S_c = (*NodeMatrix[r][c].vision[k]).name[1];
 				if(S[S_r][S_c] != 1) // If not containing a pursuer
@@ -313,10 +312,12 @@ int calculateStates(int *path){
 				while((NodeMatrix[path[2*(1+pursuer+path[0]*currentStep)]][path[2*(1+pursuer+path[0]*currentStep)+1]].vision[k]) != (struct Node *)0){ // Set state for S_u to 2 if it is visible and doesn't contain a pursuer
 					int S_r = (*NodeMatrix[path[2*(1+pursuer+path[0]*currentStep)]][path[2*(1+pursuer+path[0]*currentStep)+1]].vision[k]).name[0];
 					int S_c = (*NodeMatrix[path[2*(1+pursuer+path[0]*currentStep)]][path[2*(1+pursuer+path[0]*currentStep)+1]].vision[k]).name[1];
+					//printf("%d,%d visible\n", S_r, S_c);
 					if(S_u[S_r][S_c] != 1) // If not containing a pursuer
 						S_u[S_r][S_c] = 2;
 					k++;
 				}
+				//printf("\n");
 			}
 			for(r = 0; r < ROWS; r++){
 				for(c = 0; c < COLS; c++){ // For every node:

@@ -41,10 +41,10 @@ void place() {
 				if(A[i][j]==1){
 					B[i][j].name[0] = i;
 					B[i][j].name[1] = j;
-					B[i][j].move[LEFT] = NULL;
-					B[i][j].move[RIGHT] = NULL;
-					B[i][j].move[UP] = NULL;
-					B[i][j].move[DOWN] = NULL;
+					B[i][j].move[LEFT] = (struct Node *)0;
+					B[i][j].move[RIGHT] = (struct Node *)0;
+					B[i][j].move[UP] = (struct Node *)0;
+					B[i][j].move[DOWN] = (struct Node *)0;
 					setMove(&B[i][j]);
 					B[i][j].state = 4;
 				}
@@ -62,27 +62,27 @@ void place() {
 	}
 }
 void setMove(struct Node *b){
-	int i = (*b).name[0];
-	int j = (*b).name[1];
-	if(j>0 && A[i][j-1]==1){ //Left
+	int r = (*b).name[0];
+	int c = (*b).name[1];
+	if(c>=1 && A[r][c-1]==1){ //Left
 		(*b).move[LEFT]=(&(*getMove(b,LEFT)));
 	}else{
-		(*b).move[LEFT]=NULL;
+		(*b).move[LEFT]=(struct Node *)0;
 	}
-	if(j<COLS && A[i][j+1]==1){ //Right
+	if(c<COLS && A[r][c+1]==1){ //Right
 		(*b).move[RIGHT]=(&(*getMove(b,RIGHT)));
 	}else{
-		(*b).move[RIGHT]=NULL;
+		(*b).move[RIGHT]=(struct Node *)0;
 	}
-	if(i>0 && A[i-1][j]==1){ //Up
+	if(r>=1 && A[r-1][c]==1){ //Up
 		(*b).move[UP]=(&(*getMove(b,UP)));
 	}else{
-		(*b).move[UP]=NULL;
+		(*b).move[UP]=(struct Node *)0;
 	}
-	if(i<COLS && A[i+1][j]==1){ //Down
+	if(r<ROWS && A[r+1][c]==1){ //Down
 		(*b).move[DOWN]=(&(*getMove(b,DOWN)));
 	}else{
-		(*b).move[DOWN]=NULL;
+		(*b).move[DOWN]=(struct Node *)0;
 	}
 }
 struct Node *getMove(struct Node *from, int dir){
@@ -123,7 +123,7 @@ int getRight(struct Node *b) {
 	return 0;
 }
 int getUp(struct Node *b) {
-	if((*b).move[UP]==NULL){
+	if((*b).move[UP]==(struct Node *)0){
 		int s=0;
 		return s;
 	}else{
@@ -134,7 +134,7 @@ int getUp(struct Node *b) {
 	return 0;
 }
 int getDown(struct Node *b) {
-	if((*b).move[DOWN]==NULL){
+	if((*b).move[DOWN]==(struct Node *)0){
 		int s=0;
 		return s;
 	}else{
@@ -162,6 +162,7 @@ void setVision(struct Node *b) {
 	Rmax = getRight(b);
 	Umax = getUp(b);
 	Dmax = getDown(b);
+	//printf("(%d,%d) Lmax: %d, Rmax: %d, Umax: %d, Dmax: %d\n", r, k, Lmax, Rmax, Umax, Dmax);
 	z=k;
 	while(z>=Lmax-k)
 	{
@@ -311,7 +312,7 @@ int resetAB() {
 	}
 }
 void getStartPositions(int *Hunters){
-	Hunters[0] = 4;
+	Hunters[0] = 2;
 	int i;
 	for(i=1;i<1+2*Hunters[0];i+=2){
 		while(1==1){
@@ -343,9 +344,9 @@ int main() {
 		purPaths = fopen("PATHS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
 		printArea();
 		//int Hunter_static[]={2,2,0,4,4};
-		int BREAK = 100;
+		int BREAK = 20;
 		int envLoop=0;
-		for(envLoop=0;envLoop<4;envLoop++){ // Same area 4 times, with different start positions
+		for(envLoop=0;envLoop<1;envLoop++){ // Same area 4 times, with different start positions
 			memset(Hunters,0,sizeof(Hunters));
 			getStartPositions(Hunters);
 			fprintf(res, "Algorithm\t");
@@ -363,7 +364,7 @@ int main() {
 				printf("Hunters[0]: %d\n", Hunters[0]);
 				printCommon(Hunters); // Write all common info to RESULTS.txt
 				int sameEnv=0;
-				for(sameEnv=0;sameEnv<4;sameEnv++){ // Loop with same parameters 4 times
+				for(sameEnv=0;sameEnv<1;sameEnv++){ // Loop with same parameters 4 times
 					fprintf(res, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
 					printf("Loop %d of 4 in sameEnv\n", sameEnv);
 					printf("Genetic\n");
