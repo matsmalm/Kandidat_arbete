@@ -3,7 +3,7 @@
 
 /*** Definitions ***/
 #define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
-#define GENETIC_POPULATION_SIZE 200 // Population size, static.
+#define GENETIC_POPULATION_SIZE 300 // Population size, static.
 #define GENETIC_MAX_PURSUERS 20 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
 #define GENETIC_MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
 
@@ -48,11 +48,11 @@ int getS4(void);
 
 /*** Preparations ***/
 void preGenetic(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, int COLS) { // Do all pre-processing, which is to generate population.
-	Population = malloc(GENETIC_POPULATION_SIZE * sizeof(struct Chromosome));
+	Population = calloc(GENETIC_POPULATION_SIZE, sizeof(struct Chromosome));
 	
 	if(Population == NULL)
 		fprintf(stderr, "Population out of memory\n");
-	New_Population = malloc(GENETIC_POPULATION_SIZE * sizeof(struct Chromosome));
+	New_Population = calloc(GENETIC_POPULATION_SIZE, sizeof(struct Chromosome));
 	
 	if(New_Population == NULL)
 		fprintf(stderr, "New_Population out of memory\n");
@@ -62,13 +62,13 @@ void preGenetic(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS,
 	GENETIC_PURSUERS = Hunters[0];
 	int i,j;
 	/*** Allocate memory for NodeMatrix ***/
-	NodeMatrix = malloc(ROWS * sizeof(struct Node *));
+	NodeMatrix = calloc(ROWS, sizeof(struct Node *));
 	
 	if(NodeMatrix == NULL)
 		fprintf(stderr, "NodeMatrix out of memory\n");
 	for(i = 0; i < ROWS; i++)
 	{
-		NodeMatrix[i] = malloc(COLS * sizeof(struct Node));
+		NodeMatrix[i] = calloc(COLS, sizeof(struct Node));
 		if(NodeMatrix[i] == NULL)
 			fprintf(stderr, "NodeMatrix[i] out of memory\n");
 	}
