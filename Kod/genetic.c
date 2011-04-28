@@ -3,14 +3,14 @@
 
 /*** Definitions ***/
 #define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
-#define GENETIC_POPULATION_SIZE 300 // Population size, static.
+#define GENETIC_POPULATION_SIZE 200 // Population size, static.
 #define GENETIC_MAX_PURSUERS 20 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
 #define GENETIC_MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
 
 /*** Variables ***/
 int GENETIC_PURSUERS = 0; // Only a temporary value.
 int GENETIC_GENERATIONS = 0; // Only a temporary value.
-float GENETIC_CONVERGENCE_PERCENT = 0.95; // fraction of population to be equal to break early.
+float GENETIC_CONVERGENCE_PERCENT = 0.90; // fraction of population to be equal to break early.
 float GENETIC_MUTATION_PROBABILITY = 0.05; // fraction of mutation probability.
 int ROWS;
 int COLS;

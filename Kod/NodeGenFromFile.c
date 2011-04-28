@@ -311,7 +311,7 @@ int resetAB() {
 	}
 }
 void getStartPositions(int *Hunters){
-	Hunters[0] = 2;
+	Hunters[0] = 4;
 	int i;
 	for(i=1;i<1+2*Hunters[0];i+=2){
 		while(1==1){
