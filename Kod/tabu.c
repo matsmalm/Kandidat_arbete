@@ -29,19 +29,19 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxx Viktiga!!! xxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-#define max_step_minus_in_L_list 1 				// hur många tidigare steg vi skall förbjuda att gå på 35
+#define max_step_minus_in_L_list 20 				// hur många tidigare steg vi skall förbjuda att gå på 35
 #define allowed_stat_4_loss 2 						// antalet områden vi får förlora i ett steg
-#define max_antal_INcomplete_tabu_solutions 5
+#define max_antal_INcomplete_tabu_solutions 1000
 #define TABU_MAX_LIKA 10
 
-#define MAX_TABU_STEPS 300
-int best_step_length=301;							//VIKTIGT steps får inte va för hög ty 2*(jagare=5)*800 = 8000 < int tabu_solution[8500]
+#define MAX_TABU_STEPS 600
+int best_step_length=1001;							//VIKTIGT steps får inte va för hög ty 2*(jagare=5)*800 = 8000 < int tabu_solution[8500]
 #define START_FROM_THE_BEGINING_AGEN_NUMBER 4 		//antalet gånger man når MAX_TABU_STEPS innan man besetämeer att ingen lösning finns
 
 
-#define to_easy_problem_problem_adjustment_set_nr_steps_to 4				//sätt denna till noll så blir du av med detta
-#define to_easy_problem_problem_adjustment_go_agen_nr 2			// om 2 körs den två gånger
-#define Mss_L_fuck_up 50000
+#define to_easy_problem_problem_adjustment_set_nr_steps_to 6				//sätt denna till noll så blir du av med detta
+#define to_easy_problem_problem_adjustment_go_agen_nr 4			// om 2 körs den två gånger
+#define Mss_L_fuck_up 100
 
 
 
@@ -193,7 +193,7 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, in
 	printf("START_FROM_THE_BEGINING_AGEN_NUMBER\t\t\t%d\n", START_FROM_THE_BEGINING_AGEN_NUMBER);
 	printf("to_easy_problem_problem_adjustment_set_nr_steps_to \t%d\n", to_easy_problem_problem_adjustment_set_nr_steps_to);
 	printf("to_easy_problem_problem_adjustment_go_agen_nr \t\t%d\n", to_easy_problem_problem_adjustment_go_agen_nr);
-	printf("Mss_L_fuck_up \t\t\t\t\t%d\n", Mss_L_fuck_up);
+	printf("Mss_L_fuck_up \t\t\t\t\t\t%d\n", Mss_L_fuck_up);
 	
 	printf("TABU_Pursuers \t\t\t\t\t\t%d\n", Hunters[0]);
 	
@@ -361,10 +361,10 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		tabu_calculateStates(tabu_solution);
 		
 		if(check_ALL_Tabu_lists(tabu_solution)==NOT_OK){
-			printf("UUUUUUDDDDAAAAA %d\n",tabu_solution[1]);
+			//printf("UUUUUUDDDDAAAAA %d\n",tabu_solution[1]);
 			tabu_solution[1]-=1;
-			printf("UUUUUUUDDDDDDDDDDAAAAAAA -1 %d\n",tabu_solution[1]);
-			
+			//printf("UUUUUUUDDDDDDDDDDAAAAAAA -1 %d\n",tabu_solution[1]);
+			/*
 			int hhh=0;
 			for(hhh=0;hhh<2*(3+tabu_solution[0]+tabu_solution[1]*tabu_solution[0]);hhh+=2){
 				// printar alla stegen 
@@ -380,6 +380,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 											printf("steps2 %d\n",tabu_solution[1]);
 											//STOOOP=2;
 											}
+										*/
 		}
 		tabu_calculateStates(tabu_solution);
 		if(tabu_getS4() == 0){
@@ -427,11 +428,14 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			number_of_stat_4_in_past_step = 0;
 			
 		}
+		/*
 		if(tabu_solution[1]==MAX_TABU_STEPS){
 		printf("END\n");
 		printf("steps %d\n",tabu_solution[1]);
 		//STOOOP=2;
-		}	
+		}
+			*/
+	
 	}
 	
 	/*
@@ -597,7 +601,7 @@ int check_L_Tabu_list(int *tabu_solution){
 						if(Mr_L==Mss_L_fuck_up){
 							printf("Mr_L up\n");
 							Mr_L=0;
-							return OK;
+							//return OK;
 						}
 						return NOT_OK;
 					}
@@ -611,7 +615,7 @@ int check_L_Tabu_list(int *tabu_solution){
 						if(Mr_L==Mss_L_fuck_up){
 							printf("Mr_L right\n");
 							Mr_L=0;
-							return OK;
+							//return OK;
 						}
 						return NOT_OK;
 					}
@@ -625,7 +629,7 @@ int check_L_Tabu_list(int *tabu_solution){
 						if(Mr_L==Mss_L_fuck_up){
 							printf("Mr_L down\n");
 							Mr_L=0;
-							return OK;
+							//return OK;
 						}
 						return NOT_OK;
 					}
@@ -639,7 +643,7 @@ int check_L_Tabu_list(int *tabu_solution){
 						if(Mr_L==Mss_L_fuck_up){
 							printf("Mr_L left\n");
 							Mr_L=0;
-							return OK;
+							//return OK;
 						}
 						return NOT_OK;
 					}
