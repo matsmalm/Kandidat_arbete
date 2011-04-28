@@ -3,14 +3,14 @@
 
 /*** Definitions ***/
 #define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
-#define GENETIC_POPULATION_SIZE 100 // Population size, static.
+#define GENETIC_POPULATION_SIZE 200 // Population size, static.
 #define GENETIC_MAX_PURSUERS 20 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
-#define GENETIC_MAX_STEPS 100 // Maximum number of steps, just to allocate enough memory
+#define GENETIC_MAX_STEPS 200 // Maximum number of steps, just to allocate enough memory
 
 /*** Variables ***/
 int GENETIC_PURSUERS = 0; // Only a temporary value.
 int GENETIC_GENERATIONS = 0; // Only a temporary value.
-float GENETIC_CONVERGENCE_PERCENT = 0.90; // fraction of population to be equal to break early.
+float GENETIC_CONVERGENCE_PERCENT = 0.95; // fraction of population to be equal to break early.
 float GENETIC_MUTATION_PROBABILITY = 0.05; // fraction of mutation probability.
 int ROWS;
 int COLS;
@@ -97,7 +97,6 @@ void preGenetic(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS,
 			getRandom(&(Population[ChromNr].gene[GeneNr]),0); // Generate a random step sequence
 		}
 	}
-	printf("End of pre\n");
 }
 void getRandom(struct Gene *g, int from){ // Generate random step-sequence from a given node
 	int stepnr, nextStep;

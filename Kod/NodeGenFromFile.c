@@ -312,7 +312,7 @@ int resetAB() {
 	}
 }
 void getStartPositions(int *Hunters){
-	Hunters[0] = 2;
+	Hunters[0] = 5;
 	int i;
 	for(i=1;i<1+2*Hunters[0];i+=2){
 		while(1==1){
@@ -346,7 +346,7 @@ int main() {
 		//int Hunter_static[]={2,2,0,4,4};
 		int BREAK = 20;
 		int envLoop=0;
-		for(envLoop=0;envLoop<1;envLoop++){ // Same area 4 times, with different start positions
+		for(envLoop=0;envLoop<4;envLoop++){ // Same area 4 times, with different start positions
 			memset(Hunters,0,sizeof(Hunters));
 			getStartPositions(Hunters);
 			fprintf(res, "Algorithm\t");
@@ -364,7 +364,7 @@ int main() {
 				printf("Hunters[0]: %d\n", Hunters[0]);
 				printCommon(Hunters); // Write all common info to RESULTS.txt
 				int sameEnv=0;
-				for(sameEnv=0;sameEnv<1;sameEnv++){ // Loop with same parameters 4 times
+				for(sameEnv=0;sameEnv<4;sameEnv++){ // Loop with same parameters 4 times
 					fprintf(res, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
 					printf("Loop %d of 4 in sameEnv\n", sameEnv);
 					printf("Genetic\n");
