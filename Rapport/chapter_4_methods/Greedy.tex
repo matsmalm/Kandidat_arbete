@@ -1,6 +1,5 @@
 \section{The greedy algorithm approach}
 \subsection{Description of greedy algorithms}
-
 Greedy algorithms can be either itterative or recursive. In most cases a itterative algorithm can be reformulated as a recursive one and vice versa. For simplicity we will consider the greedy algorithms itterative unless stated otherwice. In each itteration the algorithm has a set of possible alternatives on how to to push the algorithm towards a solution. A so called "cost function" designates a cost to each alternative. At the end of the itteration the alternative with the best cost, be it maximum or minimun, is choosen as a part of the solution. \\
 \\It is not guaranteed in general that greedy algorithms provide optimal solutions. Also there is no general way of determining wether an greedy algorithm provides an optimal solution or not, but there are two very important properties that usually helps to determine if an optimal solution can be provided. These are the greedy-choice property and the optimal substructure property (referens [10] kap 16.2). The greedy choice property states that an global optimal solution can be arrived at by making locally optimal choices. In other words, at each itteration a choice can be made without reconsidering previous itterations. The optimal substructure property states that an optimal solution can be expressed as a sum of solutions to subproblems. If these two properties are fullfilled, then a solution can be constructed by summing optimal subsolutions. Hopefully this is an optimal solution, but if one want's to be shure more rigorous proofs are needed. 
 
@@ -66,35 +65,28 @@ A boundry to an area is by construction seen by some pursuer. If the area can be
 \item{} In the previous steps we have now added at most five values to each tile in the proximity of each pursuer. For each pursuer find the tile with the largest sum and move the pursuer into this tile.
 \item{} When the movement is made, update the states of the enviroment correspodingly. save the path taken so far. Return the updated states and the path taken so far to the start of the algorithm. 
 \end{enumerate}
-\subsection{Our implementation of the greedy algorithm.}
-declare that the algorithm is not readily implemented, and why. 
-make a flowchart? 
+\subsection{Implementation of the greedy algorithm.}
+Due to a combination of time pressure and shortcommings in the programming language C, the implementation of the greedy algorithm failed. Even though a ready-to-run implementation was not made, many parts of the implementation were finished.\\
+\\In the prefunction all the needed static information about the enviroment is evaluated and saved to a struct. 
+\begin{verbatim}
+struct Greedy{
+int SolutionPath[]; 
+struct Node NodeMatrix[][];
+int BreakCondition[];
+HashTable; 
+}
+\end{verbatim}
+The solution path is an array where index 0 contains the number of pursuers, index 1 contains the itterations made (set to zero by the prefunction), and the rest of the indices are the coordinates for each pursuer. The NodeMatrix is the graph created by the simulation enviroment described in chapter three. The break condition is simply an integer to describe the maximum allowed itterations. Since the algorithm needs to know the distance and the path between two tiles and this is saved into a hashtable. To find the shortest path and the distance between two tiles the A-star algorithm is used. 
 
-pregreedy:
-a-star to find the distance and the path between any two tiles. describe complexity
-hashtable to access shortest distance in a fast manor, key: (from to)
-descride the greedy struct contents and motivate.
-
-algorithm
-describe the breadth first used to find interiors of areas. complexity
-describe the assignment, hungarian, motivate why not to use the hungarian
-motivate the queue implementation instead.
-describe the book keeping of the tile value adding 
-describe the implementation of finding the values from step 8
+FIND THE COMPLEXITY OF A-STAR!!! Dijkstra:  algorithm of $O(\vert v \vert^2)$ , a-star is special case of dijkstar? 
+%pregreedy:
+%a-star to find the distance and the path between any two tiles. describe complexity
+%hashtable to access shortest distance in a fast manor, key: (from to)
+%descride the greedy struct contents and motivate.
 
 
-before starting the algorithm all static conditions are evaluated and stored. this is done in a so called pre-function. the pre-function for the greedy algorithm runs the A-star algorithm to find the shortest path and distance between any two tiles in the map and stores this information in a hash table. also all the information from the graph network presented in chapter three is given. The pre prefunction also puts the hunters in their starting positions and evaluates the starting states of all tiles.
+The implementation of the algorithm described in the previous section calls for the usage of a couple of interesting algorithms to solve some of the steps. In step four we want to find the interior of all areas. This was implemented by first taking any tile not part of the pursuers vision. Make a breadth first search to find and mark all the interior points of this area. Find a new unmarked and unseen tile and execute another breadth first search. Repeat this until all tiles not visible by the pursuer team are marked. The breadth first algorithm's time complexity is $O(\vert V \vert + \vert E \vert)$ \cite{adk8}, where V is the number of vertices in the graph and E is the number of edges.\\
+\\For step six in the algorithm (the assignment) the implementation is designed to exaust all possible combinations and then pick the combination giving the smallest sum. The combinations are found by usage of a queue (first in, first out). Here one could try to use the Hungarian method \cite{hungarian} instead, but since the size of the table is usually not very large this algorithm seemed like overkill.  
 
-due to a combination of time pressure and shortcommings in programming with the C language, the implementation of the greedy algorithm was not finnished. but the outline is as follows:
-
-given the data from the prefunction:
-test if the enviroment is cleared. if not
-test if the given break condition is reached. if not
-run the function oneitteration().
- 
-the function oneitteration is in turn divided into three smaller functions preparations, valuation, execute.
-int the preparation function. the algorithm  completes step one to five, given in the previous subsection.
-in the valuation function it completes step six to eleven in the previous subsection.
-at last in the execute function it moves each pursuer to the most valuated tile and uppdates the states of the enviroment.
 
 
