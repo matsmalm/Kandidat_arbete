@@ -126,7 +126,7 @@ int check_L_Tabu_list_X_past_steps_left();
 
  // i en liten fin matris med ettor och nollor
 void print_K_matrix();
-//void save_complete_tabu_solution_path();
+
 int save_complete_tabu_solution_path();
 void analys_tabu_solutions_and_update_Tabu_K_list(int *tabu_solution);
 
@@ -390,7 +390,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			
 			nr_of_complete_tabu_solutions++;
 			
-			//save_complete_tabu_solution_path(tabu_solution);
+			
 			if(save_complete_tabu_solution_path(tabu_solution)==OK){
 				//printf("HALLLELLLUUULLLIIIIAAAAAAAA\n");
 				break;
@@ -1047,6 +1047,8 @@ int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 				int tabu_algorithem_agen_number=0;
 				*/
 				
+				Tabu_save_number_3=0;
+				
 				tabu_algorithem_agen_number++;
 				if(tabu_algorithem_agen_number<=to_easy_problem_problem_adjustment_go_agen_nr){
 				
@@ -1076,6 +1078,7 @@ int save_complete_tabu_solution_path(int *tabu_solution){ //verion 2.0 samt 1.0
 
 	
 				}
+			
 			}
 			
 			
