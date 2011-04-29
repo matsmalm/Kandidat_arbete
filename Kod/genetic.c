@@ -3,15 +3,27 @@
 
 /*** Definitions ***/
 #define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
-#define GENETIC_POPULATION_SIZE 300 // Population size, static.
+#define GENETIC_POPULATION_SIZE 400 // Population size, static.
 #define GENETIC_MAX_PURSUERS 20 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
 #define GENETIC_MAX_STEPS 200 // Maximum number of steps, just to allocate enough memory
 
 /*** Variables ***/
 int GENETIC_PURSUERS = 0; // Only a temporary value.
 int GENETIC_GENERATIONS = 0; // Only a temporary value.
-float GENETIC_CONVERGENCE_PERCENT = 0.95; // fraction of population to be equal to break early.
+float GENETIC_CONVERGENCE_PERCENT = 0.90; // fraction of population to be equal to break early.
+float GENETIC_MUTATION_PROBABILITY = 0.10; // fraction of mutation probability.
+/*
+5x5
+#define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
+#define GENETIC_POPULATION_SIZE 300 // Population size, static.
+#define GENETIC_MAX_PURSUERS 20 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
+#define GENETIC_MAX_STEPS 200 // Maximum number of steps, just to allocate enough memory
+
+int GENETIC_PURSUERS = 0; // Only a temporary value.
+int GENETIC_GENERATIONS = 0; // Only a temporary value.
+float GENETIC_CONVERGENCE_PERCENT = 0.98; // fraction of population to be equal to break early.
 float GENETIC_MUTATION_PROBABILITY = 0.05; // fraction of mutation probability.
+*/
 int ROWS;
 int COLS;
 
@@ -120,6 +132,7 @@ void getRandom(struct Gene *g, int from){ // Generate random step-sequence from 
 /*** Algorithm ***/
 void genAlg(int *solution) { // Main call function for Genetic Algorithm
 	int currentGeneration=0, currentPopulation=0;
+	printf("genAlg\n");
 	/*
 	printf("**** Genetic Algorithm info ****\n");
 	printf("Population size:\t%d\n", GENETIC_POPULATION_SIZE);
@@ -135,6 +148,7 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 	sortPopulation(Population, GENETIC_POPULATION_SIZE); // Sort the population after fitness
 	for(currentGeneration = 0; currentGeneration < GENETIC_GENERATIONS; currentGeneration++){
 		/*** New generation ***/
+		printf("Generation %d\n", currentGeneration);
 		addToNewPopulation(Population[0]); // Elite selection
 		addToNewPopulation(Population[1]); // Elite selection
 		while(NewPopLocation < GENETIC_POPULATION_SIZE)
@@ -145,9 +159,10 @@ void genAlg(int *solution) { // Main call function for Genetic Algorithm
 		for(i = 0; i < GENETIC_POPULATION_SIZE;i++)
 			Population[i] = New_Population[i]; // Overwrite old population with new
 		memcpy(Population, New_Population, sizeof New_Population);
-		if(currentGeneration%10==0){
-			//printf("Best Fitness: %f, States: %d, steps: %d\n", Population[0].fitnessScore, Population[0].inS4, Population[0].chrSteps);
-			//printf("Compare Fitness: %f, States: %d, steps: %d\n", Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].fitnessScore, Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].inS4, Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].chrSteps);
+		if(currentGeneration%2==0){
+			printf("Best Fitness: %f, States: %d, steps: %d\n", Population[0].fitnessScore, Population[0].inS4, Population[0].chrSteps);
+			printf("Compare Fitness: %f, States: %d, steps: %d\n", Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].fitnessScore, Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].inS4, Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].chrSteps);
+			printf("Worst Fitness: %f, States: %d, steps: %d\n", Population[GENETIC_POPULATION_SIZE-1].fitnessScore, Population[GENETIC_POPULATION_SIZE-1].inS4, Population[GENETIC_POPULATION_SIZE-1].chrSteps);
 		}
 		if(Population[0].inS4 == 0 && Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].inS4 == 0) // If a complete solution has been found, check if convergence level is reached
 				if((Population[0].chrSteps==Population[abs(GENETIC_POPULATION_SIZE*GENETIC_CONVERGENCE_PERCENT)].chrSteps)) // If 90% of the population has the same number of steps, no need to continue to do more generations.

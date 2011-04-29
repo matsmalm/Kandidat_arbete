@@ -284,7 +284,7 @@ int readFromFile() {
 			COLS=tmpcols;
 		}
 		if(line[0]!='\n'){
-			for(i=0;i<=(2*COLS+1);i++){
+			for(i=0;i<(2*COLS);i++){
 				if((line[i] != ' ') && (line[i] != '\n')){ // Will only happen for 0 and 1 in the matrix.
 					A[ROWS-1][currentcol] = (int) strtol(&line[i],NULL,10);
 					if(A[ROWS-1][currentcol]==0){
@@ -344,12 +344,14 @@ int main() {
 		place();
 		Hunters = malloc(21*sizeof(int));
 		//int Hunter_static[]={2,2,0,4,4};
-		int BREAK = 20;
+		int BREAK = 100;
 		int envLoop=0;
-		for(envLoop=0;envLoop<4;envLoop++){ // Same area 4 times, with different start positions
-			res = fopen("RESULTS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
-			purPaths = fopen("PATHS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
-			env = fopen("ENV.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
+		res = fopen("RESULTS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
+		purPaths = fopen("PATHS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
+		env = fopen("ENV.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
+		fprintf(env, "%d.x.x.x\n", numMatrices);
+		printArea();
+		for(envLoop=0;envLoop<1;envLoop++){ // Same area 4 times, with different start positions
 			memset(Hunters,0,sizeof(Hunters));
 			getStartPositions(Hunters);
 			printCommon(Hunters); // Write all common info to RESULTS.txt
@@ -363,15 +365,15 @@ int main() {
 			****/
 			/*** Genetic ***/
 			int numPur;
-			for(numPur=Hunters[0];numPur>=2;numPur--){ // Loop from Hunters[1] down to 2 pursuers
+			for(numPur=Hunters[0];numPur>=3;numPur--){ // Loop from Hunters[1] down to 2 pursuers
 				Hunters[0] = numPur;
 				printf("Hunters[0]: %d\n", Hunters[0]);
 				int sameEnv=0;
-				for(sameEnv=0;sameEnv<4;sameEnv++){ // Loop with same parameters 4 times
+				for(sameEnv=0;sameEnv<1;sameEnv++){ // Loop with same parameters 4 times
 					printf("NodeGenFromFile Rows: %d, Cols: %d\n", ROWS, COLS);
 					fprintf(res, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
-					fprintf(env, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
-					printArea();
+					printf("%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
+					
 					printf("Loop %d of 4 in sameEnv\n", sameEnv);
 					printf("Genetic\n");
 					int geneticSolution[2*(1+Hunters[0]*200)];
@@ -431,10 +433,10 @@ int main() {
 					fprintf(purPaths, "\n");
 				}
 			}
-			fclose(purPaths); // Close the result file once
-			fclose(res); // Close the result file once
-			fclose(env);
 		}
+		fclose(purPaths); // Close the result file once
+		fclose(res); // Close the result file once
+		fclose(env);
 		free(Hunters);
 	}
 	printf("There were %d matrices in input file.\n", numMatrices);

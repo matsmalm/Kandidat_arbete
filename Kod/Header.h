@@ -5,7 +5,7 @@
 #include "hashtab.h"
 #include <time.h>
 
-#define SIZE 50 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
+#define SIZE 75 // Set to at least the maximum size of your environments, 1024 (1024^2 nodes) should be enough. Bigger SIZE means longer computation time.
 #define MAX_SIZE_SOLUTION 200 //set to a maximum size of solution array
 #define MAX_TOTAL_AREA 100
 #define MAX_SIZE_TOTAL_VISION 40

@@ -5,9 +5,8 @@ Genetic algorithms are based on the idea of evolution, that the most suited indi
 In Genetic Algorithms, or GAs, a population is simulated in an artificial world using a combination of reproduction, gene crossover and mutation, with a given goal for the population to achieve. As in nature, a population consisting of individuals are used. As a simplification, each individual has one chromosome, containing one or more genes. During each generation, individuals are selected and paired for reproduction, and their genes are combined to form new children.\\
 \\
 Due to the need to simulate the population and evaluate individuals, often multiple times, GAs are not well suited for all kind of problems. When there exists an analytical solution it may be better to use that. However, if the problem can be simulated, both problems without analytical solutions and problem with complicated analytical solutions can be handled by GAs, although it is never guaranteed to give an optimal solution.\\
-%% Generational / Steady-state
-\\There are two different kinds of GAs can either be steady-state or generational, where steady-state means that the current population is altered, and generational is when a new generation is created and replaces the old.\\
-\\
+%% Variations / Generational / Steady-state
+There are different ways to implement genetic algorithms, with variations in how each step is performed. This yields many different versions of genetic algorithms. Firstly there are two different kinds of GAs, steady-state and generational, where steady-state maintains and alters one population and generational replaces an old population with a new one.\\
 A GA can be described by the following steps:
 \begin{enumerate}
 \item Initial population
@@ -20,17 +19,19 @@ A GA can be described by the following steps:
 \subsubitem Replacement
 \subitem Search Termination
 \end{enumerate}
-%% Fitness function
-To be able to compare different individuals, a fitness function is used. The fitness function should calculate a score for an individual, depending on how fit the individual is in relation to the goal.\\
+%% Initial population
+At first an initial population has to be obtained, either an existing set of solutions or created in some way.\\
+%% Evaluation / Fitness function
+To be able to evaluate and compare different individuals, a fitness function is used. The fitness function should calculate a score for an individual, depending on how fit the individual is in relation to the goal.\\
 %% Breeding
-To make sure that evolution is performed, a breeding step is used, during which two individuals are selected and used to create two new individuals. The creation is done first by crossover and then by mutation.\\
+Evolution is performed using a breeding step during which two individuals are selected and used to create two new individuals. The creation is done first by crossover and then by mutation.\\
 %% Selection (parents)
-There are different procedures that can be used for each step of the algorithm, for selection five different methods are Fitness Proportionate Selection, Random Selection, Fit-Fit, Fit-Weak and Elite selection.\\
+For selection, there are different methods but five of them are Fitness Proportionate Selection, Random Selection, Fit-Fit, Elite selection and tournament selection.\\
 In Fitness Proportionate Selection, of which Roulette Selection is one example, the probability of choosing a more fit individual is higher than to select a less fit individual.\\
 In Random Selection, the probability to be selected is equal for all individuals. \\
-With Fit-fit, the two most fit individuals are selected, and thereafter the two next most fit are selected.\\
-With Fit-Weak, the most fit and the least fit individual are selected.\\
+With Fit-fit, at each step the two most fit individuals are selected. In the next step the next two most fit are selected.\\
 In Elite selection the best individual is chosen. This selection procedure should be used in combination with another selection method.\\
+Tournament selection chooses a number of individuals stochastically, and then take the best of them.\\
 \\
 %% Crossover
 For Crossover there are different methods, a few of those are n-point shuffle crossover, uniform crossover and variable crossover.\\
@@ -46,18 +47,18 @@ In Weakest Individual, the children replaces the two weakest individuals in the 
 In Random, the children replaces random individuals in the population.\\
 \\
 %% Termination
-To make sure the algorithm ends at some point, a termination condition has to be used. It can be a maximum number of generations, a limit in fitness sum, a median fitness, best individual or worst individual.\\
+To make sure the algorithm ends at some point, a termination condition has to be used, for instance a maximum number of generations, a limit in fitness sum, a median fitness, best individual or worst individual.\\
 With Fitness sum, the algorithm will terminate when the sum of the fitness for the population is less than or equal to a specified value.\\
 With Median fitness, a range for the fitness is specified.\\
 With best individual, the algorithm will terminate when the minimum fitness drops below a convergence value and thereby guarantee at least one good solution while saving time.\\
 With Worst Individual, the algorithm will terminate when all individuals in the population has a fitness value lower than the convergence value.\\
+\\
+%% Encoding
+To adapt genes to computers, an encoding has to be used.  According to literature \cite{GAHandbook1} binary encoding is the fastest encoding, where each gene is encoded as 0 and 1, but there are also integer encoding and string encoding.\\
 %%%% Development process of the genetic algorithm
 \subsection{Development process of the genetic algorithm}
 The first idea to use  was to use an existing framework for Genetic Algorithms, such as LibGA or GAUL, to save time on programming. Due to the implementation of the libraries, for this application it was determined to be faster to write a new implementation.\\
-%% Random
-\\After reading the parts of the source code of the existing libraries and Johan Thunberg's Boolean Control software, for ideas, a first attempt to a program was written. The first version was a boolean control network, where feasible solutions were generated by using a random function to generate numbers between 0 and 4 to indicate if the pursuer were to move left, right, up, down or stand still. Even if \\
-%% Encoding
-\\To encode the genes, an integer based encoding was used. According to literature \cite{GAHandbook1}, binary encoding is faster, but as this is an attempt to implement heuristic methods and an integer encoding is easier to debug, it was used instead. Each integer in the gene is called an allele.\\
+\\After reading the parts of the source code of existing libraries and Johan Thunberg's Boolean Control software for ideas, a first attempt to a program was written. The first version was a boolean control network, where feasible solutions were generated by using a random function to generate numbers between 0 and 4 to indicate if the pursuer were to move left, right, up, down or stand still. For each pursuer, an integer based encoding was used, which was easy to implement and debug compared to binary encoding. Each digit in the gene is called an allele, following the notation from GAUL. It was thereafter extended to a generational GA instead of steady-state, because of easier implementation and a more clear termination condition in number of generations. \\
 %% Generational
 \\Generational GA was used, because of easier implementation and a more clear termination condition in number of generations.\\
 %% Fitness

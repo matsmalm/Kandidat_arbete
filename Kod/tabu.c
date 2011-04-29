@@ -29,19 +29,21 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxx Viktiga!!! xxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-#define max_step_minus_in_L_list 18 				// hur många tidigare steg vi skall förbjuda att gå på 35
-#define allowed_stat_4_loss 1 						// antalet områden vi får förlora i ett steg
-#define max_antal_INcomplete_tabu_solutions 1000
-#define TABU_MAX_LIKA 10
+#define max_step_minus_in_L_list 60 				// hur många tidigare steg vi skall förbjuda att gå på 35
+#define allowed_stat_4_loss 3 						// antalet områden vi får förlora i ett steg
+#define max_antal_INcomplete_tabu_solutions 100
+#define TABU_MAX_LIKA 3
 
-#define MAX_TABU_STEPS 700
+#define MAX_TABU_STEPS 300
 int best_step_length=1001; //ändra tre ställen							//VIKTIGT steps får inte va för hög ty 2*(jagare=5)*800 = 8000 < int tabu_solution[8500]
-#define START_FROM_THE_BEGINING_AGEN_NUMBER 4 		//antalet gånger man når MAX_TABU_STEPS innan man besetämeer att ingen lösning finns
+#define START_FROM_THE_BEGINING_AGEN_NUMBER 20 		//antalet gånger man når MAX_TABU_STEPS innan man besetämeer att ingen lösning finns
 
 
-#define to_easy_problem_problem_adjustment_set_nr_steps_to 6				//sätt denna till noll så blir du av med detta
-#define to_easy_problem_problem_adjustment_go_agen_nr 3			// om 2 körs den två gånger
+#define to_easy_problem_problem_adjustment_set_nr_steps_to 0				//sätt denna till noll så blir du av med detta
+#define to_easy_problem_problem_adjustment_go_agen_nr 0			// om 2 körs den två gånger
 #define Mss_L_fuck_up 5000
+#define Mss_30 30
+
 
 
 
@@ -64,7 +66,7 @@ int *tabu_solution;
 int *returned_Tabu_tabu_solution;
 int **tabuMatris;  //int tabuMatris[ROWS][COLS];
 int Mr_30=1;
-int Mss_30=4;
+
 int Mr_L=1; //vill ta bort Mr & Mss L men vi har dom med för säkerhetskull
 int nr_of_tabus = 0;
 int nr_of_complete_tabu_solutions = 0;
@@ -156,7 +158,7 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, in
 	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	Mr_30=1;
-	Mss_30=4;
+	
 	Mr_L=1; //vill ta bort Mr & Mss L men vi har dom med för säkerhetskull
 	nr_of_tabus = 0;
 	nr_of_complete_tabu_solutions = 0;
@@ -191,6 +193,8 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, in
 	printf("to_easy_problem_problem_adjustment_set_nr_steps_to \t%d\n", to_easy_problem_problem_adjustment_set_nr_steps_to);
 	printf("to_easy_problem_problem_adjustment_go_agen_nr \t\t%d\n", to_easy_problem_problem_adjustment_go_agen_nr);
 	printf("Mss_L_fuck_up \t\t\t\t\t\t%d\n", Mss_L_fuck_up);
+	printf("Mss_30 \t\t\t\t\t\t\t\t%d\n", Mss_30);
+	
 	
 	printf("TABU_Pursuers \t\t\t\t\t\t%d\n", Hunters[0]);
 	
@@ -306,7 +310,13 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	
 	
 	while(GOOO==STOOOP){ // lite av en oändlig while loop
+		
 		//printf("tabu_solution[1] =%d\n",tabu_solution[1]);
+		if(tabu_solution[1]==300){
+		printf("vad gar langsamt\n");
+		
+		}
+		
 		if(tabu_solution[1]==hundra_raknare1){
 			printf(" Antal steg tagna:  %d\n",hundra_raknare1 );
 			hundra_raknare1+=100;
@@ -371,6 +381,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		//printf("Here 3\n");
 		tabu_calculateStates(tabu_solution);
 		if(tabu_getS4() == 0){
+			
 			 /*	//TA EJ BORT
 			printf( "Nr_of_complete_tabu_solutions: %d\n",nr_of_complete_tabu_solutions);
 			printf( "Using %d steps\n",tabu_solution[1]);
@@ -440,17 +451,19 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 			*/
 			
 			if(Mr_L==4500){
+				tabu_calculateStates(tabu_solution);
 				int LLL=0;
 				printf("\n");
 				for(LLL=0;LLL<2*(3+tabu_solution[0]+tabu_solution[1]*tabu_solution[0]);LLL+=2){
 				// printar alla stegen 
 				printf("(%d,%d)", tabu_solution[LLL], tabu_solution[LLL+1]);
 				}
-			printf("\n");
-			print_K_matrix();
-			printf("\n");
-			tabu_printStates();
-			printf("\n");
+				printf("\n");
+				print_K_matrix();
+				printf("\n");
+				tabu_printStates();
+				printf("\n");
+			
 			}
 			
 			
@@ -515,7 +528,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		tabuSolution[0] = returned_Tabu_tabu_solution[0];
 		tabuSolution[1] = -returned_Tabu_tabu_solution[1];
 	}
-	/*
+	
 	printf( "\n");
 	printf( "FINAL INFO \n");
 	printf( "ROWS = %d",ROWS);
@@ -535,7 +548,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	printf("\n");
 	tabu_printStates();
 	printf("\n");
-	*/
+	
 
 	
 	//printf( "END Tabu\n\n");
@@ -565,7 +578,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 	Mr_30=1;
-	Mss_30=4;
+	
 	Mr_L=1; //vill ta bort Mr & Mss L men vi har dom med för säkerhetskull
 	nr_of_tabus = 0;
 	nr_of_complete_tabu_solutions = 0;
@@ -656,7 +669,7 @@ int check_K_Tabu_list_one_Hunter(int *tabu_solution, int k){
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXX   30 START   
 int check_30_Tabu_list(int *tabu_solution){
 
-	return OK;
+	
 	// denna funktion skapar en hel del problem för hela algoritmen...
 	// den fryser ibland om saker blir fel pga denna.
 
