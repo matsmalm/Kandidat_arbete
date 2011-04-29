@@ -350,9 +350,9 @@ int main() {
 			memset(Hunters,0,sizeof(Hunters));
 			getStartPositions(Hunters);
 			fprintf(res, "Algorithm\t");
-			fprintf(res, "Genetic  \t");
-			fprintf(res, "Greedy   \t");
-			fprintf(res, "Tabu     \n");
+			fprintf(res, "Genetic\t");
+			fprintf(res, "Greedy\t");
+			fprintf(res, "Tabu\n");
 			printf("Using %d pursuers\n", Hunters[0]);
 			/****
 			Here we should be able to call our algorithms, since B will contain the graph network.
@@ -395,30 +395,30 @@ int main() {
 					/*fprintf(res, "Time     \t");
 					fprintf(res, "%.2f     \t", ((double) (genEnd - genStart)) / CLOCKS_PER_SEC);
 					fprintf(res, "%.2f     \n", ((double) (tabEnd - tabStart)) / CLOCKS_PER_SEC);*/
-					fprintf(res, "Time     \t");
-					fprintf(res, "%.4f     \t", ((double) (afterGen.tv_sec - beforeGen.tv_sec)*1000 + (afterGen.tv_usec-beforeGen.tv_usec)/1000)/1000);
-					fprintf(res, "%.4f     \t", ((double) (afterGre.tv_sec - beforeGre.tv_sec)*1000 + (afterGre.tv_usec-beforeGre.tv_usec)/1000)/1000);
-					fprintf(res, "%.4f     \t\n", ((double) (afterTab.tv_sec - beforeTab.tv_sec)*1000 + (afterTab.tv_usec-beforeTab.tv_usec)/1000)/1000);
-					fprintf(res, "Steps    \t");
-					fprintf(res, "%d       \t", geneticSolution[1]);
-					printf("Genetic: %d\n", geneticSolution[1]);
-					fprintf(res, "%d       \t", start.solution[1]);
-					fprintf(res, "%d       \n", tabuSolution[1]);
-					printf("Tabu: %d\n", tabuSolution[1]);
+					fprintf(res, "Time\t");
+					fprintf(res, "%.4f\t", ((double) (afterGen.tv_sec - beforeGen.tv_sec)*1000 + (afterGen.tv_usec-beforeGen.tv_usec)/1000)/1000);
+					fprintf(res, "%.4f\t", ((double) (afterGre.tv_sec - beforeGre.tv_sec)*1000 + (afterGre.tv_usec-beforeGre.tv_usec)/1000)/1000);
+					fprintf(res, "%.4f\t\n", ((double) (afterTab.tv_sec - beforeTab.tv_sec)*1000 + (afterTab.tv_usec-beforeTab.tv_usec)/1000)/1000);
+					fprintf(res, "Steps\t");
+					fprintf(res, "%d\t", geneticSolution[1]);
+					printf("Genetic:\t%d\n", geneticSolution[1]);
+					fprintf(res, "%d\t", start.solution[1]);
+					fprintf(res, "%d\n", tabuSolution[1]);
+					printf("Tabu:\t%d\n", tabuSolution[1]);
 					// Print path to separate file (PATHS.txt)
 					fprintf(purPaths, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
 					int i,genDone=0,greDone=0,tabDone=0,pur=0;
-					fprintf(purPaths, "Genetic: \n");
+					fprintf(purPaths, "Genetic:\t\n");
 					for(pur=0;pur<Hunters[0];pur++){
 						for(i=2*(1+pur);i<2*(1+Hunters[0]+Hunters[0]*geneticSolution[1]);i+=2*Hunters[0]){
-							fprintf(purPaths, "(%d,%d) ", geneticSolution[i], geneticSolution[i+1]);
+							fprintf(purPaths, "(%d,%d)\t", geneticSolution[i], geneticSolution[i+1]);
 						}
 						fprintf(purPaths, "\n");
 					}
-					fprintf(purPaths, "Tabu: \n");
+					fprintf(purPaths, "Tabu:\t\n");
 					for(pur=0;pur<Hunters[0];pur++){
 						for(i=2*(1+pur);i<2*(1+Hunters[0]+Hunters[0]*tabuSolution[1]);i+=2*Hunters[0]){
-							fprintf(purPaths, "(%d,%d) ", tabuSolution[i], tabuSolution[i+1]);
+							fprintf(purPaths, "(%d,%d)\t", tabuSolution[i], tabuSolution[i+1]);
 						}
 						fprintf(purPaths, "\n");
 					}
@@ -437,7 +437,7 @@ int main() {
 }
 void printCommon(int *Hunters){
 	int i;
-	fprintf(res, "         \t         \t         \tPursuers \t%d         \t", Hunters[0]);
+	fprintf(res, "\t\t\t\tPursuers\t%d\t", Hunters[0]);
 	for(i=1;i<1+2*Hunters[0];i+=2){
 		fprintf(res, "(%d,%d)", Hunters[i], Hunters[i+1]);
 	}
@@ -448,11 +448,11 @@ void printArea(){
 	int i,j;
 	for(i=0;i<ROWS;i++){
 		for(j=0;j<COLS;j++){
-			fprintf(res, "%d ", A[i][j]);
+			fprintf(res, "%d\t", A[i][j]);
 		}
 		fprintf(res, "\n");
 	}
-	fprintf(res, "Rows: %d\n", ROWS);
-	fprintf(res, "Columns: %d\n", COLS);
-	fprintf(res, "Obstacles: %d\n", OBS);
+	fprintf(res, "Rows:\t%d\n", ROWS);
+	fprintf(res, "Columns:\t%d\n", COLS);
+	fprintf(res, "Obstacles:\t%d\n", OBS);
 }
