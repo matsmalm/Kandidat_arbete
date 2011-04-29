@@ -25,6 +25,7 @@ void printCommon(int *Hunters);
 FILE *fr = NULL;
 FILE *res = NULL;
 FILE *purPaths = NULL;
+FILE *env = NULL;
 int ROWS=0,COLS=0,OBS=0;
 struct Node B[SIZE][SIZE];
 int *Hunters;
@@ -268,8 +269,10 @@ int readFromFile() {
 		int i=0;
 		while(1==1){
 			if(line[i]!='\n'){
+				if(line[i]!=' '){
+					tmpcols++;
+				}
 				i++;
-				tmpcols++;
 			}else{
 				break;
 			}
@@ -281,7 +284,7 @@ int readFromFile() {
 			COLS=tmpcols;
 		}
 		if(line[0]!='\n'){
-			for(i=0;i<=COLS;i++){
+			for(i=0;i<=(2*COLS+1);i++){
 				if((line[i] != ' ') && (line[i] != '\n')){ // Will only happen for 0 and 1 in the matrix.
 					A[ROWS-1][currentcol] = (int) strtol(&line[i],NULL,10);
 					if(A[ROWS-1][currentcol]==0){
@@ -300,7 +303,7 @@ int readFromFile() {
 	if(ROWS==0){ // Shift between two matrices, can stop reading.
 		return -1;
 	}
-	COLS = (int)(COLS/2+1);
+	//COLS = (int)(COLS/2+1);
 	return 1;
 }
 int resetAB() {
@@ -340,15 +343,16 @@ int main() {
 		numMatrices++;
 		place();
 		Hunters = malloc(21*sizeof(int));
-		res = fopen("RESULTS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
-		purPaths = fopen("PATHS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
-		printArea();
 		//int Hunter_static[]={2,2,0,4,4};
 		int BREAK = 20;
 		int envLoop=0;
 		for(envLoop=0;envLoop<4;envLoop++){ // Same area 4 times, with different start positions
+			res = fopen("RESULTS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
+			purPaths = fopen("PATHS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
+			env = fopen("ENV.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
 			memset(Hunters,0,sizeof(Hunters));
 			getStartPositions(Hunters);
+			printCommon(Hunters); // Write all common info to RESULTS.txt
 			fprintf(res, "Algorithm\t");
 			fprintf(res, "Genetic\t");
 			fprintf(res, "Greedy\t");
@@ -362,10 +366,12 @@ int main() {
 			for(numPur=Hunters[0];numPur>=2;numPur--){ // Loop from Hunters[1] down to 2 pursuers
 				Hunters[0] = numPur;
 				printf("Hunters[0]: %d\n", Hunters[0]);
-				printCommon(Hunters); // Write all common info to RESULTS.txt
 				int sameEnv=0;
 				for(sameEnv=0;sameEnv<4;sameEnv++){ // Loop with same parameters 4 times
+					printf("NodeGenFromFile Rows: %d, Cols: %d\n", ROWS, COLS);
 					fprintf(res, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
+					fprintf(env, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
+					printArea();
 					printf("Loop %d of 4 in sameEnv\n", sameEnv);
 					printf("Genetic\n");
 					int geneticSolution[2*(1+Hunters[0]*200)];
@@ -425,9 +431,10 @@ int main() {
 					fprintf(purPaths, "\n");
 				}
 			}
+			fclose(purPaths); // Close the result file once
+			fclose(res); // Close the result file once
+			fclose(env);
 		}
-		fclose(purPaths); // Close the result file once
-		fclose(res); // Close the result file once
 		free(Hunters);
 	}
 	printf("There were %d matrices in input file.\n", numMatrices);
@@ -437,9 +444,9 @@ int main() {
 }
 void printCommon(int *Hunters){
 	int i;
-	fprintf(res, "\t\t\t\tPursuers\t%d\t", Hunters[0]);
+	fprintf(res, "Pursuers\t%d\t", Hunters[0]);
 	for(i=1;i<1+2*Hunters[0];i+=2){
-		fprintf(res, "(%d,%d)", Hunters[i], Hunters[i+1]);
+		fprintf(res, "(%d.%d)\t", Hunters[i], Hunters[i+1]);
 	}
 	fprintf(res, "\n");
 }
@@ -448,9 +455,9 @@ void printArea(){
 	int i,j;
 	for(i=0;i<ROWS;i++){
 		for(j=0;j<COLS;j++){
-			fprintf(res, "%d\t", A[i][j]);
+			fprintf(env, "%d\t", A[i][j]);
 		}
-		fprintf(res, "\n");
+		fprintf(env, "\n");
 	}
 	fprintf(res, "Rows:\t%d\n", ROWS);
 	fprintf(res, "Columns:\t%d\n", COLS);
