@@ -197,13 +197,12 @@ int main(){
 	cleanA(); // Start by setting each element in A to NULL.
 	int z = 0, tries=0;	
 	srand(time(0)); // Resets random.
-	fileOK=fopen("OK.txt", "a+");
-	fileEJOK=fopen("notOK.txt", "a+");
 	
 	
-	int numberOfEnv=10; // Number of matrices to be created
-	int obstaclesPerCent = 50; // How many percent of the environment should be obstacles?
-	int multiplier = 5; // Scales the environments. 5 gives 5x5, 10x10, 15x15 and so on.
+	
+	int numberOfEnv=5; // Number of matrices to be created
+	int obstaclesPerCent = 25; // How many percent of the environment should be obstacles?
+	int multiplier = 30; // Scales the environments. 5 gives 5x5, 10x10, 15x15 and so on.
 	int startAtLoop = 1; // Counter to keep track of which turn in the loop it is, starts at one since 0x0-maps aren't fun.
 	int stopAtLoop = 1; // Will create environments ranging in size between "multiplier*startAtLoop" and "multiplier*stopAtLoop".
 	
@@ -216,13 +215,18 @@ int main(){
 		working = 0; // Keep track of number of working environments.
 		tries = 0;
 		z = 0;
+		fileOK=fopen("OK-30x30.txt", "a+");
+		fileEJOK=fopen("notOK.txt", "a+");
 		while(working<numberOfEnv){
 			create(*A, obstacles);
 			//tries++; // Keep track of how many attempts it took to create enough working environments.
+			
 		}
+		printf("Create ok\n");
+		fclose(fileOK);
+		fclose(fileEJOK);
 	}
 	
-	fclose(fileOK);
-	fclose(fileEJOK);
+	
 	return EXIT_SUCCESS;
 }

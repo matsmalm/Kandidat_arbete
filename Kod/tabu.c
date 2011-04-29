@@ -73,7 +73,7 @@ int nr_of_complete_tabu_solutions = 0;
 int max_antal_INcomplete_tabu_solutions_in_a_row_counter=0;
 int number_of_stat_4_in_this_step = 0;
 int number_of_stat_4_in_past_step = 0;
-int hundra_raknare1=100;
+int hundra_raknare1=50;
 int hundra_raknare2=1;
 int tabu_algorithem_agen_number=0;
 //FELIX versionshantering
@@ -144,7 +144,6 @@ void analys_tabu_solutions_and_update_Tabu_K_list(int *tabu_solution);
 //Hunters
 
 void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, int COLS) { // Do all pre-processing, which is to generate population.
-	printf("Tabu Rows: %d, Cols: %d\n", ROWS, COLS);
 	// xxxxxxxxxxxxxxxxxxxxx  SÄKERHETSÅTGÄRDER  xxxxxxxxxxxxxxxxxxxxx
 	// variabel sättnig igen för säkerhetskull.	
 	ROWS = ROWS;
@@ -165,7 +164,7 @@ void preTabu(struct Node (*NodeMat)[SIZE], int *Hunters, int BREAK, int ROWS, in
 	max_antal_INcomplete_tabu_solutions_in_a_row_counter=0;
 	number_of_stat_4_in_this_step = 0;
 	number_of_stat_4_in_past_step = 0;
-	hundra_raknare1=100;
+	hundra_raknare1=50;
 	hundra_raknare2=1;
 	tabu_algorithem_agen_number=0;
 	//FELIX versionshantering
@@ -310,23 +309,16 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	
 	
 	while(GOOO==STOOOP){ // lite av en oändlig while loop
-		
-		//printf("tabu_solution[1] =%d\n",tabu_solution[1]);
-		if(tabu_solution[1]==300){
-		printf("vad gar langsamt\n");
-		
-		}
-		
 		if(tabu_solution[1]==hundra_raknare1){
-			printf(" Antal steg tagna:  %d\n",hundra_raknare1 );
-			hundra_raknare1+=100;
+			//printf(" Antal steg tagna:  %d\n",hundra_raknare1 );
+			hundra_raknare1+=50;
 			if(tabu_solution[1]==MAX_TABU_STEPS){
 				printf("tabu_solution[1]==MAX_TABU_STEPS\n");
 				hundra_raknare2++;
 
 				tabu_solution[1]=0;
-				printf("steps1 %d\n",tabu_solution[1]);
-				hundra_raknare1=100;
+				//printf("steps1 %d\n",tabu_solution[1]);
+				hundra_raknare1=50;
 				//STOOOP=2;
 				
 				
@@ -528,7 +520,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 		tabuSolution[0] = returned_Tabu_tabu_solution[0];
 		tabuSolution[1] = -returned_Tabu_tabu_solution[1];
 	}
-	
+	/*
 	printf( "\n");
 	printf( "FINAL INFO \n");
 	printf( "ROWS = %d",ROWS);
@@ -548,7 +540,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	printf("\n");
 	tabu_printStates();
 	printf("\n");
-	
+	*/
 
 	
 	//printf( "END Tabu\n\n");
@@ -585,7 +577,7 @@ void Tabu(int *tabuSolution) { // Main call function for Tabu Algorithm  annat n
 	max_antal_INcomplete_tabu_solutions_in_a_row_counter=0;
 	number_of_stat_4_in_this_step = 0;
 	number_of_stat_4_in_past_step = 0;
-	hundra_raknare1=100;
+	hundra_raknare1=50;
 	hundra_raknare2=1;
 	tabu_algorithem_agen_number=0;
 	//FELIX versionshantering
