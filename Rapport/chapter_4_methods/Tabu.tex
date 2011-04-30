@@ -2,149 +2,127 @@
 
 \subsection{Description of Tabu search method}
 
-Tabu search is a metaheuristic\footnote{ metaheuristic: simmular to heuristic  with the add on that it solves the problem iterativly}  optimization method, designed to search for the global optimum. Meaning that the method, figuratively, has the ability to climb out of a local minimum, and then explore other parts of domain.
+Tabu search is a metaheuristic\footnote{ metaheuristic: simmular to heuristic  with the add on that it solves the problem iterativly}  optimization method, designed to search for the global optimum. Meaning that the method, figuratively, has the ability to climb out of a local minimum, and then explore other parts of domain.\\
 There are several solutions on how this abilitie can be acquired. Tabu search uses a so-called tabu list, intended to bring former visited areas in to the domain to be forbidden, "tabu", to return to.
-Tabu search has a few konseptiual blidnigblocks and basic ideas, easy to understand but with widely varying difficulty to implement. Konsept which, if well implemented will give you a highly sofisticeated search algorithm.
-The core bildingblock is as mention before the tabu list. The ability to render a surten regen or moves tabu lets ous creeate a search startegis bilt on the infromation at hand, in a given moment, and prier experienses of the search. Hens tabu search is all about coming upp with intelegent roules, that vill sett a spesific move to be tabu or not. 
-Another key bildingblock is the tabu overriding mechanism, in the litetur named as the aspriation criteria [glover]. Its jobb is to check wheter a certain move should be approved even if it initaly var sett to be tabu. In addisen this mens that the existens of the apriation criteria alowes the the tabu list to be more strikt. (And the search a lott faster.)
+Tabu search has a few konseptiual blidnigblocks and basic ideas, easy to understand but with widely varying difficulty to implement. Konsept which, if well implemented will give you a highly sofisticeated search algorithm.\\
+The core bildingblock is as mention before the tabu list. The ability to render a surten regen or moves tabu lets ous creeate a search startegis bilt on the infromation at hand, in a given moment, and prier experienses of the search. Hens tabu search is all about coming upp with intelegent roules, that vill sett a spesific move to be tabu or not.\\ 
+Another key bildingblock is the tabu overriding mechanism, in the litetur named as the aspriation criteria [glover]. Its jobb is to check wheter a certain move should be approved even if it initaly var sett to be tabu. In addisen this mens that the existens of the apriation criteria alowes the the tabu list to be more strikt. (And the search a lott faster.)\\
+\\
+With these two key blidnigblocks one can construct almost any type of logic strucktur. Which makes the tabu search an highly implementebal and adaptive method.\\
+A logic structure  that can be built with these two is the one wich is the actual main idea behind the tabu search method.\\
+To anderstand this grundtanke of tabu search one rely needs to get to therms with the random aspekt of heuristik search.\\ 
+The tabu list and aspiration criteria only deels with the random selekted path/moves/solutions, this offcors meens that the current solution maight not be a good one. But and this is the nutchell:\\ 
 
-With these two key blidnigblocks one can construct almost any type of logic strucktur. 
-Which makes the tabu search an highly implementebal and adaptive method.
-A logic structure  that can be built with these two is the one wich is the actual main idea behind the tabu search method.
-To anderstand this grundtanke of tabu search one rely needs to get to therms with the random aspekt of heuristik search. 
-The tabu list and aspiration criteria only deels with the random selekted path/moves/solutions, this offcors meens that the current solution maight not be a good one. But and this is the nutchell: 
+LEMMMA1 START 1\\
+a solution/move produst out of a strategy tells something abut the problem at hand, indebendet wheter the achul solution/move wör a good or a bad one.\\
+LEMMMA END 1\\
 
-LEMMMA1 START 1
-a solution/move produst out of a strategy tells something abut the problem at hand, indebendet wheter the achul solution/move wör a good or a bad one.
-LEMMMA END 1
+A insait that at furst glans might seem somwhat basic but if implemented in a good way yeelds powerfull ressoults.\\
+\\
+In this deskripten certain aspect of the tabu search method has nowingly bin neglekted to make it more anderstandebul.\\
+ \\
+To gain claraty a generalaised tabu serch algorithem will dawnbelow be deskribed in a step by step sevdo cod fachen (flochart)\\
 
-A insait that at furst glans might seem somwhat basic but if implemented in a good way yeelds powerfull ressoults.
+Word convention:\\ 
+Compleet solution = a sett of moves that have soulved the problem\\
+Incompleet solution = a sett of moves that vill not soulve the problem\\
+feasible solution = a sett of moves that have not yett soulved the problem or have not yett bin evalueted whter it is a compleet/incomplete solution.\\
 
-In this deskripten certain aspect of the tabu search method has nowingly bin neglekted to make it more anderstandebul. 
- 
-To gain claraty a generalaised tabu serch algorithem will dawnbelow be deskribed in a step by step sevdo cod fachen (flochart)
-
-Word convention: 
-Compleet solution = a sett of moves that have soulved the problem
-Incompleet solution = a sett of moves that vill not soulve the problem
-feasible solution = a sett of moves that have not yett soulved the problem or have not yett bin evalueted whter it is a compleet/incomplete solution.
-
-
-1
-Obtiain feasible soultion or solutions. this are often generated randomly  =>2
-2
-Evaluation of the feasible solution
-If it is a compleet solution, save it. Update tabu list and aspiration criteria accordingly. =>5
-If it is a new best compleet solution, save it. Update  the tabu list, the aspiration criteria and the stopping criteria accordingly. =>5
-If it is a incomplete solution, maby save it. Update tabu list and aspiration criteria accordingly. =>5
-If still a feasible solution => 3
-3
-check it against the tabu list:
-If not tabu. Update tabu list and aspiration criteria accordingly =>5
-If tabu => 4
-4
-check it against the aspiration criteria:
-Override the tabu list. Update tabu list and aspiration criteria accordingly => 5
-not override the tabu list=>5
-5
-Check stopping criteria:
-If reached => 6
-If not =>1
-6
-Terminat algorithem, return final solution
+\\
+1\\
+Obtiain feasible soultion or solutions. this are often generated randomly  =>2\\
+2\\
+Evaluation of the feasible solution\\
+If it is a compleet solution, save it. Update tabu list and aspiration criteria accordingly. =>5\\
+If it is a new best compleet solution, save it. Update  the tabu list, the aspiration criteria and the stopping criteria accordingly. =>5\\
+If it is a incomplete solution, maby save it. Update tabu list and aspiration criteria accordingly. =>5\\
+If still a feasible solution => 3\\
+3\\
+check it against the tabu list:\\
+If not tabu. Update tabu list and aspiration criteria accordingly =>5\\
+If tabu => 4\\
+4\\
+check it against the aspiration criteria:\\
+Override the tabu list. Update tabu list and aspiration criteria accordingly => 5\\
+not override the tabu list=>5\\
+5\\
+Check stopping criteria:\\
+If reached => 6\\
+If not =>1\\
+6\\
+Terminat algorithem, return final solution\\
 
 
 
 \subsection{Development process of the Tabu search algorithm}
 
-The develepment prosses of the tabu serch algoritem vill her be fromulated and the tjojses taken along the rood expland.
-This prosses hade a few key fechers being: it had a strikt dead line and inexperiens among the programers, hens the dead line agen. This forced the prosses in a direktion that the idees needed to be somewhat esaly implemented. 
-
-Letts star by analysing the random genereting of moves a.k.a. feasible solution, see step 1 in figur [flochart].
-The furst cross roued was encontered when the dessiton of generat one feasible solution at a time, was tacken, insteed of a sett of feasible solution. The reasen behyend this cooyes was that the genetic algorithem allrady hade gone down the path of generating a sett of feasible solution \footnote{ refering to poppulation se sechten???}. And diversity was desired.
-The second cross roued, on the subjekt of generating moves, was wehter to generet one move or a seris of moves to generat a new feasible solution. This dessition was harder to make, sinns aider chois seemed to generat highly prommising but wery diffrent algorithems. The implimentation of making a seris of moves would be an intermeedieat between the two choueses of the furst crossroed. And resoult in receding horizon [referens johan papper] aprooch where one hade to ader: 
-\begin{enumerate}[(a)]   
+The develepment prosses of the tabu serch algoritem vill her be fromulated and the tjojses taken along the rood expland.\\
+This prosses hade a few key fechers being: it had a strikt dead line and inexperiens among the programers, hens the dead line agen. This forced the prosses in a direktion that the idees needed to be somewhat esaly implemented. \\
+\\
+Letts star by analysing the random genereting of moves a.k.a. feasible solution, see step 1 in figur [flochart].\\
+The furst cross roued was encontered when the dessiton of generat one feasible solution at a time, was tacken, insteed of a sett of feasible solution. The reasen behyend this cooyes was that the genetic algorithem allrady hade gone down the path of generating a sett of feasible solution \footnote{ refering to poppulation se sechten???}. And diversity was desired.\\
+The second cross roued, on the subjekt of generating moves, was wehter to generet one move or a seris of moves to generat a new feasible solution. This dessition was harder to make, sinns aider chois seemed to generat highly prommising but wery diffrent algorithems. The implimentation of making a seris of moves would be an intermeedieat between the two choueses of the furst crossroed. And resoult in receding horizon [referens johan papper] aprooch where one hade to ader:
+\begin{enumerate}
 \item produse a larg sett of seris of moves to later sort bay fittnes, then chouse one to check against the tabu list and aspiration critera.
 \item generat a singel seris of moves to check against the tabu list and aspiration critera.
 \end{enumerate}
-Both alternetives would probebly have jeelded prommesing algorithems, but the fakt that the tabu list and aspriation critera then would have needed more of a analysing tipe ability i.e. more difficult to implement resulted in that this path was skrapt. This ment that the one move one feasible solution approach came out ahead.
-
-This setheled we can now move forverd to view the ideas of the tabu list:
-In the begingn of the development the ideas fluricht. Sex different rouls wher evalueted   
-
+Both alternetives would probebly have jeelded prommesing algorithems, but the fakt that the tabu list and aspriation critera then would have needed more of a analysing tipe ability i.e. more difficult to implement resulted in that this path was skrapt. This ment that the one move one feasible solution approach came out ahead.\\
+\\
+This setheled we can now move forverd to view the ideas of the tabu list:\\
+In the begingn of the development the ideas fluricht. Sex different rouls wher evalueted:
 \begin{enumerate}
-
 \item fore one feasible solution save the past X number of moves for each prosuer and render theese moves tabu to be return to.
-
-
 \item Not alow moves that results in X number of lost secured areas
-
 \item Geometri baesed tabus for kritikal areas:
 \subitem mening areas of corridor like karakter would not be needed to be walkt down if one saw its end point. Or if one hade an area whit a obstical that one could walk around, hens it needs two persoer to secure,  it would be tabu to go about to try secure it alone. And finaly if one hade a tree like corridor system, going about to solve it would only be alowed with the right amount of prosuers.
-
 \item Work togheter:
 \subitem somewhat simmular to tabu roul (3) but with the addon that two persouers never rely need to see each other only chare vissebal arias. A more of a genneral roule that would need to be weighted in the aspriation criteria
-
 \item high Walued areas:
 \subitem trying to inkoperat the idea of  LEMMA1 in the way that the path taken, areas walkt appon in a compleet solution chould be given a walu bonus. Or if you look appon it from the ather angel, areas not walkt appon could be sett to be tabu 
-
 \item low Walued areas:
 \subitem an incomplete solution my have a seris of moves that have bin konsentrated on a spesific regen for to long, hens one could give this areas a walu penalty.
-
 \end{enumerate}
+\\
+All this tabus was needed to be rankt, given a priorety level that would be weight in the aspiration criteria. Also many of the tabu rules listed abow needed sume sort of worst case senario handeling, to awoyed the algorithem of getting stuk.\\
 
-All this tabus was needed to be rankt, given a priorety level that would be weight in the aspiration criteria. Also many of the tabu rules listed abow needed sume sort of worst case senario handeling, to awoyed the algorithem of getting stuk.
+This said lets diskuss the aspiration critera:\\
+As anderstud from the text abow the aspiration critera needs to inkoperat a lott. As a start it needs to have the abilety of cheking if an area is of high or low walu. Which then means that the evaluation step in figure [flochart1] needs a fitness calculation function that would depend on the area visited and the shape of the feasible solution.\\
+Sad to say this aspiration criteria, would need an overwhelming amount of work hours to implement. Thus this advanced aspiration criteria was scrapped for a simpler one. This also means that tabu rules (3), (4) and (6) no longer could be implemented. Tabu rule (5) got simplified to: areas not walked upon where set to be tabu. More about tabu rule (5) later.\\
+The more simple aspiration criteria, in the end, only came to be more of a worst case scenario handling, to avoid the algorithm of getting stuck.\\
 
-This said lets diskuss the aspiration critera:
-As anderstud from the text abow the aspiration critera needs to inkoperat a lott. As a start it needs to have the abilety of cheking if an area is of high or low walu. Which then means that the evaluation step in figure [flochart1] needs a fitness calculation function that would depend on the area visited and the shape of the feasible solution.
-Sad to say this aspiration criteria, would need an overwhelming amount of work hours to implement. Thus this advanced aspiration criteria was scrapped for a simpler one. This also means that tabu rules (3), (4) and (6) no longer could be implemented. Tabu rule (5) got simplified to: areas not walked upon where set to be tabu. More about tabu rule (5) later.
-The more simple aspiration criteria, in the end, only came to be more of a worst case scenario handling, to avoid the algorithm of getting stuck.
-
-Tabu rule (5):
-When this rule first was implemented the idea was that X number of past complete solutions were analyzed, to check which areas had been walked upon, at least ones, and render the rest tabu.
-The problem was however that this wasn’t strict enough. So X was set to one. Which intern led to the arising of another problem?
+Tabu rule (5):\\
+When this rule first was implemented the idea was that X number of past complete solutions were analyzed, to check which areas had been walked upon, at least ones, and render the rest tabu.\\
+The problem was however that this wasn’t strict enough. So X was set to one. Which intern led to the arising of another problem?\\
 The problem that arouse was that the algorithm now, under certain circumstances, was too hasty in returning a final solution.
-The problem was partially solved by some new stopping criteria and “go about it again criteria”.
-
-That was the development process of the tabu search algorithm, the final version can be viewed in figure [ ] and also discussed in the next section.
-
- 
-
-
-
-
-
-
+The problem was partially solved by some new stopping criteria and “go about it again criteria”.\\
+\\
+That was the development process of the tabu search algorithm, the final version can be viewed in figure [ ] and also discussed in the next section.\\
 
 
 \subsection{The Tabu search algorithm for our problem}
 
-Pseudo code dvs förklaring av tabuvilkoren.
-Ffllllllllllooooooooooooooooooooooooooooo
 
-
-1
-Obtain feasible solution by going one step with each pursuer randomly =>2
-2
-Evaluation of the feasible solution
-If it is a new best complete solution, save it. Update the tabu list, the aspiration criteria and the stopping criteria accordingly. =>5
-If it is an incomplete solution. Update stopping criteria accordingly. =>5
-If still a feasible solution => 3
-3
-Check it against the tabu list:
-If not tabu. Update tabu list and aspiration criteria accordingly =>5
-If tabu => 4
-4
-Check it against the aspiration criteria:
-Override the tabu list. Update tabu list and aspiration criteria accordingly => 5
-Not override the tabu list=>5
-5
-Check stopping criteria
-If reached = >6 
-If not =>1
-6
-Terminate algorithm, return final solution
-
+1\\
+Obtain feasible solution by going one step with each pursuer randomly =>2\\
+2\\
+Evaluation of the feasible solution\\
+If it is a new best complete solution, save it. Update the tabu list, the aspiration criteria and the stopping criteria accordingly. =>5\\
+If it is an incomplete solution. Update stopping criteria accordingly. =>5\\
+If still a feasible solution => 3\\
+3\\
+Check it against the tabu list:\\
+If not tabu. Update tabu list and aspiration criteria accordingly =>5\\
+If tabu => 4\\
+4\\
+Check it against the aspiration criteria:\\
+Override the tabu list. Update tabu list and aspiration criteria accordingly => 5\\
+Not override the tabu list=>5\\
+5\\
+Check stopping criteria\\
+If reached = >6 \\
+If not =>1\\
+6\\
+Terminate algorithm, return final solution\\
 
 \subsection{Implementation of the Tabu search algorithm}
 
@@ -158,4 +136,5 @@ Alla konstiga utskrifter grejen
 
 
 Hur dom jävla tabuvilkoren hanterades ,ordningen av koden.
+
 
