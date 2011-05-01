@@ -28,7 +28,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 //xxxxxxxxxxxxxxxxxxxxxxxxxxx Viktiga!!! xxxxxxxxxxxxxxxxxxxxxxxxxxx
-
+/*
 #define max_step_minus_in_L_list 60 				// hur många tidigare steg vi skall förbjuda att gå på 35
 #define allowed_stat_4_loss 3 						// antalet områden vi får förlora i ett steg
 #define max_antal_INcomplete_tabu_solutions 100
@@ -43,7 +43,22 @@ int best_step_length=1001; //ändra tre ställen							//VIKTIGT steps får inte va
 #define to_easy_problem_problem_adjustment_go_agen_nr 0			// om 2 körs den två gånger
 #define Mss_L_fuck_up 5000
 #define Mss_30 30
+*/
 
+#define max_step_minus_in_L_list 80 				
+#define allowed_stat_4_loss 2 						
+#define max_antal_INcomplete_tabu_solutions 1000
+#define TABU_MAX_LIKA 3
+
+#define MAX_TABU_STEPS 300
+int best_step_length=1001; //ändra tre ställen ORGINALVÄRDE 1001							
+#define START_FROM_THE_BEGINING_AGEN_NUMBER 25 		
+
+
+#define to_easy_problem_problem_adjustment_set_nr_steps_to 0				
+#define to_easy_problem_problem_adjustment_go_agen_nr 0	
+#define Mss_L_fuck_up 5000
+#define Mss_30 20
 
 
 

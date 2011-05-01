@@ -1,5 +1,5 @@
-gcc -g -c genetic.c
-gcc -g -c greedy.c
-gcc -g -c hashtab.c
-gcc -g -c tabu.c
-gcc -g -lm -o NodeGen NodeGenFromFile.c genetic.o greedy.o hashtab.o tabu.o
+gcc -g -O2 -c genetic.c
+gcc -g -O2 -c greedy.c
+gcc -g -O2 -c hashtab.c
+gcc -g -O2 -c tabu.c
+gcc -g -O2 -lm -o NodeGen NodeGenFromFile.c genetic.o greedy.o hashtab.o tabu.o

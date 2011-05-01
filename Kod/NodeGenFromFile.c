@@ -344,7 +344,7 @@ int main() {
 		place();
 		Hunters = malloc(21*sizeof(int));
 		//int Hunter_static[]={2,2,0,4,4};
-		int BREAK = 100;
+		int BREAK = 200;
 		int envLoop=0;
 		res = fopen("RESULTS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
 		purPaths = fopen("PATHS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
@@ -416,20 +416,31 @@ int main() {
 					fprintf(purPaths, "%d.%d.%d.%d\n", numMatrices, envLoop, numPur, sameEnv);
 					int i,genDone=0,greDone=0,tabDone=0,pur=0;
 					fprintf(purPaths, "Genetic:\t\n");
-					for(pur=0;pur<Hunters[0];pur++){
-						for(i=2*(1+pur);i<2*(1+Hunters[0]+Hunters[0]*geneticSolution[1]);i+=2*Hunters[0]){
-							fprintf(purPaths, "(%d,%d)\t", geneticSolution[i], geneticSolution[i+1]);
+					if(geneticSolution[1]>=0){
+						for(pur=0;pur<Hunters[0];pur++){
+							for(i=2*(1+pur);i<2*(1+geneticSolution[0]+geneticSolution[0]*geneticSolution[1]);i+=2*geneticSolution[0]){
+								fprintf(purPaths, "(%d,%d)\t", geneticSolution[i], geneticSolution[i+1]);
+							}
+							fprintf(purPaths, "\n");
 						}
+					}
+					else{
 						fprintf(purPaths, "\n");
 					}
 					fprintf(purPaths, "Tabu:\t\n");
-					for(pur=0;pur<Hunters[0];pur++){
-						for(i=2*(1+pur);i<2*(1+Hunters[0]+Hunters[0]*tabuSolution[1]);i+=2*Hunters[0]){
-							fprintf(purPaths, "(%d,%d)\t", tabuSolution[i], tabuSolution[i+1]);
+					if(tabuSolution[1]>=0){
+						printf("Pathlength OK\n");
+						for(pur=0;pur<Hunters[0];pur++){
+							for(i=2*(1+pur);i<2*(1+tabuSolution[0]+tabuSolution[0]*tabuSolution[1]);i+=2*tabuSolution[0]){
+								fprintf(purPaths, "(%d,%d)\t", tabuSolution[i], tabuSolution[i+1]);
+							}
+							fprintf(purPaths, "\n");
 						}
 						fprintf(purPaths, "\n");
 					}
-					fprintf(purPaths, "\n");
+					else{
+						fprintf(purPaths, "\n");
+					}
 				}
 			}
 		}

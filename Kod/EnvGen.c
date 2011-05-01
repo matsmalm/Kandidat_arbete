@@ -201,8 +201,8 @@ int main(){
 	
 	
 	int numberOfEnv=5; // Number of matrices to be created
-	int obstaclesPerCent = 25; // How many percent of the environment should be obstacles?
-	int multiplier = 30; // Scales the environments. 5 gives 5x5, 10x10, 15x15 and so on.
+	int obstaclesPerCent = 40; // How many percent of the environment should be obstacles?
+	int multiplier = 25; // Scales the environments. 5 gives 5x5, 10x10, 15x15 and so on.
 	int startAtLoop = 1; // Counter to keep track of which turn in the loop it is, starts at one since 0x0-maps aren't fun.
 	int stopAtLoop = 1; // Will create environments ranging in size between "multiplier*startAtLoop" and "multiplier*stopAtLoop".
 	
@@ -215,7 +215,7 @@ int main(){
 		working = 0; // Keep track of number of working environments.
 		tries = 0;
 		z = 0;
-		fileOK=fopen("OK-30x30.txt", "a+");
+		fileOK=fopen("OK-25x25.txt", "a+");
 		fileEJOK=fopen("notOK.txt", "a+");
 		while(working<numberOfEnv){
 			create(*A, obstacles);
