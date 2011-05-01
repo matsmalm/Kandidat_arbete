@@ -1,0 +1,20 @@
+   
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXX  20*20  XXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#define max_step_minus_in_L_list 250 				
+#define allowed_stat_4_loss 2 						
+#define max_antal_INcomplete_tabu_solutions 1200
+#define TABU_MAX_LIKA 3
+
+#define MAX_TABU_STEPS 550
+int best_step_length=1001; //ändra tre ställen ORGINALVÄRDE 1001							
+#define START_FROM_THE_BEGINING_AGEN_NUMBER 90 		
+
+
+#define to_easy_problem_problem_adjustment_set_nr_steps_to 10				
+#define to_easy_problem_problem_adjustment_go_agen_nr 1	
+#define Mss_L_fuck_up 5000
+#define Mss_30 20
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+

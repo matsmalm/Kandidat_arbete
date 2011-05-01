@@ -5,7 +5,7 @@
 #define GENETIC_MAX_GEN 100 // Maximum number of GENETIC_GENERATIONS
 #define GENETIC_POPULATION_MAX_SIZE 8000 // Population size, static.
 #define GENETIC_MAX_PURSUERS 20 // Maximum number of GENETIC_PURSUERS, just to allocate enough memory
-#define GENETIC_MAX_STEPS 200 // Maximum number of steps, just to allocate enough memory
+#define GENETIC_MAX_STEPS 50 // Maximum number of steps, just to allocate enough memory
 #define GENETIC_MIN_POP_SIZE 500 // Minimum size of population
 #define GENETIC_INCREMENT_POPULATION 100 // How much the population should increment if no solution is found.
 

@@ -346,9 +346,9 @@ int main() {
 		//int Hunter_static[]={2,2,0,4,4};
 		int BREAK = 400;
 		int envLoop=0;
-		res = fopen("RESULTS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
-		purPaths = fopen("PATHS.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
-		env = fopen("ENV.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
+		res = fopen("RESULTS-10x10.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
+		purPaths = fopen("PATHS-10x10.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
+		env = fopen("ENV-10x10.txt", "a+"); // Open file once, will overwrite each run. "a+" = append, "w" = (over)write
 		fprintf(env, "%d.x.x.x\n", numMatrices);
 		printArea();
 		for(envLoop=0;envLoop<2;envLoop++){ // Same area 4 times, with different start positions
