@@ -2,12 +2,13 @@
 
 \subsection{Description of Tabu search method}
 
-Tabu search is a metaheuristic\footnote{ metaheuristic: simmular to heuristic  with the add on that it solves the problem iterativly}  optimization method, designed to search for the global optimum. Meaning that the method, figuratively, has the ability to climb out of a local minimum, and then explore other parts of domain.\\
-There are several solutions on how this abilitie can be acquired. Tabu search uses a so-called tabu list, intended to bring former visited areas in to the domain to be forbidden, "tabu", to return to.
-Tabu search has a few konseptiual blidnigblocks and basic ideas, easy to understand but with widely varying difficulty to implement. Konsept which, if well implemented will give you a highly sofisticeated search algorithm.\\
-The core bildingblock is as mention before the tabu list. The ability to render a surten regen or moves tabu lets ous creeate a search startegis bilt on the infromation at hand, in a given moment, and prier experienses of the search. Hens tabu search is all about coming upp with intelegent roules, that vill sett a spesific move to be tabu or not.\\ 
-Another key bildingblock is the tabu overriding mechanism, in the litetur named as the aspriation criteria [glover]. Its jobb is to check wheter a certain move should be approved even if it initaly var sett to be tabu. In addisen this mens that the existens of the apriation criteria alowes the the tabu list to be more strikt. (And the search a lott faster.)\\
+Tabu search is a metaheuristic\footnote{ metaheuristic: simmular to heuristic  with the add on that it solves the problem iterativly}  optimization method, designed to search for the global optimum. Meaning that the method, figuratively, has the ability to climb out of a local minimum, and then explore other parts of the domain. There are several solutions %ways, concepts
+ on how these abilities can be acquired. Tabu search uses a so-called tabu list, intended to make areas in the domain that have already been visited to be forbidden (««tabu''), to return to%consider again, reconsider, thread on again?.
+Tabu search has a few conseptual buildingblocks and basic ideas, easy to understand but widely varying in difficulty to implement. Concepts that, if well implemented, will give you a highly sofisticated search algorithm.\\
+\\The core buildingblock is, as mentioned before, the tabu list. The ability to render certain regions or moves tabu enables us to create search strategys built on the information at hand, both for a given moment and from prior experiences of the search. Hence tabu search is all about coming upp with intelligent rules, that vill set a specific move to be tabu or not.\\ 
+\\Another key buildingblock is the tabu overriding mechanism, in literature named as the aspiration criteria [glover]. Its jobb is to check whether a certain move should be approved even if it initaly was set to be tabu. In addition this means that the existens of the aspiration criteria allows the tabu list to be more strict. (And the search a lot faster.)\\
 \\
+%fram hit har jag kollat!!
 With these two key blidnigblocks one can construct almost any type of logic strucktur. Which makes the tabu search an highly implementebal and adaptive method.\\
 A logic structure  that can be built with these two is the one wich is the actual main idea behind the tabu search method.\\
 To anderstand this grundtanke of tabu search one rely needs to get to therms with the random aspekt of heuristik search.\\ 
