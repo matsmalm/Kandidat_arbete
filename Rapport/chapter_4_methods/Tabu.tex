@@ -1,100 +1,93 @@
 \section{The Tabu search method approach}
 \subsection{Description of Tabu search method}
-Tabu search is a metaheuristic\footnote{ metaheuristic: simmular to heuristic with the add on that it solves the problem iterativly} optimization method, designed to search for the global optimum. Meaning that the method, figuratively, has the ability to climb out of a local minimum, and then explore other parts of domain.\\
-There are several solutions on how this abilitie can be acquired. Tabu search uses a so-called tabu list, intended to bring former visited areas in to the domain to be forbidden, "tabu", to return to.
-Tabu search has a few konseptiual blidnigblocks and basic ideas, easy to understand but with widely varying difficulty to implement. Konsept which, if well implemented will give you a highly sofisticeated search algorithm.\\
-The core bildingblock is as mention before the tabu list. The ability to render a surten regen or moves tabu lets ous creeate a search startegis bilt on the infromation at hand, in a given moment, and prier experienses of the search. Hens tabu search is all about coming upp with intelegent roules, that vill sett a spesific move to be tabu or not.\\ 
-Another key bildingblock is the tabu overriding mechanism, in the litetur named as the aspriation criteria [glover]. Its jobb is to check wheter a certain move should be approved even if it initaly var sett to be tabu. In addisen this mens that the existens of the apriation criteria alowes the the tabu list to be more strikt. (And the search a lott faster.)\\
+Tabu search is a metaheuristic\footnote{ metaheuristic: simmular to heuristic with the add on that it solves the problem iterativly} optimization method, designed to search for the global optimum. Meaning that the method, figuratively, has the ability to climb out of a local minimum, and then explore other parts of the domain. There are several methods on how these abilities can be acquired. Tabu search uses a so-called tabu list, intended to make already visited areas in the domain forbidden (``tabu''). Tabu search has a few conseptual buildingblocks and basic ideas, easy to understand but widely varying in difficulty to implement. Consepts which, if well implemented, will give you a highly sofisticated search algorithm. The core buildingblock is, as mentioned before, the tabu list. The ability to render certain regions or moves tabu enables us to create search strategys built on the information at hand, both for a given moment and from prior experiences of the search. Hence tabu search is all about coming up with intelligent rules, that will set a specific move to be tabu or not. Another key buildingblock is the tabu overriding mechanism, in literature named as the aspiration criteria [glover]. Its jobb is to check whether a certain move should be approved even if it initially was set to be tabu. In addition this means that the existence of the aspiration criteria allowes the tabu list to be more strict. (And the search a lot faster.)\\
 \\
-With these two key blidnigblocks one can construct almost any type of logic strucktur. Which makes the tabu search an highly implementebal and adaptive method.\\
-A logic structure that can be built with these two is the one wich is the actual main idea behind the tabu search method.\\
-To anderstand this grundtanke of tabu search one rely needs to get to therms with the random aspekt of heuristik search.\\ 
-The tabu list and aspiration criteria only deels with the random selekted path/moves/solutions, this offcors meens that the current solution maight not be a good one. But and this is the nutchell:\\ 
-LEMMMA1 START 1\\
-a solution/move produst out of a strategy tells something abut the problem at hand, indebendet wheter the achul solution/move wör a good or a bad one.\\
-LEMMMA END 1\\
-A insait that at furst glans might seem somwhat basic but if implemented in a good way yeelds powerfull ressoults.\\
-\\
-In this deskripten certain aspect of the tabu search method has nowingly bin neglekted to make it more anderstandebul.\\
-\\
-To gain claraty a generalaised tabu serch algorithem will dawnbelow be deskribed in a step by step sevdo cod fachen (flochart)\\
+With these two key buildingblocks one can construct almost any type of logic structure. Which makes the tabu search an highly implementable and adaptive method. A logic structure that can be built upon these two concepts is the actual main idea behind the tabu search method. To understand this concept of tabu search one really needs to get on terms with the random aspects of the algorithm.\\
 
+\\The tabu list and aspiration criteria only deals with the random selected \textbf{path/moves/solutions}, this means that the current solution is not necessarily a good one. One of the strengths of the tabu search algorithms is that \emph{any solution produced tells something about the problem at hand, independent of the solutions' quality.} What this really means is that a bad solution also yields important information.  Or, to quote Thomas Edison 
+
+\begin{quotation}
+\emph{``I have not failed 1,000 times.  I have
+successfully discovered 1,000 ways to NOT make a light bulb.''}
+\end{quotation}
+
+
+This insight might seem somewhat basic at first sight, but if implemented in a good way it yields powerful results.\\
 \\
-[skall laggas in I ordbeskrivnings kappitlet]\\
+In this description certain aspects of the tabu search methods are intentionally neglected. This is in order to make the text more understandable.To gain clairity a generalized tabu search algorithm will described below, in a flow chart and step by step pseudo code.\\
+\\
+skall laggas in I ordbeskrivnings kappitlet\\
 Word convention:\\ 
-Compleet solution = a sett of moves that have soulved the problem\\
-Incompleet solution = a sett of moves that vill not soulve the problem\\
-feasible solution = a sett of moves that have not yett soulved the problem or have not yett bin evalueted whter it is a compleet/incomplete solution.\\
+Complete solution = a set of moves that have solved the problem.\\
+Incomplete solution = a set of moves that will not solve the problem.\\
+Feasible solution = a set of moves that have not yet solved the problem, or have not yet been evaluated whether it is a complete/incomplete solution.\\
 \\
-1\\
-Obtiain feasible soultion or solutions. this are often generated randomly =>2\\
-2\\
-Evaluation of the feasible solution\\
-If it is a compleet solution, save it. Update tabu list and aspiration criteria accordingly. =>5\\
-If it is a new best compleet solution, save it. Update the tabu list, the aspiration criteria and the stopping criteria accordingly. =>5\\
-If it is a incomplete solution, maby save it. Update tabu list and aspiration criteria accordingly. =>5\\
-If still a feasible solution => 3\\
-3\\
-check it against the tabu list:\\
-If not tabu. Update tabu list and aspiration criteria accordingly =>5\\
-If tabu => 4\\
-4\\
-check it against the aspiration criteria:\\
-Override the tabu list. Update tabu list and aspiration criteria accordingly => 5\\
-not override the tabu list=>5\\
-5\\
-Check stopping criteria:\\
-If reached => 6\\
-If not =>1\\
-6\\
-Terminat algorithem, return final solution\\
+
+\begin{enumerate}
+\item{}Obtiain one or more feasible solutions. These are ususally generated randomly.
+\item{}Evaluate the feasible solutions.
+\begin{itemize}
+\item[-]{}If it's a complete solution, save it. Update tabu list and aspiration criteria accordingly. Go to step five.
+\item[-]{}If it's a new best complete solution, save it. Update the tabu list, the aspiration criteria and the stopping criteria accordingly. Go to step five.
+\item[-]{}If it's an incomplete solution, maby save it. Update tabu list and aspiration criteria accordingly. Go to step five.
+\item[-]{}If still a feasible solution, got to step three.\\
+\end{itemize}
+
+\item{}Check it against the tabu list. If not tabu, update tabu list and aspiration criteria accordingly. Go to step five. If tabu, go to step four.
+\item{}Check it against the aspiration criteria. \textbf{Override the tabu list. Update tabu list and aspiration criteria accordingly, go to step five. Not override the tabu list, Go to step five}
+\item{}Check stopping criteria. If reached, go to step six. If not, go to step one.
+\item{}Terminate algorithm, return final solution.
+\end {enummerate}
+
+
+
 \subsection{Development process of the Tabu search algorithm}
-The develepment prosses of the tabu serch algoritem vill her be fromulated and the tjojses taken along the rood expland.\\
-This prosses hade a few key fechers being: it had a strikt dead line and inexperiens among the programers, hens the dead line agen. This forced the prosses in a direktion that the idees needed to be somewhat esaly implemented. \\
+The developement process of the tabu search algorithm will here be formulated and the choices taken along the road expland. One of the features of this project is that it had a strict deadline. This forced the process in a direction so that the ideas needed to be somewhat easy to implement. \\
 \\
-Letts star by analysing the random genereting of moves a.k.a. feasible solution, see step 1 in figur [flochart].\\
-The furst cross roued was encontered when the dessiton of generat one feasible solution at a time, was tacken, insteed of a sett of feasible solution. The reasen behyend this cooyes was that the genetic algorithem allrady hade gone down the path of generating a sett of feasible solution \footnote{ refering to poppulation se sechten???}. And diversity was desired.\\
-The second cross roued, on the subjekt of generating moves, was wehter to generet one move or a seris of moves to generat a new feasible solution. This dessition was harder to make, sinns aider chois seemed to generat highly prommising but wery diffrent algorithems. The implimentation of making a seris of moves would be an intermeedieat between the two choueses of the furst crossroed. And resoult in receding horizon [referens johan papper] aprooch where one hade to ader:
+Let's start by analysing the random generating of moves a.k.a. feasible solution, see step 1 in figur [flowchart]. The first crossroad was encountered when the decission of generating one feasible solution at a time was taken, instead of generating a set of feasible solutions. The reason behind this choice was that the genetic algorithm already had gone down the path of generating a set of feasible solutions \footnote{ refering to poppulation se sechten???}, since diversity was desired.\\
+\\The second crossroad, on the subject of generating moves, was whether to generate one move or a series of moves to generate a new feasible solution. 
+
+This decission was harder to make, since both alternatives seemed to yield highly promising but very different algorithms. The implementation of making a series of moves would be an intermediate between the two choices of the first crossroad. And the result would be a receding horizon [referens johan papper] approach where one had to either:
+\begin{itemize}
+\item[-]{}Produce a large set of series of moves to later sort by fitness, then choose one to check against the tabu list and aspiration critera.
+\item[-]{}Generate a single series of moves to check against the tabu list and aspiration critera.
+\end{itemize}
+
+Both alternatives would probably have yielded promising algorithms. But the fact that the tabu list and aspiration critera then would have needed abilities of a more analysing type implied that it would be more difficult to implement. This resulted in that this path was scraped. This meant that the one move one feasible solution approach came out ahead.\\
+\\
+This settled we can now move forward to view the ideas of the tabu list. In the beginning of the development the ideas flourished. Seven different rules where evaluated:
 \begin{enumerate}
-\item produse a larg sett of seris of moves to later sort bay fittnes, then chouse one to check against the tabu list and aspiration critera.
-\item generat a singel seris of moves to check against the tabu list and aspiration critera.
+\item{}For one feasible solution save the past X number of moves for each pursuer and render these moves tabu to be returned to.
+\item{}Do not allow moves that results in X number of lost secured areas.
+\item{}Make geometricaly based tabus for critical areas:
+\subitem{} Regions of corridor like characteristics would not be needed to be walked down if a pursuer saw its end point or if one had a region with an obstacle that one could walk around. Regions with an obstacle of that kind would need two pursuers to be secured, thus it would be tabu to go about and try to secure it alone. And finaly if one hade a tree like corridor system, going about to solve it would only be allowed with the right amount of pursuers.
+\item{} Work togheter:
+\subitem{} Somewhat similar to tabu rule (3), but with the addon that two pursuers never really need to see each other only share vissible areas. This is  a more general rule that would need to be weighted in the aspriation criteria.
+\item{} High valued areas:
+\subitem{} Trying to incorporate the idea of getting information even from bad solutions. This would be made by considering the path taken, areas walked upon in a complete solution should be given a value bonus. Or if you look upon it from another angle, areas not walked upon could be set to be tabu. 
+\item{} Low valued areas:
+\subitem {}An incomplete solution may have a series of moves that have been concentrated on a specific region for to long, hence one could give this areas a value penalty.
+\item{} Not alow, or give value penaltys to� moves in already secured areas.
 \end{enumerate}
-Both alternetives would probebly have jeelded prommesing algorithems, but the fakt that the tabu list and aspriation critera then would have needed more of a analysing tipe ability i.e. more difficult to implement resulted in that this path was skrapt. This ment that the one move one feasible solution approach came out ahead.\\
+
+All these tabus needed to be ranked, given a priority level that would be weighted in the aspiration criteria. Also many of the tabu rules listed above needed some sort of worst case senario handeling, to avoid that the algorithm would get stuck.\\
+\\This said, let's now diskuss the aspiration critera:
+As understood from the text above the aspiration critera needs to incorporate a lot. As a start it needs to have the ability of checking wheter an area is of high or low value. Which then means that the evaluation step in figure [flochart1] needs a fitness calculation function that would depend on the area visited and the shape of the feasible solution. Sad to say this aspiration criteria, would need an overwhelming amount of work to implement. Thus this advanced aspiration criteria was scrapped for a simpler one. This also means that tabu rules (3), (4), (6) and (7) no longer could be implemented. Tabu rule (5) got simplified to:  areas not walked upon where set to be tabu. More about tabu rule (5) later. The more simple aspiration criteria, in the end, only came to be: more of a worst case scenario handling, to avoid the algorithm of getting stuck.\\
+\\Tabu rule (5): When this rule first was implemented the idea was that X number of past complete solutions were analysed to check which areas had been walked upon at least once, and render the rest tabu. The problem was however that this wasn't strict enough. So X was set to one. Which in turn led to a new problem. The problem that arouse was that the algorithm now, under certain circumstances, was too hasty in returning a final solution. This was partially solved by a new stoping criteria and ``go about it again criteria''.\\
 \\
-This setheled we can now move forverd to view the ideas of the tabu list:\\
-In the begingn of the development the ideas fluricht. Seven different rouls wher evalueted:
-\begin{enumerate}
-\item fore one feasible solution save the past X number of moves for each prosuer and render theese moves tabu to be return to.
-\item Not alow moves that results in X number of lost secured areas
-\item Geometri baesed tabus for kritikal areas:
-\subitem mening reegens of corridor like karakter would not be needed to be walkt down if: one saw its end point. Or if one hade an regen whit a obstical that one could walk around, hens it needs two persoer to secure, it would be tabu to go about to try secure it alone. And finaly if one hade a tree like corridor system, going about to solve it would only be alowed with the right amount of prosuers.
-\item Work togheter:
-\subitem somewhat simmular to tabu roul (3) but with the addon that two persouers never rely need to see each other only chare vissebal arias. A more of a genneral roule that would need to be weighted in the aspriation criteria
-\item high Walued areas:
-\subitem trying to inkoperat the idea of LEMMA1 in the way that the path taken, areas walkt appon in a compleet solution chould be given a walu bonus. Or if you look appon it from the ather angel, areas not walkt appon could be sett to be tabu 
-\item low Walued areas:
-\subitem an incomplete solution my have a seris of moves that have bin konsentrated on a spesific regen for to long, hens one could give this areas a walu penalty.
-\item Generly not alow or give walu penaltys to moves in allrady secuered areas.
-\end{enumerate}
-\\
-All this tabus was needed to be rankt, given a priorety level that would be weight in the aspiration criteria. Also many of the tabu rules listed abow needed sume sort of worst case senario handeling, to awoyed the algorithem of getting stuk.\\
-This said lets diskuss the aspiration critera:\\
-As anderstud from the text abow the aspiration critera needs to inkoperat a lott. As a start it needs to have the abilety of cheking if an area is of high or low walu. Which then means that the evaluation step in figure [flochart1] needs a fitness calculation function that would depend on the area visited and the shape of the feasible solution.\\
-Sad to say this aspiration criteria, would need an overwhelming amount of work hours to implement. Thus this advanced aspiration criteria was scrapped for a simpler one. This also means that tabu rules (3), (4), (6) and (7) no longer could be implemented. Tabu rule (5) got simplified to: areas not walked upon where set to be tabu. More about tabu rule (5) later.\\
-The more simple aspiration criteria, in the end, only came to be: more of a worst case scenario handling, to avoid the algorithm of getting stuck.\\
-Tabu rule (5):\\
-When this rule first was implemented the idea was that X number of past complete solutions were analyzed, to check which areas had been walked upon, at least ones, and render the rest tabu.\\
-The problem was however that this wasn’t strict enough. So X was set to one. Which intern led to the arising of another problem\\
-The problem that arouse was that the algorithm now, under certain circumstances, was too hasty in returning a final solution.
-The problem was partially solved by some new stopping criteria and “go about it again criteria”.\\
-\\
-That was the development process of the tabu search algorithm, the final version can be viewed in figure [ ] and also discussed in the next section.\\
+That was the development process of the tabu search algorithm, the final version can be viewed in figure [ ] and is also discussed in the next section.\\
 \subsection{The Tabu search algorithm for our problem}
+%kollat hit!
+%kollat hit.
+%kollat hit.
+%kollat hit.
+%kollat hit.
 
-The tabu search algorithem uesed for solveing the problem will her be disscust.\\
-In figur [generella tabu] a generall step by step explination was maid of the tabu search algorithem. In figur [???] a modified verison can be seen, meening to illustrat the final algorithem and what funktions that was removed in relation to the genneral algorithem.\\
 
-figur [igentligen en figur har]\\
+The tabu search algorithm used for solving the problem be discussed here.\\
+In figur [generella tabu] a generall step by step explanation was made of the tabu search algorithm. In figur [???] a modified version can be seen, intended to illustrate the final algorithm and also to show what functions from to the general algorithm that was removed.\\
+
+\textbf{The following text will be exchanged for a flowchart figure::}\\
 1\\
 Obtain feasible solution by going one step with each pursuer randomly =>2\\
 2\\
@@ -116,51 +109,28 @@ If reached = >6 \\
 If not =>1\\
 6\\
 Terminate algorithm, return final solution\\
+\textbf{end of flowchart figure}\\
 
-To gett a feel for the algorithem and point out insufficiencys, an explination of how the algorithem convergat maghit be in order:\\
-There are tow convergat helping ellements in the algorithem:
+To get a feel for the algorithm and to point out insufficiencys, an explanation of how the algorithm converges is in order.\\
+There are two elements in the algorithm that affect the convergens:
 \begin{enumerate}
-\item Tabu roule (5)
-\item Best-solution-found-so-far stopping criteria 
-\subitem mening that if a solution is found one douse not search for a solution with step length higher then of the one found.
+\item{} Tabu roule (5)
+\item{} Best-solution-found-so-far stopping criteria. 
+\subitem{} Mening that if a solution is found one does not search for a solution with a path of longer length.
 \end{enumerate}
-To note her is that both convergat helping ellements depend on the fakt of actuly having a complet solution. Mening that if the algorithem is unlucky in fainding the furst complet solution, the computational time will rise acordingly.\\
-As a said note, this considerable insufficiency migth have been avoided with the more advansed aspiration critera, disscust in section [develupment].
-
-
-
+To note here is that both convergens helping elements depend on that they actualy hava a complete solution. Meaning that if the algorithm is unlucky in finding the first complete solution, the computational time will rise acordingly. As a said note, this considerable insufficiency migth have been avoided with the more advansed aspiration critera, discussed in section [develupment].
 
 \subsection{Implementation of the Tabu search algorithm}
-
-
+In this section certain important aspects of the implementation will be discussed. With the implementation of the tabu search algorithm, a series of parameter values arouse. Parameter values that had three different features: 
 \begin{enumerate}
-11111\item fore one feasible solution save the past X number of moves for each prosuer and render theese moves tabu to be return to.
-22222\item Not alow moves that results in X number of lost secured areas
-33333\item Geometri baesed tabus for kritikal areas:
-\subitem mening reegens of corridor like karakter would not be needed to be walkt down if: one saw its end point. Or if one hade an regen whit a obstical that one could walk around, hens it needs two persoer to secure, it would be tabu to go about to try secure it alone. And finaly if one hade a tree like corridor system, going about to solve it would only be alowed with the right amount of prosuers.
-4444444\item Work togheter:
-\subitem somewhat simmular to tabu roul (3) but with the addon that two persouers never rely need to see each other only chare vissebal arias. A more of a genneral roule that would need to be weighted in the aspriation criteria
-5555555\item high Walued areas:
-\subitem trying to inkoperat the idea of LEMMA1 in the way that the path taken, areas walkt appon in a compleet solution chould be given a walu bonus. Or if you look appon it from the ather angel, areas not walkt appon could be sett to be tabu 
-666666\item low Walued areas:
-\subitem an incomplete solution my have a seris of moves that have bin konsentrated on a spesific regen for to long, hens one could give this areas a walu penalty.
-77777\item Generly not alow or give walu penaltys to moves in allrady secuered areas.
+\item{} Tabu rule values:
+\subitem{} tabu rule (1)  save_past_X_number_of_moves 
+\subitem{} tabu rule (2)  X_number_of_lost_secured_areas
 
-
-
-
-
-In this section surten important aspekts of the implemetation will be wyued  appon.\\
-With the implementation of the tabu search algorithem, a seris of parameter values arouse. Parameter values that hade tre different features: 
-\begin{enumerate}
-\item Tabu roule values:
-\subitem tabu rule (1)  save_past_X_number_of_moves 
-\subitem tabu rule (2)  X_number_of_lost_secured_areas
-
-\item Stopping criteria values:
-\subitem 
-\item Go agen values:
-\subitem
+\item{} Stopping criteria values:
+\subitem{} 
+\item{} Go agen values:
+\subitem{}
 \end{enumerate}
 
 Tabu regler värden
