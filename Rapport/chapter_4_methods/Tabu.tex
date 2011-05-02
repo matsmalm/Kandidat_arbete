@@ -3,7 +3,6 @@
 Tabu search is a metaheuristic\footnote{ metaheuristic: simmular to heuristic with the add on that it solves the problem iterativly} optimization method, designed to search for the global optimum. Meaning that the method, figuratively, has the ability to climb out of a local minimum, and then explore other parts of the domain. There are several methods on how these abilities can be acquired. Tabu search uses a so-called tabu list, intended to make already visited areas in the domain forbidden (``tabu''). Tabu search has a few conseptual buildingblocks and basic ideas, easy to understand but widely varying in difficulty to implement. Consepts which, if well implemented, will give you a highly sofisticated search algorithm. The core buildingblock is, as mentioned before, the tabu list. The ability to render certain regions or moves tabu enables us to create search strategys built on the information at hand, both for a given moment and from prior experiences of the search. Hence tabu search is all about coming up with intelligent rules, that will set a specific move to be tabu or not. Another key buildingblock is the tabu overriding mechanism, in literature named as the aspiration criteria [glover]. Its jobb is to check whether a certain move should be approved even if it initially was set to be tabu. In addition this means that the existence of the aspiration criteria allowes the tabu list to be more strict. (And the search a lot faster.)\\
 \\
 With these two key buildingblocks one can construct almost any type of logic structure. Which makes the tabu search an highly implementable and adaptive method. A logic structure that can be built upon these two concepts is the actual main idea behind the tabu search method. To understand this concept of tabu search one really needs to get on terms with the random aspects of the algorithm.\\
-
 \\The tabu list and aspiration criteria only deals with the random selected \textbf{path/moves/solutions}, this means that the current solution is not necessarily a good one. One of the strengths of the tabu search algorithms is that \emph{any solution produced tells something about the problem at hand, independent of the solutions' quality.} What this really means is that a bad solution also yields important information.  Or, to quote Thomas Edison 
 
 \begin{quotation}
@@ -13,16 +12,13 @@ successfully discovered 1,000 ways to NOT make a light bulb.''}
 
 
 This insight might seem somewhat basic at first sight, but if implemented in a good way it yields powerful results.\\
-\\
-In this description certain aspects of the tabu search methods are intentionally neglected. This is in order to make the text more understandable.To gain clairity a generalized tabu search algorithm will described below, in a flow chart and step by step pseudo code.\\
+\\In this description certain aspects of the tabu search methods are intentionally neglected. This is in order to make the text more understandable.To gain clairity a generalized tabu search algorithm will described below, in a flow chart and step by step pseudo code.\\
 \\
 skall laggas in I ordbeskrivnings kappitlet\\
 Word convention:\\ 
 Complete solution = a set of moves that have solved the problem.\\
 Incomplete solution = a set of moves that will not solve the problem.\\
 Feasible solution = a set of moves that have not yet solved the problem, or have not yet been evaluated whether it is a complete/incomplete solution.\\
-\\
-
 \begin{enumerate}
 \item{}Obtiain one or more feasible solutions. These are ususally generated randomly.
 \item{}Evaluate the feasible solutions.
@@ -32,7 +28,6 @@ Feasible solution = a set of moves that have not yet solved the problem, or have
 \item[-]{}If it's an incomplete solution, maby save it. Update tabu list and aspiration criteria accordingly. Go to step five.
 \item[-]{}If still a feasible solution, got to step three.\\
 \end{itemize}
-
 \item{}Check it against the tabu list. If not tabu, update tabu list and aspiration criteria accordingly. Go to step five. If tabu, go to step four.
 \item{}Check it against the aspiration criteria. \textbf{Override the tabu list. Update tabu list and aspiration criteria accordingly, go to step five. Not override the tabu list, Go to step five}
 \item{}Check stopping criteria. If reached, go to step six. If not, go to step one.
@@ -128,25 +123,25 @@ With the implementation, a seris of parameter values arouse. Parameter values th
 \begin{enumerate}
 \item Tabu roule values:
 \begin{enumerate}
-\item tabu rule (1)  save_past_X_number_of_moves 
-\item tabu rule (2)  X_number_of_lost_secured_areas
+\item tabu rule (1)  save\_past\_X\_number\_of\_moves 
+\item tabu rule (2)  X\_number\_of\_lost\_secured\_areas
 \end{enumerate} 
 \item aspiration criteria values:
 \begin{enumerate}
-\item Override_X_number_of_lost_secured_areas
-\item Override _save_past_X_number_of_moves
+\item Override\_X\_number\_of\_lost\_secured\_areas
+\item Override \_save\_past\_X\_number\_of\_moves
 \end{enumerate} 
 \item Stopping criteria values:
 \begin{enumerate}
-\item Max_incomplet_solutions_ found _in_a_row
-\item Max_ equal_complet_solutions_ found _in_a_row
-\item Max_allowed_steps
+\item Max\_incomplet\_solutions\_ found \_in\_a\_row
+\item Max\_ equal\_complet\_solutions\_ found \_in\_a\_row
+\item Max\_allowed\_steps
 \end{enumerate} 
 \item Go agen values:
 \begin{enumerate}
-\item Restart_the_algorithmen_X_times
-\item Restart_the_algorithmen_X_times_keep_best_complete_solution
-\item X_steps_is_this_realy_the_best_complet_solution
+\item Restart\_the\_algorithmen\_X\_times
+\item Restart\_the\_algorithmen\_X\_times\_keep\_best\_complete\_solution
+\item X\_steps\_is\_this\_realy\_the\_best\_complet\_solution
 \end{enumerate} 
 \end{enumerate} 
 
@@ -155,7 +150,7 @@ This relations will now be expland:\\
 The Tabu roule values and the aspiration criteria values 
 Paramiter values (1) and (2) has the relation of that (2) ensures that (1) douse not make the algorithem to get stuk.\\
 Parameter valu (4.2) and (4.3) aims to awoyed the algorithem for beeing to hayst in returning a final solution, when enconterd with a less difficult enviroment.\\
-The Max_allowed_steps and Restart_the_algorithmen_X_times tryes to tackel the problem of fainding the furst complet solution. The computational time and the probobility of finding a solution atall totally depends on this relation.\\
+The Max\_allowed\_steps and Restart\_the\_algorithmen\_X\_times tryes to tackel the problem of fainding the furst complet solution. The computational time and the probobility of finding a solution atall totally depends on this relation.\\
 As disscust laite/last in ref[The Tabu search algorithm for our problem] the algorithems computational time will strongly be affected if complet solution is founed late in the search.
-But the computational time will even grater be effekted if one wants to enchur the finding of a solution atall. Mening if The Max_allowed_steps value is increest, the chanses of finding a complet solution incresses 
+But the computational time will even grater be effekted if one wants to enchur the finding of a solution atall. Mening if The Max\_allowed\_steps value is increest, the chanses of finding a complet solution incresses 
 
