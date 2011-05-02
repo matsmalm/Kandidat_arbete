@@ -1,12 +1,14 @@
 \chapter{Problem formulation}
-This paper is an extension of the paper ``A Boolean Control Network Approach to Pursuit Evasion Problems in Polygonal Enviroments'' \cite{paper1}. Our main purpose is to use three conceptualy different heuristic methods to try and construct algorithms that efficiently solves the problem stated in the previous chapter, section 1.4.4. We will also try to implement these algorithms in ANSI C to evaluate the quality and efficency of the algorithms. The efficency is quantified as the run time needed for the algorithm to construct a solution. The quality of the solution is quantified in terms of path length. We will also discuss how the efficency and quality of the solutions depend on the enviroment's size and the number of pursuers.
+%%describe feasible enviroment? referenced to from chapter 3
+
+This paper is an extension of the paper ``A Boolean Control Network Approach to Pursuit Evasion Problems in Polygonal Enviroments'' \cite{paper1}. Our main purpose is to use three conceptualy different heuristic methods to try and construct algorithms that efficiently solves the problem stated in the previous chapter, section 1.4.4. We will also try to implement these algorithms in ANSI C to evaluate the quality and efficency of the algorithms. The efficency is quantified as the runtime needed for the algorithm to construct a solution. The quality of the solution is quantified in terms of path length. We will also discuss how the efficency and quality of the solutions depend on the enviroment's size and the number of pursuers.
 
 \section{Our problem formulation}
-Given the original problem presented in the previous chapter, section 1.4.4. Our aim is to:
+Given the original pursuit \& evasion problem presented in the previous chapter, section 1.4.4. Our aim is to:
 \begin{enumerate}
 \item[-] Construct three heuristic algorithms that solves the problem.
 \item[-] Try to implement the algorithms and evaluate their efficency and the quality of the solutions presented.
-\item[-] If the implementation succeeds. Collect data on the implemented algorithms' results and discuss whether any new conclusions can be made concerning the original problem.
+\item[-] If the implementation succeeds. Collect data on the implemented algorithms' results and discuss whether any new conclusions can be made on how to approach the original problem.
 \end{enumerate}
 
 \section{Our approach}
@@ -23,6 +25,6 @@ The work can be divided into six subtasks, each will be discussed in more detail
 As mentioned in chapter one, section 1.4.5. there are a vast amount of different heuristics. In this report we decided to use the heuristic concepts from greedy methods, tabu search and genetic programming to construct the algorithms. Greedy methods are local and deterministic in their approach. Both tabu search and genetic algorithms are stocastic and global in their approach, but they differ significantly in how they examine and construct feasible solutions. We have intentionally chosen our methods so that each method strongly differs in its characteristics from the other two. The reason for this descision was that we wanted to see if some conclusion could be made about if any specific characteristics would be favorable for solving our problem.\\
 \\The subtask to construct the algorithms is selfexplanatory in what it means. More information about the process is given in chapter four.\\
 \\Since the problem is NP-hard and the algorithms are heuristic the need for an simulation enviroment is obvious. All implementations are made in ANSI C, due to computational efficency. The requirements on the simulation enviroment is to construct random feasible enviroments of specified size for the problem, run all algorithms on the enviroment and print the results into a file. A more indepth description of how the simulation enviroment is implemented can be read in chapter three.\\
-\\The subtask of implementating the algorithms is also self explanatory in what it means. More information about the implementation of the algorithms is found in chapter four.\\
+\\The subtask of implementing the algorithms is also self explanatory in what it means. More information about the implementation of the algorithms is found in chapter four.\\
 \\Once all the implementations are done, simulations will be executed to collect data. The output data collected is runtime and solution path from each algorithm. Also the enviroments' size, density and number of pursuers is known for each execution. The results are presented and discussed in chapter five and six.
  
