@@ -19,21 +19,12 @@ Word convention:\\
 Complete solution = a set of moves that have solved the problem.\\
 Incomplete solution = a set of moves that will not solve the problem.\\
 Feasible solution = a set of moves that have not yet solved the problem, or have not yet been evaluated whether it is a complete/incomplete solution.\\
-\begin{enumerate}
-\item{}Obtiain one or more feasible solutions. These are ususally generated randomly.
-\item{}Evaluate the feasible solutions.
-\begin{itemize}
-\item[-]{}If it's a complete solution, save it. Update tabu list and aspiration criteria accordingly. Go to step five.
-\item[-]{}If it's a new best complete solution, save it. Update the tabu list, the aspiration criteria and the stopping criteria accordingly. Go to step five.
-\item[-]{}If it's an incomplete solution, maby save it. Update tabu list and aspiration criteria accordingly. Go to step five.
-\item[-]{}If still a feasible solution, got to step three.\\
-\end{itemize}
-\item{}Check it against the tabu list. If not tabu, update tabu list and aspiration criteria accordingly. Go to step five. If tabu, go to step four.
-\item{}Check it against the aspiration criteria. \textbf{Override the tabu list. Update tabu list and aspiration criteria accordingly, go to step five. Not override the tabu list, Go to step five}
-\item{}Check stopping criteria. If reached, go to step six. If not, go to step one.
-\item{}Terminate algorithm, return final solution.
-\end {enummerate}
-
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\textwidth]{chapter_4_methods/tabu_generell.jpg}
+  	\caption[Generic flow chart of tabu algorithm]
+  	{Flow chart of tabu algorithm}
+\end{figure}
 
 
 \subsection{Development process of the Tabu search algorithm}
@@ -62,7 +53,7 @@ This settled we can now move forward to view the ideas of the tabu list. In the 
 \subitem{} Trying to incorporate the idea of getting information even from bad solutions. This would be made by considering the path taken, areas walked upon in a complete solution should be given a value bonus. Or if you look upon it from another angle, areas not walked upon could be set to be tabu. 
 \item{} Low valued areas:
 \subitem {}An incomplete solution may have a series of moves that have been concentrated on a specific region for to long, hence one could give this areas a value penalty.
-\item{} Not alow, or give value penaltys to� moves in already secured areas.
+\item{} Not alow, or give value penaltys to moves in already secured areas.
 \end{enumerate}
 
 All these tabus needed to be ranked, given a priority level that would be weighted in the aspiration criteria. Also many of the tabu rules listed above needed some sort of worst case senario handeling, to avoid that the algorithm would get stuck.\\
@@ -82,29 +73,12 @@ That was the development process of the tabu search algorithm, the final version
 The tabu search algorithm used for solving the problem be discussed here.\\
 In figur [generella tabu] a generall step by step explanation was made of the tabu search algorithm. In figur [???] a modified version can be seen, intended to illustrate the final algorithm and also to show what functions from to the general algorithm that was removed.\\
 
-\textbf{The following text will be exchanged for a flowchart figure::}\\
-1\\
-Obtain feasible solution by going one step with each pursuer randomly =>2\\
-2\\
-Evaluation of the feasible solution\\
-If it is a new best complete solution, save it. Update the tabu list, the aspiration criteria and the stopping criteria accordingly. =>5\\
-If it is an incomplete solution. Update stopping criteria accordingly. =>5\\
-If still a feasible solution => 3\\
-3\\
-Check it against the tabu list:\\
-If not tabu. Update tabu list and aspiration criteria accordingly =>5\\
-If tabu => 4\\
-4\\
-Check it against the aspiration criteria:\\
-Override the tabu list. Update tabu list and aspiration criteria accordingly => 5\\
-Not override the tabu list=>5\\
-5\\
-Check stopping criteria\\
-If reached = >6 \\
-If not =>1\\
-6\\
-Terminate algorithm, return final solution\\
-\textbf{end of flowchart figure}\\
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\textwidth]{chapter_4_methods/tabu_ny.jpg}
+  	\caption[Final algorithm flow chart of tabu algorithm]
+  	{Final algorithm flow chart of tabu algorithm}
+\end{figure}
 
 To get a feel for the algorithm and to point out insufficiencys, an explanation of how the algorithm converges is in order.\\
 There are two elements in the algorithm that affect the convergens:
