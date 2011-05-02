@@ -1,10 +1,10 @@
 \section{The Tabu search method approach}
 \subsection{Description of Tabu search method}
-Tabu search is a metaheuristic\footnote{ metaheuristic: simmular to heuristic with the add on that it solves the problem iterativly} optimization method, designed to search for the global optimum. Meaning that the method, figuratively, has the ability to climb out of a local minimum, and then explore other parts of the domain. There are several methods on how these abilities can be acquired. Tabu search uses a so-called tabu list, intended to make already visited areas in the domain forbidden (``tabu''). Tabu search has a few conseptual buildingblocks and basic ideas, easy to understand but widely varying in difficulty to implement. Consepts which, if well implemented, will give you a highly sofisticated search algorithm. The core buildingblock is, as mentioned before, the tabu list. The ability to render certain regions or moves tabu enables us to create search strategys built on the information at hand, both for a given moment and from prior experiences of the search. Hence tabu search is all about coming up with intelligent rules, that will set a specific move to be tabu or not. Another key buildingblock is the tabu overriding mechanism, in literature named as the aspiration criteria [glover]. Its jobb is to check whether a certain move should be approved even if it initially was set to be tabu. In addition this means that the existence of the aspiration criteria allowes the tabu list to be more strict. (And the search a lot faster.)\\
+Tabu search is a metaheuristic \footnote{ metaheuristic: simmular to heuristic with the add on that it solves the problem iterativly} optimization method, designed to search for the global optimum. Meaning that the method, figuratively, has the ability to climb out of a local minimum, and then explore other parts of the domain. There are several methods on how these abilities can be acquired. Tabu search uses a so-called tabu list, intended to make already visited areas in the domain forbidden (``tabu''). Tabu search has a few conseptual buildingblocks and basic ideas, easy to understand but widely varying in difficulty to implement. Consepts which, if well implemented, will give you a highly sofisticated search algorithm. The core buildingblock is, as mentioned before, the tabu list. The ability to render certain regions or moves tabu enables us to create search strategys built on the information at hand, both for a given moment and from prior experiences of the search. Hence tabu search is all about coming up with intelligent rules, that will set a specific move to be tabu or not. Another key buildingblock is the tabu overriding mechanism, in literature named as the aspiration criteria [glover]. Its jobb is to check whether a certain move should be approved even if it initially was set to be tabu. In addition this means that the existence of the aspiration criteria allowes the tabu list to be more strict. (And the search a lot faster.)\\
 \\
 With these two key buildingblocks one can construct almost any type of logic structure. Which makes the tabu search an highly implementable and adaptive method. A logic structure that can be built upon these two concepts is the actual main idea behind the tabu search method. To understand this concept of tabu search one really needs to get on terms with the random aspects of the algorithm.\\
-
-\\The tabu list and aspiration criteria only deals with the random selected \textbf{path/moves/solutions}, this means that the current solution is not necessarily a good one. One of the strengths of the tabu search algorithms is that \emph{any solution produced tells something about the problem at hand, independent of the solutions' quality.} What this really means is that a bad solution also yields important information.  Or, to quote Thomas Edison 
+\\
+The tabu list and aspiration criteria only deals with the random selected \textbf{path/moves/solutions}, this means that the current solution is not necessarily a good one. One of the strengths of the tabu search algorithms is that \emph{any solution produced tells something about the problem at hand, independent of the solutions' quality.} What this really means is that a bad solution also yields important information.  Or, to quote Thomas Edison 
 
 \begin{quotation}
 \emph{``I have not failed 1,000 times.  I have
@@ -37,7 +37,7 @@ Feasible solution = a set of moves that have not yet solved the problem, or have
 \item{}Check it against the aspiration criteria. \textbf{Override the tabu list. Update tabu list and aspiration criteria accordingly, go to step five. Not override the tabu list, Go to step five}
 \item{}Check stopping criteria. If reached, go to step six. If not, go to step one.
 \item{}Terminate algorithm, return final solution.
-\end {enummerate}
+\end {enumerate}
 
 
 
@@ -121,49 +121,49 @@ There are two elements in the algorithm that affect the convergens:
 To note here is that both convergens helping elements depend on that they actualy hava a complete solution. Meaning that if the algorithm is unlucky in finding the first complete solution, the computational time will rise acordingly. As a said note, this considerable insufficiency migth have been avoided with the more advansed aspiration critera, discussed in section [develupment].
 
 \subsection{Implementation of the Tabu search algorithm}
-In this section certain important aspects of the implementation will be discussed. With the implementation of the tabu search algorithm, a series of parameter values arouse. Parameter values that had three different features: 
-\begin{enumerate}
-\item{} Tabu rule values:
-\subitem{} tabu rule (1)  save_past_X_number_of_moves 
-\subitem{} tabu rule (2)  X_number_of_lost_secured_areas
+%In this section certain important aspects of the implementation will be discussed. With the implementation of the tabu search algorithm, a series of parameter values arouse. Parameter values that had three different features: 
+%\begin{enumerate}
+%\item{} Tabu rule values:
+%\subitem{} tabu rule (1)  save_past_X_number_of_moves 
+%\subitem{} tabu rule (2)  X_number_of_lost_secured_areas
 
-\item{} Stopping criteria values:
-\subitem{} 
-\item{} Go agen values:
-\subitem{}
-\end{enumerate}
+%\item{} Stopping criteria values:
+%\subitem{} 
+%\item{} Go agen values:
+%\subitem{}
+%\end{enumerate}
 
-Tabu regler värden
-Brytvilkor
-Go agen caracter
+%Tabu regler värden
+%Brytvilkor
+%Go agen caracter
+%
+%#define max_step_minus_in_L_list 20 				
+%#define allowed_stat_4_loss 1				
+%#define max_antal_INcomplete_tabu_solutions 800
+%#define TABU_MAX_LIKA 8
+%#define MAX_TABU_STEPS 100	
+%#define START_FROM_THE_BEGINING_AGEN_NUMBER 20
+%#define to_easy_problem_problem_adjustment_set_nr_steps_to 6
+%#define to_easy_problem_problem_adjustment_go_agen_nr 4
+%#define Mss_L_fuck_up 5000
+%#define Mss_30 30
 
-#define max_step_minus_in_L_list 20 				
-#define allowed_stat_4_loss 1				
-#define max_antal_INcomplete_tabu_solutions 800
-#define TABU_MAX_LIKA 8
-#define MAX_TABU_STEPS 100	
-#define START_FROM_THE_BEGINING_AGEN_NUMBER 20 		
-#define to_easy_problem_problem_adjustment_set_nr_steps_to 6		
-#define to_easy_problem_problem_adjustment_go_agen_nr 4	
-#define Mss_L_fuck_up 5000
-#define Mss_30 30
-
-Vad ska skrivas hära:
-Punktform:
-•	Random genereringen fesabal solution probelmet köra tills en CompSolution är funnen sen börjar algen AVKLARAD
-•	Parametrarna beskrivning av och varför dessa. 
-•	Tydliga tillkortackommanden inte kunna stå still!!
-•	Beskrivning av K listan
-•	Beskrivning av L listan
-•	Beskrivning av 30 listan
-
-
+%Vad ska skrivas hära:
+%Punktform:
+%•	Random genereringen fesabal solution probelmet köra tills en CompSolution är funnen sen börjar algen AVKLARAD
+%•	Parametrarna beskrivning av och varför dessa. 
+%•	Tydliga tillkortackommanden inte kunna stå still!!
+%•	Beskrivning av K listan
+%•	Beskrivning av L listan
+%•	Beskrivning av 30 listan
 
 
 
-Skiva ner pretabu
-Tabu 
-Uppdelning etc
-Beskrivning av sättningen av parametrarna List K list 
-Alla konstiga utskrifter grejen
-Hur dom jävla tabuvilkoren hanterades ,ordningen av koden.
+
+
+%Skiva ner pretabu
+%Tabu 
+%Uppdelning etc
+%Beskrivning av sättningen av parametrarna List K list 
+%Alla konstiga utskrifter grejen
+%Hur dom jävla tabuvilkoren hanterades ,ordningen av koden.
