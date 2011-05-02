@@ -67,7 +67,7 @@ This settled we can now move forward to view the ideas of the tabu list. In the 
 \subitem{} Trying to incorporate the idea of getting information even from bad solutions. This would be made by considering the path taken, areas walked upon in a complete solution should be given a value bonus. Or if you look upon it from another angle, areas not walked upon could be set to be tabu. 
 \item{} Low valued areas:
 \subitem {}An incomplete solution may have a series of moves that have been concentrated on a specific region for to long, hence one could give this areas a value penalty.
-\item{} Not alow, or give value penaltys to� moves in already secured areas.
+\item{} Not alow, or give value penaltys to� moves in already secured areas.
 \end{enumerate}
 
 All these tabus needed to be ranked, given a priority level that would be weighted in the aspiration criteria. Also many of the tabu rules listed above needed some sort of worst case senario handeling, to avoid that the algorithm would get stuck.\\
@@ -121,49 +121,41 @@ There are two elements in the algorithm that affect the convergens:
 To note here is that both convergens helping elements depend on that they actualy hava a complete solution. Meaning that if the algorithm is unlucky in finding the first complete solution, the computational time will rise acordingly. As a said note, this considerable insufficiency migth have been avoided with the more advansed aspiration critera, discussed in section [develupment].
 
 \subsection{Implementation of the Tabu search algorithm}
-In this section certain important aspects of the implementation will be discussed. With the implementation of the tabu search algorithm, a series of parameter values arouse. Parameter values that had three different features: 
+
+In this section tow important aspekts of the implemetation will be wyued  appon.
+This tow are obvious shortcomings in the algorithm and paramiter values.\\
+With the implementation, a seris of parameter values arouse. Parameter values that hade tre different features: 
 \begin{enumerate}
-\item{} Tabu rule values:
-\subitem{} tabu rule (1)  save_past_X_number_of_moves 
-\subitem{} tabu rule (2)  X_number_of_lost_secured_areas
+\item Tabu roule values:
+\begin{enumerate}
+\item tabu rule (1)  save_past_X_number_of_moves 
+\item tabu rule (2)  X_number_of_lost_secured_areas
+\end{enumerate} 
+\item aspiration criteria values:
+\begin{enumerate}
+\item Override_X_number_of_lost_secured_areas
+\item Override _save_past_X_number_of_moves
+\end{enumerate} 
+\item Stopping criteria values:
+\begin{enumerate}
+\item Max_incomplet_solutions_ found _in_a_row
+\item Max_ equal_complet_solutions_ found _in_a_row
+\item Max_allowed_steps
+\end{enumerate} 
+\item Go agen values:
+\begin{enumerate}
+\item Restart_the_algorithmen_X_times
+\item Restart_the_algorithmen_X_times_keep_best_complete_solution
+\item X_steps_is_this_realy_the_best_complet_solution
+\end{enumerate} 
+\end{enumerate} 
 
-\item{} Stopping criteria values:
-\subitem{} 
-\item{} Go agen values:
-\subitem{}
-\end{enumerate}
+As can be seen in the list abow sume of the parameters has strong relations to echuder. 
+This relations will now be expland:\\
+The Tabu roule values and the aspiration criteria values 
+Paramiter values (1) and (2) has the relation of that (2) ensures that (1) douse not make the algorithem to get stuk.\\
+Parameter valu (4.2) and (4.3) aims to awoyed the algorithem for beeing to hayst in returning a final solution, when enconterd with a less difficult enviroment.\\
+The Max_allowed_steps and Restart_the_algorithmen_X_times tryes to tackel the problem of fainding the furst complet solution. The computational time and the probobility of finding a solution atall totally depends on this relation.\\
+As disscust laite/last in ref[The Tabu search algorithm for our problem] the algorithems computational time will strongly be affected if complet solution is founed late in the search.
+But the computational time will even grater be effekted if one wants to enchur the finding of a solution atall. Mening if The Max_allowed_steps value is increest, the chanses of finding a complet solution incresses 
 
-Tabu regler värden
-Brytvilkor
-Go agen caracter
-
-#define max_step_minus_in_L_list 20 				
-#define allowed_stat_4_loss 1				
-#define max_antal_INcomplete_tabu_solutions 800
-#define TABU_MAX_LIKA 8
-#define MAX_TABU_STEPS 100	
-#define START_FROM_THE_BEGINING_AGEN_NUMBER 20 		
-#define to_easy_problem_problem_adjustment_set_nr_steps_to 6		
-#define to_easy_problem_problem_adjustment_go_agen_nr 4	
-#define Mss_L_fuck_up 5000
-#define Mss_30 30
-
-Vad ska skrivas hära:
-Punktform:
-•	Random genereringen fesabal solution probelmet köra tills en CompSolution är funnen sen börjar algen AVKLARAD
-•	Parametrarna beskrivning av och varför dessa. 
-•	Tydliga tillkortackommanden inte kunna stå still!!
-•	Beskrivning av K listan
-•	Beskrivning av L listan
-•	Beskrivning av 30 listan
-
-
-
-
-
-Skiva ner pretabu
-Tabu 
-Uppdelning etc
-Beskrivning av sättningen av parametrarna List K list 
-Alla konstiga utskrifter grejen
-Hur dom jävla tabuvilkoren hanterades ,ordningen av koden.
