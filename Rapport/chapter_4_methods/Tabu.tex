@@ -3,8 +3,9 @@
 Tabu search is a metaheuristic \footnote{ metaheuristic: simmular to heuristic with the add on that it solves the problem iterativly} optimization method, designed to search for the global optimum. Meaning that the method, figuratively, has the ability to climb out of a local minimum, and then explore other parts of the domain. There are several methods on how these abilities can be acquired. Tabu search uses a so-called tabu list, intended to make already visited areas in the domain forbidden (``tabu''). Tabu search has a few conseptual buildingblocks and basic ideas, easy to understand but widely varying in difficulty to implement. Consepts which, if well implemented, will give you a highly sofisticated search algorithm. The core buildingblock is, as mentioned before, the tabu list. The ability to render certain regions or moves tabu enables us to create search strategys built on the information at hand, both for a given moment and from prior experiences of the search. Hence tabu search is all about coming up with intelligent rules, that will set a specific move to be tabu or not. Another key buildingblock is the tabu overriding mechanism, in literature named as the aspiration criteria [glover]. Its jobb is to check whether a certain move should be approved even if it initially was set to be tabu. In addition this means that the existence of the aspiration criteria allowes the tabu list to be more strict. (And the search a lot faster.)\\
 \\
 With these two key buildingblocks one can construct almost any type of logic structure. Which makes the tabu search an highly implementable and adaptive method. A logic structure that can be built upon these two concepts is the actual main idea behind the tabu search method. To understand this concept of tabu search one really needs to get on terms with the random aspects of the algorithm.\\
-\\
-The tabu list and aspiration criteria only deals with the random selected \textbf{path/moves/solutions}, this means that the current solution is not necessarily a good one. One of the strengths of the tabu search algorithms is that \emph{any solution produced tells something about the problem at hand, independent of the solutions' quality.} What this really means is that a bad solution also yields important information.  Or, to quote Thomas Edison 
+
+\\The tabu list and aspiration criteria only deals with the random selected \textbf{path/moves/solutions}, this means that the current solution is not necessarily a good one. One of the strengths of the tabu search algorithms is that \emph{any solution produced tells something about the problem at hand, independent of the solutions' quality.} What this really means is that a bad solution also yields important information.  Or, to quote Thomas Edison 
+
 
 \begin{quotation}
 \emph{``I have not failed 1,000 times.  I have
@@ -13,32 +14,20 @@ successfully discovered 1,000 ways to NOT make a light bulb.''}
 
 
 This insight might seem somewhat basic at first sight, but if implemented in a good way it yields powerful results.\\
-\\
-In this description certain aspects of the tabu search methods are intentionally neglected. This is in order to make the text more understandable.To gain clairity a generalized tabu search algorithm will described below, in a flow chart and step by step pseudo code.\\
+\\In this description certain aspects of the tabu search methods are intentionally neglected. This is in order to make the text more understandable.To gain clairity a generalized tabu search algorithm will described below, in a flow chart and step by step pseudo code.\\
 \\
 skall laggas in I ordbeskrivnings kappitlet\\
 Word convention:\\ 
 Complete solution = a set of moves that have solved the problem.\\
 Incomplete solution = a set of moves that will not solve the problem.\\
 Feasible solution = a set of moves that have not yet solved the problem, or have not yet been evaluated whether it is a complete/incomplete solution.\\
-\\
 
-\begin{enumerate}
-\item{}Obtiain one or more feasible solutions. These are ususally generated randomly.
-\item{}Evaluate the feasible solutions.
-\begin{itemize}
-\item[-]{}If it's a complete solution, save it. Update tabu list and aspiration criteria accordingly. Go to step five.
-\item[-]{}If it's a new best complete solution, save it. Update the tabu list, the aspiration criteria and the stopping criteria accordingly. Go to step five.
-\item[-]{}If it's an incomplete solution, maby save it. Update tabu list and aspiration criteria accordingly. Go to step five.
-\item[-]{}If still a feasible solution, got to step three.\\
-\end{itemize}
-
-\item{}Check it against the tabu list. If not tabu, update tabu list and aspiration criteria accordingly. Go to step five. If tabu, go to step four.
-\item{}Check it against the aspiration criteria. \textbf{Override the tabu list. Update tabu list and aspiration criteria accordingly, go to step five. Not override the tabu list, Go to step five}
-\item{}Check stopping criteria. If reached, go to step six. If not, go to step one.
-\item{}Terminate algorithm, return final solution.
-\end {enumerate}
-
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\textwidth]{chapter_4_methods/tabu_generell.jpg}
+  	\caption[Generic flow chart of tabu algorithm]
+  	{Flow chart of tabu algorithm}
+\end{figure}
 
 
 \subsection{Development process of the Tabu search algorithm}
@@ -67,7 +56,7 @@ This settled we can now move forward to view the ideas of the tabu list. In the 
 \subitem{} Trying to incorporate the idea of getting information even from bad solutions. This would be made by considering the path taken, areas walked upon in a complete solution should be given a value bonus. Or if you look upon it from another angle, areas not walked upon could be set to be tabu. 
 \item{} Low valued areas:
 \subitem {}An incomplete solution may have a series of moves that have been concentrated on a specific region for to long, hence one could give this areas a value penalty.
-\item{} Not alow, or give value penaltys to� moves in already secured areas.
+\item{} Not alow, or give value penaltys to moves in already secured areas.
 \end{enumerate}
 
 All these tabus needed to be ranked, given a priority level that would be weighted in the aspiration criteria. Also many of the tabu rules listed above needed some sort of worst case senario handeling, to avoid that the algorithm would get stuck.\\
@@ -87,29 +76,12 @@ That was the development process of the tabu search algorithm, the final version
 The tabu search algorithm used for solving the problem be discussed here.\\
 In figur [generella tabu] a generall step by step explanation was made of the tabu search algorithm. In figur [???] a modified version can be seen, intended to illustrate the final algorithm and also to show what functions from to the general algorithm that was removed.\\
 
-\textbf{The following text will be exchanged for a flowchart figure::}\\
-1\\
-Obtain feasible solution by going one step with each pursuer randomly =>2\\
-2\\
-Evaluation of the feasible solution\\
-If it is a new best complete solution, save it. Update the tabu list, the aspiration criteria and the stopping criteria accordingly. =>5\\
-If it is an incomplete solution. Update stopping criteria accordingly. =>5\\
-If still a feasible solution => 3\\
-3\\
-Check it against the tabu list:\\
-If not tabu. Update tabu list and aspiration criteria accordingly =>5\\
-If tabu => 4\\
-4\\
-Check it against the aspiration criteria:\\
-Override the tabu list. Update tabu list and aspiration criteria accordingly => 5\\
-Not override the tabu list=>5\\
-5\\
-Check stopping criteria\\
-If reached = >6 \\
-If not =>1\\
-6\\
-Terminate algorithm, return final solution\\
-\textbf{end of flowchart figure}\\
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\textwidth]{chapter_4_methods/tabu_ny.jpg}
+  	\caption[Final algorithm flow chart of tabu algorithm]
+  	{Final algorithm flow chart of tabu algorithm}
+\end{figure}
 
 To get a feel for the algorithm and to point out insufficiencys, an explanation of how the algorithm converges is in order.\\
 There are two elements in the algorithm that affect the convergens:
@@ -121,49 +93,39 @@ There are two elements in the algorithm that affect the convergens:
 To note here is that both convergens helping elements depend on that they actualy hava a complete solution. Meaning that if the algorithm is unlucky in finding the first complete solution, the computational time will rise acordingly. As a said note, this considerable insufficiency migth have been avoided with the more advansed aspiration critera, discussed in section [develupment].
 
 \subsection{Implementation of the Tabu search algorithm}
-%In this section certain important aspects of the implementation will be discussed. With the implementation of the tabu search algorithm, a series of parameter values arouse. Parameter values that had three different features: 
-%\begin{enumerate}
-%\item{} Tabu rule values:
-%\subitem{} tabu rule (1)  save_past_X_number_of_moves 
-%\subitem{} tabu rule (2)  X_number_of_lost_secured_areas
+In this section tow important aspekts of the implemetation will be wyued  appon.
+This tow are obvious shortcomings in the algorithm and paramiter values.\\
+With the implementation, a seris of parameter values arouse. Parameter values that hade tre different features: 
+\begin{enumerate}
+\item Tabu roule values:
+\begin{enumerate}
+\item tabu rule (1)  save\_past\_X\_number\_of\_moves 
+\item tabu rule (2)  X\_number\_of\_lost\_secured\_areas
+\end{enumerate} 
+\item aspiration criteria values:
+\begin{enumerate}
+\item Override\_X\_number\_of\_lost\_secured\_areas
+\item Override \_save\_past\_X\_number\_of\_moves
+\end{enumerate} 
+\item Stopping criteria values:
+\begin{enumerate}
+\item Max\_incomplet\_solutions\_ found \_in\_a\_row
+\item Max\_ equal\_complet\_solutions\_ found \_in\_a\_row
+\item Max\_allowed\_steps
+\end{enumerate} 
+\item Go agen values:
+\begin{enumerate}
+\item Restart\_the\_algorithmen\_X\_times
+\item Restart\_the\_algorithmen\_X\_times\_keep\_best\_complete\_solution
+\item X\_steps\_is\_this\_realy\_the\_best\_complet\_solution
+\end{enumerate} 
+\end{enumerate} 
 
-%\item{} Stopping criteria values:
-%\subitem{} 
-%\item{} Go agen values:
-%\subitem{}
-%\end{enumerate}
-
-%Tabu regler värden
-%Brytvilkor
-%Go agen caracter
-%
-%#define max_step_minus_in_L_list 20 				
-%#define allowed_stat_4_loss 1				
-%#define max_antal_INcomplete_tabu_solutions 800
-%#define TABU_MAX_LIKA 8
-%#define MAX_TABU_STEPS 100	
-%#define START_FROM_THE_BEGINING_AGEN_NUMBER 20
-%#define to_easy_problem_problem_adjustment_set_nr_steps_to 6
-%#define to_easy_problem_problem_adjustment_go_agen_nr 4
-%#define Mss_L_fuck_up 5000
-%#define Mss_30 30
-
-%Vad ska skrivas hära:
-%Punktform:
-%•	Random genereringen fesabal solution probelmet köra tills en CompSolution är funnen sen börjar algen AVKLARAD
-%•	Parametrarna beskrivning av och varför dessa. 
-%•	Tydliga tillkortackommanden inte kunna stå still!!
-%•	Beskrivning av K listan
-%•	Beskrivning av L listan
-%•	Beskrivning av 30 listan
-
-
-
-
-
-%Skiva ner pretabu
-%Tabu 
-%Uppdelning etc
-%Beskrivning av sättningen av parametrarna List K list 
-%Alla konstiga utskrifter grejen
-%Hur dom jävla tabuvilkoren hanterades ,ordningen av koden.
+As can be seen in the list abow sume of the parameters has strong relations to echuder. 
+This relations will now be expland:\\
+The Tabu roule values and the aspiration criteria values 
+Paramiter values (1) and (2) has the relation of that (2) ensures that (1) douse not make the algorithem to get stuk.\\
+Parameter valu (4.2) and (4.3) aims to awoyed the algorithem for beeing to hayst in returning a final solution, when enconterd with a less difficult enviroment.\\
+The Max\_allowed\_steps and Restart\_the\_algorithmen\_X\_times tryes to tackel the problem of fainding the furst complet solution. The computational time and the probobility of finding a solution atall totally depends on this relation.\\
+As disscust laite/last in ref[The Tabu search algorithm for our problem] the algorithems computational time will strongly be affected if complet solution is founed late in the search.
+But the computational time will even grater be effekted if one wants to enchur the finding of a solution atall. Mening if The Max\_allowed\_steps value is increest, the chanses of finding a complet solution incresses 
