@@ -8,17 +8,12 @@ Due to the need to simulate the population and evaluate individuals, often multi
 %% Variations / Generational / Steady-state
 There are different ways to implement genetic algorithms, with variations in how each step is performed. This yields many different versions of genetic algorithms. Firstly there are two different kinds of GAs, steady-state and generational, where steady-state maintains and alters one population and generational replaces an old population with a new one.\\
 A GA can be described by the following steps:
-\begin{enumerate}
-\item Initial population
-\item Repeat:
-\subitem Evaluation
-\subitem Breeding
-\subsubitem Selection
-\subsubitem Crossing
-\subsubitem Mutation
-\subsubitem Replacement
-\subitem Search Termination
-\end{enumerate}
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\textwidth]{chapter_4_methods/GeneticFlowChart-Generic.jpg}
+  	\caption[Generic flowchart of a genetic algorithm]
+  	{Generic flowchart of a genetic algorithm}
+\end{figure}
 %% Initial population
 At first an initial population has to be obtained, either an existing set of solutions or created in some way.\\
 %% Evaluation / Fitness function
@@ -87,7 +82,12 @@ Each individual was evaluated using \eqref{fitness3}, and sorted by fitness in d
 The two individuals with the best fitness value was added to the new population, and thereafter the selection process selected individuals for breeding. Fitness proportionate selection was used, in which the sum of the fitness value was calculated and a random number between 0 and the sum was generated. The fitness was thereafter added for each individual until that number was reached, and that individual was selected. This was repeated to select a second parent. The crossover was copying genes alternating between each parent, so that two different children were created. A mutation step was performed with 75\% probability, where an allele from one of the gene was replaced as described in the previous subsection. Finally the best individuals of the parents and children was  placed in the new population, and the step is repeated until a new population of the same size as the previous was created.
 %% Termination
 As a termination criteria the fitness score of up to 99\%\footnote{Values between 75\% and 99\% was used} of the population was compared. If the individuals had completely cleared the environment and had an equal fitness score, the algorithm was terminated. As 99\% is a very high convergence criteria, it was only used for small environments to avoid premature termination. As a second termination criteria the maximum number of generations was set to 800, to make sure the algorithm would terminate even if no solution was found.
-
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\textwidth]{chapter_4_methods/GeneticFlowChart-Algorithm.jpg}
+  	\caption[Flowchart of the implemented genetic algorithm]
+  	{Flowchart of the implemented genetic algorithm}
+\end{figure}
 \subsection{Our implementation of the genetic algorithm}
 The algorithm was implemented using C. Every time a random value was to be obtained \begin{verbatim} ((int)((double)rand() / ((double)RAND_MAX + 1)*SCALE_FACTOR)); \end{verbatim} was used, which generates a number in the range [0,SCALE\_FACTOR). As a random seed number \begin{verbatim} srand(time(0))\end{verbatim} was used. No alternative random functions were evaluated.\\
 For sorting the population, quicksort was used \cite{quicksort}.\\
