@@ -2,14 +2,8 @@
 
 \section{Objective}
 
-The goal of this research is to solve pursuit \& evasion problems in a two dimensional environment, using heuristic problem solving methods.
-The problem is fully explained in section 1.4.4. In a more relaxed manor it can be formulated as "given an environment with static obstacles and a specific number of pursuers, ensure that an evader cannot exist within the environment."
-
-An algorithm providing an optimal solution already exists.
-The problem yet to be solved is the problem of finding a solution within a reasonable computational time. This is here where heuristic methods could provide interesting results.
-
-With risk for loss of optimality, our goal is to use heuristic methods to find a solution within a reasonable computational time.
- 
+The aim of this paper is to construct heuristic algorithms that solve the  pursuit \& evasion problem for a two dimensional polygonal environment. The origninal pursuit \& evasion problem is fully formulated in section 1.4.4. Informally it can be formulated as``given an static environment with obstacles, and a specific number of pursuers, ensure that an evader cannot exist within the environment''. An algorithm providing an optimal solution already exists \cite{paper2}. In practice this algorithm is not very applicable though, since even for small areas the time complexity is considerable. This is where heuristic methods could provide interesting results. By sacrificing the optimality, our aim is to use heuristic methods to try and find a sufficiently good solution within a reasonable computational time.
+ %ta bort organisation?? upplägget står ändå i innehållsförteckningen....
 \section{Organization of the report}
 \begin{description}
 \item Chapter 2 contains a detailed formulation of the problem and are approach to it.
@@ -19,25 +13,19 @@ With risk for loss of optimality, our goal is to use heuristic methods to find a
 \item Chapter 6 contains a discussion of our results and a comparison.
 \item Chapter 7 contains conclusions of our work.
 \end{description}
-
+%ta bort? vi har ändå inte något att säga, annat än att vi bygger vidare på boolean control, men det framgår av referns-användandet...
 \section{Related work}
 
 Our work is based on the work of papers \cite{paper1}-\cite{paper3}.
 
 \section{Background}
 
-\subsection{What is optimization}
+\subsection{What is optimization?}
+Optimization is a mathematical discipline for solving various types of problems. The aim is to find the best available value of some objective function, given a defined domain.% Refer to other literature?
+The mathematical theory behind optimization offers a variety of methods to solve a wide range of problems. To approach these problems and, find a solution, it is important to identify the characteristics of the problem considered. Relevant distinctions can be made by studying the problem's complexity. Complexity is strongly related to the computational time. There are many different complexity classes of problems, but two of the most fundamental are the P and NP.
 
-Optimization is a mathematical discipline for solving various types of problems. The aim is to find the best available value of some objective function, given a defined domain.
-% Refer to other literature?
-
-Optimization theory offers a variety of solution methods to a wide range of problems. To approach theses problems and find a solution, it is important to identify what kind of problem one deals with.
-Relevant distinctions can be made by studying the problem's complexity.
-
-Complexity is strongly related to the computational time. There are many different complexity classes of problems, but two of the most fundamental are the P and NP.
-
-\subsection{P \& NP problems}
-
+\subsection{P \& NP problems.}
+%skriva om hela sektionen??
 The distinction between these two reveals the difficulty of our problem. This will only be a brief description, for a more detailed and interesting description please see \cite{NP}.
 
 P is the set of problems which can be solved by a deterministic Turing machine using a polynomial amount of computation time.
@@ -59,24 +47,17 @@ Within the class NP there are a few subclasses one of them are called NP-hard
 Related work has stated that the problem studied in this report are in fact of the class NP-hard \cite{paper1}, % Is it paper one?
 and hence the chances of finding an algorithm that produces an optimal solution in polynomial time are greatly reduced. As stated above it is still an open question whether such algorithms actually exist for NP problems. 
 
-\subsection{(the need for) A near optimal solution}
+\subsection{(the need for) A near optimal solution.}
+As mentioned in \cite{paper1} the problem under consideration is at least NP-hard. The consequences of thie is that the chances of finding an optimal solution within reasonable computional time are seen to be very low. Thus we are imposed to sacrifice optimality, in order to gain computational effictivity. This sacrifice opens a large spectrum of possible approaches to the problem.
 
-Due to the fact that the problem in question is NP-hard and thus the possibilities of finding an optimal solution within reasonable computing time are/is seen to be very low. The logical thread has brought us to be prepared to sacrifice optimality.
-This sacrifice leads us to a larger spectrum of possible approaches to the problem.
-
-
- \subsection {Pursuit and evasion problem with multiple pursuers.}
+ \subsection {Pursuit \& evasion problem with multiple pursuers.}
 Following the previous work of Johan Thunberg \cite{paper1}, the pursuers and evader are modeled as points moving in the polygonal free space, F . Let  $e(\tau )$ denote the position of the evader at time $\tau \geq 0$. It is assumed that $e : \lbrack 0, \infty) \to F$ is continuous, and that the evader is able to move arbitrarily fast. The initial position e(0) and path e is not known to the pursuers. At each time instant, F is partitioned into two subsets, the cleared and the contaminated, where the latter might contain the evader and the former might not. Given N pursuers, let $p_i (\tau ) : \lbrack 0, \infty) \to F$ denote the position of the i:th pursuer, and $P = \lbrace p_1 , . . . , p_N \rbrace$ be the motion strategy of the whole group of pursuers. Let V (q) denote the set of all points that are visible from $q \subset F$ , i.e., the line segment joining q and any point in V (q) is contained in F .\\
 \\
 \textbf{The original Problem (Pursuit Evasion).} \emph{ Given an evader, a set of N pursuers and a polygonal free space F , ﬁnd a solution strategy P such that for every continuos function $e : \lbrack 0, \infty) \to F$ there exists a time $\tau$ and an i such that $e(\tau ) \subset V (p_i (\tau ))$, i.e., the pursuer will always be seen by some evader, regardless of its path. }
 
 
 \subsection{Heuristic methods}
-
-Heuristic methods are a branch of methods used in computer science and mathematics to make relevant guesses to find solutions to a problem. In general heuristic methods does not provide optimal solutions. Though sometimes, for specific situations, it can be proven that a certain heuristic algorithm's solutions are optimal. Also, there is no general way of proving whether a heuristic algorithm provides an optimal solution. Despite this fact heuristic methods are often extremely relevant in algorithms. Very often they reduce the computational time needed for a solution greatly.
-Actually there are several occasions where a heuristic method is prefered to an analytic method.
- A few examples are:
-
+Heuristic methods are a branch of methods used in computer science and mathematics to make relevant guesses to find solutions to a problem. In general heuristic methods does not provide optimal solutions. Though sometimes, for specific situations, it can be proven that a certain heuristic algorithm's solutions are optimal. Also, there is no general way of proving whether a heuristic algorithm provides an optimal solution. Despite this fact heuristic methods often provide extremely efficient and relevant algorithms. Very often they reduce the computational time needed for a solution greatly. There are even several occasions where a heuristic method is prefered to an analytic method. A few examples are:
 \begin{itemize}
 \item When there is no known algorithm for solving a specific problem, a heuristic is the only way to approach a solution.
 \item A algorithm can sometimes be difficult to implement. Heuristics can sometimes be used instead because they are easy to implement and known to produce good results.
