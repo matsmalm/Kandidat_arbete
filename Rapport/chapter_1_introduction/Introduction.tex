@@ -66,8 +66,6 @@ This sacrifice leads us to a larger spectrum of possible approaches to the probl
 
 
  \subsection {Pursuit and evasion problem with multiple pursuers.}
-%The pursuit evasion problem, also known as "Lion and man" \cite{Dumitrescu08}, is a problem where an pursuer is to find an evader in an environment. An extension to this is the multi pursuer version, which is used in \cite{paper1},\cite{paper2} and \cite{paper3}.\\
-
 Following the previous work of Johan Thunberg \cite{paper1}, the pursuers and evader are modeled as points moving in the polygonal free space, F . Let  $e(\tau )$ denote the position of the evader at time $\tau \geq 0$. It is assumed that $e : \lbrack 0, \infty) \to F$ is continuous, and that the evader is able to move arbitrarily fast. The initial position e(0) and path e is not known to the pursuers. At each time instant, F is partitioned into two subsets, the cleared and the contaminated, where the latter might contain the evader and the former might not. Given N pursuers, let $p_i (\tau ) : \lbrack 0, \infty) \to F$ denote the position of the i:th pursuer, and $P = \lbrace p_1 , . . . , p_N \rbrace$ be the motion strategy of the whole group of pursuers. Let V (q) denote the set of all points that are visible from $q \subset F$ , i.e., the line segment joining q and any point in V (q) is contained in F .\\
 \\
 \textbf{The original Problem (Pursuit Evasion).} \emph{ Given an evader, a set of N pursuers and a polygonal free space F , Þnd a solution strategy P such that for every continuos function $e : \lbrack 0, \infty) \to F$ there exists a time $\tau$ and an i such that $e(\tau ) \subset V (p_i (\tau ))$, i.e., the pursuer will always be seen by some evader, regardless of its path. }
@@ -75,17 +73,14 @@ Following the previous work of Johan Thunberg \cite{paper1}, the pursuers and ev
 
 \subsection{Heuristic methods}
 
-Heuristic methods are a branch of methods used in computer science and mathematics to make educated guesses to help find solutions to a problem. Generally heuristic methods does not provide optimal solutions but it offers a reasonably fast computed solution. Heuristic methods are therefore often used, and very powerful in combination with deterministic methods \footnote{deterministic method  or deterministic algorithms are algorithms that Given a particular input always produce the same output.} to speed up the process.
-
-The characteristics of a heuristic is partly that there is no evidence of that it works, or else it would be a deterministic method. The idea of heuristic methods is thus to improve the chances of finding the desired solution. Pure random guesses forms no heuristic method.
-
-There are several occasions where a heuristic method is preferable to a deterministic method.
-Here are a few:
+Heuristic methods are a branch of methods used in computer science and mathematics to make relevant guesses to find solutions to a problem. In general heuristic methods does not provide optimal solutions. Though sometimes, for specific situations, it can be proven that a certain heuristic algorithm's solutions are optimal. Also, there is no general way of proving whether a heuristic algorithm provides an optimal solution. Despite this fact heuristic methods are often extremely relevant in algorithms. Very often they reduce the computational time needed for a solution greatly.
+Actually there are several occasions where a heuristic method is prefered to an analytic method.
+ A few examples are:
 
 \begin{itemize}
-\item There is no known algorithm for solving a specific problem, a heuristic is the only way to approach a solution
-\item A good algorithm can be difficult to implement and heuristics can sometimes be accepted because it is easy to describe in a programming language and that heuristic methods are known to produce good results.
-\item The problem is too difficult to solve efficiently and quickly with deterministic methods. A heuristic method could overcome that and give an acceptable but probably not an optimal solution
+\item When there is no known algorithm for solving a specific problem, a heuristic is the only way to approach a solution.
+\item A algorithm can sometimes be difficult to implement. Heuristics can sometimes be used instead because they are easy to implement and known to produce good results.
+\item When the problem is too difficult to solve efficiently and quickly with analytical methods. A heuristic method could overcome that and give an acceptable but probably not optimal solution.
 \end{itemize}
 
 The last point corresponds to the problem we are dealing with.
