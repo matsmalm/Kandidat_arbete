@@ -2,20 +2,21 @@
 \section{The genetic algorithm approach}
 Genetic algorithms are based on the idea of evolution, that the most suited individuals tend to live longer and reproduce. 
 \subsection{Description of genetic algorithm}
-In Genetic Algorithms, or GAs, a population is simulated in an artificial world using a combination of reproduction, gene crossover and mutation, with a given goal for the population to achieve. As in nature, a population consisting of individuals are used. As a simplification, each individual has one chromosome, containing one or more genes. During each generation, individuals are selected and paired for reproduction, and their genes are combined to form new children.\\
+In Genetic Algorithms, or GA's, a population is simulated in an artificial world using a combination of reproduction, gene crossover and mutation, with a given goal for the population to achieve. As in nature, a population consisting of individuals are used. As a simplification, each individual has one chromosome, containing one or more genes. During each generation, individuals are selected and paired for reproduction, and their genes are combined to form new children.\\
 \\
-Due to the need to simulate the population and evaluate individuals, often multiple times, GAs are not well suited for all kind of problems. When there exists an analytical solution it may be better to use that. However, if the problem can be simulated, both problems without analytical solutions and problem with complicated analytical solutions can be handled by GAs, although it is never guaranteed to give an optimal solution.\\
+Due to the need to simulate the population and evaluate individuals, often multiple times, GA's are not well suited for all kind of problems. When there exists an analytical solution it may be better to use that. However, if the problem can be simulated, both problems without analytical solutions and problem with complicated analytical solutions can be handled by GA's, although it is never guaranteed to give an optimal solution.\\
 %% Variations / Generational / Steady-state
-There are different ways to implement genetic algorithms, with variations in how each step is performed. This yields many different versions of genetic algorithms. Firstly there are two different kinds of GAs, steady-state and generational, where steady-state maintains and alters one population and generational replaces an old population with a new one.\\
-A GA can be described by the following steps:
+There are different ways to implement genetic algorithms, with variations in how each step is performed. This yields many different versions of genetic algorithms. Firstly there are two different kinds of GA's, steady-state and generational, where steady-state maintains and alters one population and generational replaces an old population with a new one.
+Figure~\ref{GeneticFlowChart1} shows a flowchart of a genetic algorithm.
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=\textwidth]{chapter_4_methods/GeneticFlowChart-Generic.jpg}
-  	\caption[Generic flowchart of a genetic algorithm]
-  	{Generic flowchart of a genetic algorithm}
+	\includegraphics[width=\textwidth]{chapter_4_methods/GeneticFlowChart-Generic}
+  	\caption[Flowchart of a genetic algorithm]
+  	{Flowchart of a genetic algorithm}
+	\label{GeneticFlowChart1}
 \end{figure}
 %% Initial population
-At first an initial population has to be obtained, either an existing set of solutions or created in some way.\\
+\\At first an initial population has to be obtained, either an existing set of solutions or created in some way.\\
 %% Evaluation / Fitness function
 To be able to evaluate and compare different individuals, a fitness function is used. The fitness function should calculate a score for an individual, depending on how fit the individual is in relation to the goal.\\
 %% Breeding
@@ -32,7 +33,7 @@ Tournament selection chooses a number of individuals stochastically, and then ta
 For Crossover there are different methods, a few of those are n-point shuffle crossover, uniform crossover and variable crossover.\\
 \\
 %% Mutation
-\\Mutation is important in GAs since it makes sure that all the search space can be reached, even if the initial population did not cover all of it. It can be implemented as 'bit-flip', if the gene is binary encoded, where a 0 is changed to 1 and 1 to 0.\\
+\\Mutation is important in GA's since it makes sure that all the search space can be reached, even if the initial population did not cover all of it. It can be implemented as 'bit-flip', if the gene is binary encoded, where a 0 is changed to 1 and 1 to 0.\\
 \\
 %% Replacement
 When breeding has been completed, in order to not increase the population size, a replacement has to be performed. For this there are several methods, such as Weak Parent, Both Parents, Weakest Individual and Random.\\
@@ -73,21 +74,21 @@ The final version of the fitness function was a simplified version of \eqref{fit
 \\At first a population size of 400 was used, which was what worked best after 10 trial runs at 5x5, in combination with a limit of 100 generations and 200 steps/alleles. Mutation frequency was set to 5\% after testing different values, which is more than the often used value in literature \cite{GAHandbook2} of 1-2\%, but still not very large. The parameters varied, and due to the increasing computation time with increasing population size a relatively small population of a maximum of 2000 individuals was used, in combination with a high mutation rate of 75\% and a maximum of 800 generations. This was in order to cover a large search space when working with environments larger than 5x5 nodes, without having an population size of over 4.000 which at some attempts took over 10 minutes for a single generation. The final version of the program had a more dynamic population size and step length, see next subsection.
 
 \subsection{The genetic algorithm of our problem}
-The final version of the genetic algorithm had a maximum population of 2000 individuals and 600 steps\footnote{depending on the size of the environment the maximum number of steps was set between 50 and 600 }, but during initialization the population size and step length was limited to a lower value if possible. This was done by creating an initial population of 400 individuals, evaluating each and see if any solution clears the environment. If it does, the maximum step length is limited to the number of steps used, and the population is incremented by 100 individuals to increase the probability of having a diversity in the population. 
+The final version of the genetic algorithm had a maximum population of 2000 individuals and 600 steps\footnote{depending on the size of the environment the maximum number of steps was set between 50 and 600 }, but during initialization the population size and step length was limited to a lower value if possible. This was done by creating an initial population of 400 individuals, evaluating each and see if any solution clears the environment. If it does, the maximum step length is limited to the number of steps used, and the population is incremented by 100 individuals to increase the probability of having a diversity in the population.
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\textwidth]{chapter_4_methods/GeneticFlowChart-Algorithm}
+	\caption[Flowchart of the implemented genetic algorithm]
+	{Flowchart of the implemented genetic algorithm}
+\end{figure}
 %% Initial population
-As written in the previous subsection the initial population was generated by a random function, which gave each pursuer a sequence of alleles that represented each step.
+\\As written in the previous subsection the initial population was generated by a random function, which gave each pursuer a sequence of alleles that represented each step.
 %% Fitness 
 Each individual was evaluated using \eqref{fitness3}, and sorted by fitness in decreasing order, which facilitated selection.
 %% Breeding
 The two individuals with the best fitness value was added to the new population, and thereafter the selection process selected individuals for breeding. Fitness proportionate selection was used, in which the sum of the fitness value was calculated and a random number between 0 and the sum was generated. The fitness was thereafter added for each individual until that number was reached, and that individual was selected. This was repeated to select a second parent. The crossover was copying genes alternating between each parent, so that two different children were created. A mutation step was performed with 75\% probability, where an allele from one of the gene was replaced as described in the previous subsection. Finally the best individuals of the parents and children was  placed in the new population, and the step is repeated until a new population of the same size as the previous was created.
 %% Termination
-As a termination criteria the fitness score of up to 99\%\footnote{Values between 75\% and 99\% was used} of the population was compared. If the individuals had completely cleared the environment and had an equal fitness score, the algorithm was terminated. As 99\% is a very high convergence criteria, it was only used for small environments to avoid premature termination. As a second termination criteria the maximum number of generations was set to 800, to make sure the algorithm would terminate even if no solution was found.
-\begin{figure}[!h]
-	\centering
-	\includegraphics[width=\textwidth]{chapter_4_methods/GeneticFlowChart-Algorithm.jpg}
-  	\caption[Flowchart of the implemented genetic algorithm]
-  	{Flowchart of the implemented genetic algorithm}
-\end{figure}
+As a termination criteria the fitness score of up to 99\%\footnote{Values between 50\% and 99\% was used} of the population was compared. If the individuals had completely cleared the environment and had an equal fitness score, the algorithm was terminated. As 99\% is a very high convergence criteria, it was only used for small environments to avoid premature termination. As a second termination criteria the maximum number of generations was set to 800, to make sure the algorithm would terminate even if no solution was found.
 \subsection{Our implementation of the genetic algorithm}
 The algorithm was implemented using C. Every time a random value was to be obtained \begin{verbatim} ((int)((double)rand() / ((double)RAND_MAX + 1)*SCALE_FACTOR)); \end{verbatim} was used, which generates a number in the range [0,SCALE\_FACTOR). As a random seed number \begin{verbatim} srand(time(0))\end{verbatim} was used. No alternative random functions were evaluated.\\
 For sorting the population, quicksort was used \cite{quicksort}.\\
