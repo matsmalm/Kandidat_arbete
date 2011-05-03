@@ -53,13 +53,7 @@ Which in turn means that the\textbf{ evaluation steps } in figure [4.2] needs a 
 \\A comment on tabu rule (5) is that when this rule first was implemented the idea was that X number of past complete solutions were analysed to check which areas had been walked upon at least once, and render the rest tabu. The problem was however that this wasn't strict enough, so X was set to one. Which in turn led to a new problem. The problem that arouse was that the algorithm now, under certain circumstances, was too hasty in returning a final solution. This was partially solved by a new stopping criteria and a ``go about it again'' criteria.\\
 \\The final version of the algorithm can be viewed in figure [4.3 ] and is also presented in the next section.
 \subsection{The Tabu search algorithm for our problem}
-%kollat hit!
-%kollat hit.
-%kollat hit.
-%kollat hit.
-%kollat hit.
-The tabu search algorithm used for solving the problem be discussed here.\\
-In figur [generella tabu] a generall step by step explanation was made of the tabu search algorithm. In figur [???] a modified version can be seen, intended to illustrate the final algorithm and also to show what functions from to the general algorithm that was removed.\\
+In figur [4.2] and the previous section a general step by step explanation was made of the tabu search algorithm. In figur [4.3] a modified version can be viewed, intended to illustrate the final algorithm. Observe that some functions from to the general algorithm have been removed.\\
 
 \begin{figure}[!h]
 	\centering
@@ -68,47 +62,41 @@ In figur [generella tabu] a generall step by step explanation was made of the ta
   	{Final algorithm flow chart of tabu algorithm}
 \end{figure}
 
-To get a feel for the algorithm and to point out insufficiencys, an explanation of how the algorithm converges is in order.\\
-There are two elements in the algorithm that affect the convergens:
-\begin{enumerate}
-\item{} Tabu roule (5)
-\item{} Best-solution-found-so-far stopping criteria. \vspace{0,1cm}\\
-Mening that if a solution is found one does not search for a solution with a path of longer length.
-\end{enumerate}
-To note here is that both convergens helping elements depend on that they actualy hava a complete solution. Meaning that if the algorithm is unlucky in finding the first complete solution, the computational time will rise acordingly. As a said note, this considerable insufficiency migth have been avoided with the more advansed aspiration critera, discussed in section [develupment].
+
+There are two elements in the algorithm that affect the convergens. These are the tabu rule (5) and the Best-solution-found-so-far criteria. The tabu rule (5) is explained in the previous section. The Best-solution-found-so-far criteria prohibits the algorithm from searching for solutions longer than the best length found so far. It should be noted that both convergens helping elements depend on the existence of a complete solution. This means that if the algorithm is unlucky in finding the first complete solution, the computational time will rise acordingly. As a side note, this considerable insufficiency migth have been avoided with the more advanced aspiration critera, discussed in section 4.2.2.
 
 \subsection{Implementation of the Tabu search algorithm}
-In this section two important aspects of the implementation will be discussed. These two are obvious shortcomings in the algorithm and parameter values. With the implementation, a series of parameter values arouse. Parameter values that had three different features:
+In this section two important aspects of the implementation will be discussed. These two are the meaning of the parameter values and obvious shortcomings in the algorithm. With the implementation, a series of parameter values arouse. The parameter values can be divided into four diferent categories.
 \begin{enumerate}
 \item{} Tabu rule values:
 \begin{enumerate}
-\item{} Tabu rule (1)  save\_past\_X\_number\_of\_moves 
-\item{} Tabu rule (2)  X\_number\_of\_lost\_secured\_areas
+\item{} save\_past\_X\_number\_of\_steps
+\item{} X\_number\_of\_lost\_secured\_tiles
 \end{enumerate} 
 \item{} Aspiration criteria values:
 \begin{enumerate}
-\item{} Override\_X\_number\_of\_lost\_secured\_areas
-\item{} Override \_save\_past\_X\_number\_of\_moves
+\item{} Override\_X\_number\_of\_lost\_secured\_tiles
+\item{} Override\_save\_past\_X\_number\_of\_steps
 \end{enumerate} 
 \item{} Stopping criteria values:
 \begin{enumerate}
 \item{} Max\_incomplete\_solutions\_ found \_in\_a\_row
-\item{} Max\_ equal\_complete\_solutions\_ found \_in\_a\_row
+\item{} Max\_ equal\_complete\_solutions\_ found\_in\_a\_row
 \item{} Max\_allowed\_steps
 \end{enumerate} 
 \item{} Go again values:
 \begin{enumerate}
 \item{} Restart\_the\_algorithm\_X\_times
 \item{} Restart\_the\_algorithm\_X\_times\_keep\_best\_complete\_solution
-\item{} X\_steps\_is\_this\_realy\_the\_best\_complet\_solution
+\item{} X\_steps\_is\_this\_really\_the\_best\_complete\_solution
 \end{enumerate} 
 \end{enumerate} 
 As can be seen in the list above some of the parameters have strong relations to eachother. These relations will now be explained. \\
-Parameter values (1) and (2) are related in a way so that (2) ensures that (1) does not make the algorithm freeze. \\
-Parameter value (4b) and (4c) aims to avoid the algorithm from being to hasty in returning a final solution, when encountering a less difficult enviroment. The Max\_allowed\_steps and Restart\_the\_algorithmen\_X\_times tries to tackle the problem of finding the first complete solution. The computational time, and the probability of finding any solution at all, totally depends on this relation. As discussed lastly in section 4.2.3 the algorithms' computational time will be affected if the first complete solution is found at a late stage in the search. But the computational time will be even greater affected if one wants to increase the probability of finding a solution at all. Meaning that if The Max\_allowed\_steps value is increased, the chances of finding a complete solution should increase. \\
-Parameter value (3a) and (3b) has two properties, first to terminate the algorithm and secondly to not terminate the algorithm until the search space has been throughly examined in promising regions. Parameter (3b) is also an indicator of that the the search has converged to a certain final solution.\\
+Parameter values (1) and (2) are related in such a way so that (2) ensures that (1) does not make the algorithm freeze. \\
+Parameter value (4b) and (4c) aims to avoid the algorithm from being to hasty in returning a final solution. This is usually encountered in less difficult enviroments. The Max\_allowed\_steps and Restart\_the\_algorithm\_X\_times tries to tackle the problem of finding the first complete solution. The computational time, and the probability of finding any solution at all, strongly depends on this relation. As discussed lastly in section 4.2.3 the algorithms' computational time will be affected if the first complete solution is found at a late stage in the search. By increasing (3c) the probability of finding any solution should increase. Though this will affect the computational time in a negative way. Both parameter value (3a) and (3b) are to ensure that the algorithm terminates when the search space has been throughly examined in promising areas.
+Parameter (3b) is also an indicator of that the the search has converged to a final solution.\\
 \\
 \indent Obvious shortcomings in the algorithm:\\
-Mera text
+Mera text kommer...
 1. kan inte stå still
 2.  
