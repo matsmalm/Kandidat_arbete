@@ -1,10 +1,23 @@
-\chapter{Discusion}
-This chapter contains analysis of each algorithm, why it did or did
-not work, how it compares to the other algorithms and a
-conclusion. The main purpose is to present conclusions from the data presented
-in the previous chapter. 
-\section{Analysis}
-An analysis of each algorithm,  evaluation of why it did or did not work. \par
+\chapter{Discussion}
+This chapter contains analysis of the data collected when running the algorithms in our simulation enviroment. Most of the data discussed is presented in the previous section and will be refered to.\\
+\\First off it should be noted that when varying the size of the enviroment certain parameters of the algorithms had to be adjusted. For enviroments of intermediate size a correct adjustment of parameters yielded solutions of significantly higher quality. For larger enviroments it was necessary in order to attain any solution at all. We found no analytical way of adjusting the parameters. A good understanding of the implementation in combination with intuition and testing usually solved the issue. This does not exclude the possibility that there might be a more descisive approach. In fact, based mainly on our intuition, it is most probable.\\
+\\As seen in the table \ref{SimData}, given in the previous section, for small enviroments both algorithms efficiently provides solutions of high quality, even with a small amount of pursuers. The optimality of the solutions is not proven, but it's likely that the provided solutions in most cases are optimal. This assumtion is motivated by the fact that the quality of the solutions rarely differs and the path length is typicaly only a few steps long. It should be noted that the average computational time for these solutions is 3 milliseconds for the tabu search algorithm and 37 milliseconds for the genetic algorithm. These are highly efficient results compared to related work \cite{paper1}.\\
+\\As the size of the enviroments is increased the solutions are less probable to be optimal. This assumption is motivated by the fact that the quality of the solutions now vary strongly. Also the computational time severely increases with the size of the enviroment. An interesting observation though is to compare how the average computational time for the two algorithms changes as the difficulty increases. The tabu search algorithm is highly efficient if it is able to find a first complete solution. But when running on the bigger areas the average time diverges. On the other hand the genetic algorithm provides reasonable average computational times, and is more reliable for difficult enviroments.
 
+%the quality 
+%\\På grund av tidsbrist han vi inte göra rigorösa tester. Variation av parametervärden förändrade resultaten så en konsekvent jämförelse var svår att genomföra.
+
+
+%\\5x5-områden löses med bra kvalitet av bägge algoritmer, men tabu får snabbare en lösning. inget kan bevisas rörande optimalitet, men resultaten varier inte mellan algoritmerna.
+
+%\\För 10x10 med ett fåtal jagare och 25\% täthet löser tabu endast problemet i ett fåtal fall. Genetic hittar oftare en lösning, men ej alltid. Genetic hade endast 75\% konvergens och borde således kunna få bättre lösningar. Om tabu hittar en lösning verkar den hitta en bättre lösning än genetisk. Parametervärden är viktiga för att hitta en lösning, samt kvalitén på lösningen.
+
+%\\För 15x15 finner genetisk oftare en lösning, men tabu ger bättre resultat OM resultat hittas. Körtiden för tabu ökar, och passerar i genomsnitt körtiden för genetic(Om en lösning hittas av tabu så kör algoritmen en längre tid, givet att första lösningen är av dålig kvalitet) . Inga lösningar för under 4 jagare hittas för 40\% täthet. Körtiden för tabu ökar.
+
+%\\För manhattan (med hårdkodade startpositioner)  är Tabu lite snabbare
+
+%\\Större områden kräver väldigt mycket tid för att lösas, vilket medförde att parametervärdena på genetisk fick sänkas för att simuleringarna skulle hina köras. Detta medförde sämre kvalité på lösningar som fanns. För större tider bör genetisk algoritm ge lösningar även på större områden.
+
+%\\Mutationerna i den genetiska algoritmen medför att även om en initial komplett lösning ej hittas så kan den påträffas under körningen.
 \section{Comparsion and statistics}
 A comparsion between the algorithms, and perhaps also with MILP. \par
