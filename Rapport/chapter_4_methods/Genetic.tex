@@ -1,13 +1,13 @@
 \pagebreak
 \section{The genetic algorithm}
-Genetic algorithms are based on the idea of evolution, that the most suited individuals tend to live longer and reproduce. 
 
 \subsection{Description of genetic algorithms}
-In Genetic Algorithms, or GA's, a population is simulated in an artificial world using a combination of reproduction, gene crossover and mutation, with a given goal for the population to achieve. As in nature, a population consisting of individuals are used. As a simplification, each individual has one chromosome, containing one or more genes. During each generation, individuals are selected and paired for reproduction, and their genes are combined to form new children.\\
+Genetic algorithms are based on the idea of evolution, that the most suited individuals tend to live longer and reproduce. A population is simulated in an artificial world using a combination of reproduction, gene crossover and mutation, with a given goal to achieve. The population consists of individuals, which by simplification has one chromosome each, containing one or more genes. During each generation, reproduction is performed to create new individuals, called children.\\
 \\
-Due to the need to simulate the population and evaluate individuals, often multiple times, GA's are not well suited for all kind of problems. When there exists an analytical solution it may be better to use that. However, if the problem can be simulated, both problems without analytical solutions and problem with complicated analytical solutions can be handled by GA's, although it is never guaranteed to give an optimal solution.\\
+Due to the need to simulate the population and evaluate individuals, often multiple times, GA's are not well suited for all kind of problems. When there exists an analytical solution it may be better to use that.\\* %% Because of?
+However if the problem can be simulated both problems without analytical solutions and problem with complicated analytical solution can be handled by GA's, although it is never guaranteed to give an optimal solution.\\
 %% Variations / Generational / Steady-state
-There are different ways to implement genetic algorithms, with variations in how each step is performed. This yields many different versions of genetic algorithms. Firstly there are two different kinds of GA's, steady-state and generational, where steady-state maintains and alters one population and generational replaces an old population with a new one.
+There are different ways to implement genetic algorithms, with variations in how each step is performed. This yields many different versions of genetic algorithms. First there are two different kinds of GA's, steady-state and generational. Steady-state maintains and alters one population by replacing its individuals through reproduction, while generational replaces an old population with a new one.
 Figure~\ref{GeneticFlowChart1} shows a flowchart of a genetic algorithm.
 \begin{figure}[!h]
 	\centering
@@ -17,11 +17,11 @@ Figure~\ref{GeneticFlowChart1} shows a flowchart of a genetic algorithm.
 	\label{GeneticFlowChart1}
 \end{figure}
 %% Initial population
-\\At first an initial population has to be obtained, either an existing set of solutions or created in some way.\\
+\\At first an initial population has to be obtained, either by an existing set of solutions or by creation.\\*
 %% Evaluation / Fitness function
-To be able to evaluate and compare different individuals, a fitness function is used. The fitness function should calculate a score for an individual, depending on how fit the individual is in relation to the goal.\\
-%% Breeding
-Evolution is performed using a breeding step during which two individuals are selected and used to create two new individuals. The creation is done first by crossover and then by mutation.\\
+To determine a solution the individuals has to be evaluated and compared to each other. For that a fitness function is used, which is to calculate a score for an individual depending on how well it fulfils the goal.\\
+%% Reproduction
+To widen the search for solutions evolution is performed by a reproduction step, during which two individuals are selected and used to create two new individuals. The new individuals are created first by crossover and then subject to mutation.\\
 %% Selection (parents)
 For selection, there are different methods but five of them are Fitness Proportionate Selection, Random Selection, Fit-Fit, Elite selection and tournament selection.\\
 In Fitness Proportionate Selection, of which Roulette Selection is one example, the probability of choosing a more fit individual is higher than to select a less fit individual.\\
