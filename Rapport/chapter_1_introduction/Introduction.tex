@@ -32,13 +32,8 @@ Within the class NP there are a few subclasses one of them are called NP-hard
 Related work has stated that the problem studied in this report are in fact of the class NP-hard \cite{paper1}, % Is it paper one?
 and hence the chances of finding an algorithm that produces an optimal solution in polynomial time are greatly reduced. As stated above it is still an open question whether such algorithms actually exist for NP problems. 
 
-\subsection{(the need for) A near optimal solution.}
-As mentioned in \cite{paper1} the problem under consideration is at least NP-hard. The consequences of thie is that the chances of finding an optimal solution within reasonable computional time are seen to be very low. Thus we are imposed to sacrifice optimality, in order to gain computational effictivity. This sacrifice opens a large spectrum of possible approaches to the problem.
-
- \subsection {Pursuit \& evasion problem with multiple pursuers.}
-Following the previous work of Johan Thunberg \cite{paper1}, the pursuers and evader are modeled as points moving in the polygonal free space, F . Let  $e(\tau )$ denote the position of the evader at time $\tau \geq 0$. It is assumed that $e : \lbrack 0, \infty) \to F$ is continuous, and that the evader is able to move arbitrarily fast. The initial position e(0) and path e is not known to the pursuers. At each time instant, F is partitioned into two subsets, the cleared and the contaminated, where the latter might contain the evader and the former might not. Given N pursuers, let $p_i (\tau ) : \lbrack 0, \infty) \to F$ denote the position of the i:th pursuer, and $P = \lbrace p_1 , . . . , p_N \rbrace$ be the motion strategy of the whole group of pursuers. Let V (q) denote the set of all points that are visible from $q \subset F$ , i.e., the line segment joining q and any point in V (q) is contained in F .\\
-\\
-\textbf{The original Problem (Pursuit Evasion).} \emph{ Given an evader, a set of N pursuers and a polygonal free space F , Þnd a solution strategy P such that for every continuos function $e : \lbrack 0, \infty) \to F$ there exists a time $\tau$ and an i such that $e(\tau ) \subset V (p_i (\tau ))$, i.e., the pursuer will always be seen by some evader, regardless of its path. }
+\subsection{A near optimal solution.}
+As mentioned in \cite{paper1} the problem under consideration is at least NP-hard. The consequences of this is that the chances of finding an optimal solution within reasonable computional time are seen to be very low. Thus we are imposed to sacrifice optimality, in order to gain computational effictivity. This sacrifice opens a large spectrum of possible approaches to the problem.
 
 
 \subsection{Heuristic methods}
