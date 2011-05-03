@@ -17,7 +17,7 @@ This insight might seem somewhat naive at first sight, but if implemented in a g
 %fitness evaluation...something like genetic
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=\textwidth]{chapter_4_methods/tabu_generell.jpg}
+	\includegraphics[width=\textwidth]{chapter_4_methods/ny_generel}
   	\caption[Generic flow chart of tabu algorithm]
   	{Flow chart of tabu algorithm}
 \end{figure}
@@ -49,7 +49,7 @@ Some tiles that are part of an incomplete solution are probable to be of low int
 All these tabu rules are to be ranked and given a priority level that would be used in the aspiration criteria. Also many of the tabu rules listed above needed some sort of worst case senario handeling, in order to avoid that the algorithm would freeze.\\
 \\We will now discuss the aspiration critera. As understood from the tabu rules presented above a lot is to be incorporated in the aspiration critera. It needs to have the ability of checking whether a tile is of high or low value.
 
-Which in turn means that the\textbf{ evaluation steps } in figure [4.2] needs a fitness calculation function that would depend on the tile visited and the shape of the feasible solution. Unfortunately this aspiration criteria would need an overwhelming amount of work to implement. Thus this advanced aspiration criteria was rejected for a simpler one. In the end the more simple aspiration criteria only came to be a worst case handling, to avoid the algorithm from freezing. This also means that tabu rules (3), (4), (6) and (7) no longer could be implemented. Tabu rule (5) got simplified to: tiles not walked upon where set to be tabu.\\
+Which in turn means that step 5 in figure [4.2] needs a fitness calculation function that would depend on the tile visited and the shape of the feasible solution. Unfortunately this aspiration criteria would need an overwhelming amount of work to implement. Thus this advanced aspiration criteria was rejected for a simpler one. In the end the more simple aspiration criteria only came to be a worst case handling, to avoid the algorithm from freezing. This also means that tabu rules (3), (4), (6) and (7) no longer could be implemented. Tabu rule (5) got simplified to: tiles not walked upon where set to be tabu.\\
 \\A comment on tabu rule (5) is that when this rule first was implemented the idea was that X number of past complete solutions were analysed to check which areas had been walked upon at least once, and render the rest tabu. The problem was however that this wasn't strict enough, so X was set to one. Which in turn led to a new problem. The problem that arouse was that the algorithm now, under certain circumstances, was too hasty in returning a final solution. This was partially solved by a new stopping criteria and a ``go about it again'' criteria.\\
 \\The final version of the algorithm can be viewed in figure [4.3 ] and is also presented in the next section.
 \subsection{The Tabu search algorithm for our problem}
@@ -57,7 +57,7 @@ In figur [4.2] and the previous section a general step by step explanation was m
 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=\textwidth]{chapter_4_methods/tabu_ny.jpg}
+	\includegraphics[width=\textwidth]{chapter_4_methods/ny_Tabu}
   	\caption[Final algorithm flow chart of tabu algorithm]
   	{Final algorithm flow chart of tabu algorithm}
 \end{figure}
@@ -95,8 +95,3 @@ As can be seen in the list above some of the parameters have strong relations to
 Parameter values (1) and (2) are related in such a way so that (2) ensures that (1) does not make the algorithm freeze. \\
 Parameter value (4b) and (4c) aims to avoid the algorithm from being to hasty in returning a final solution. This is usually encountered in less difficult enviroments. The Max\_allowed\_steps and Restart\_the\_algorithm\_X\_times tries to tackle the problem of finding the first complete solution. The computational time, and the probability of finding any solution at all, strongly depends on this relation. As discussed lastly in section 4.2.3 the algorithms' computational time will be affected if the first complete solution is found at a late stage in the search. By increasing (3c) the probability of finding any solution should increase. Though this will affect the computational time in a negative way. Both parameter value (3a) and (3b) are to ensure that the algorithm terminates when the search space has been throughly examined in promising areas.
 Parameter (3b) is also an indicator of that the the search has converged to a final solution.\\
-\\
-\indent Obvious shortcomings in the algorithm:\\
-Mera text kommer...
-1. kan inte stå still
-2.  
