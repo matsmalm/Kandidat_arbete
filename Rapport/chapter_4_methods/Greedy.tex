@@ -1,4 +1,4 @@
-\section{The greedy algorithm approach}
+\section{The greedy algorithm}
 \subsection{Description of greedy algorithms.}
 Greedy algorithms can be either itterative or recursive. In most cases a itterative algorithm can be reformulated as a recursive one and vice versa. For simplicity we will consider the greedy algorithms itterative unless stated otherwice. In each itteration the algorithm has a set of possible alternatives on how to to push the algorithm towards a solution. A so called "cost function" designates a cost to each alternative. At the end of the itteration the alternative with the best cost, be it maximum or minimun, is choosen as a part of the solution. \\
 \\It is not guaranteed in general that greedy algorithms provide optimal solutions. Also there is no general way of determining wether an greedy algorithm provides an optimal solution or not, but there are two very important properties that usually helps to determine if an optimal solution can be provided. These are the greedy-choice property and the optimal substructure property (referens [10] kap 16.2). The greedy choice property states that an global optimal solution can be arrived at by making locally optimal choices. In other words, at each itteration a choice can be made without reconsidering previous itterations. The optimal substructure property states that an optimal solution can be expressed as a sum of solutions to subproblems. If these two properties are fullfilled, then a solution can be constructed by summing optimal subsolutions. Hopefully this is an optimal solution, but if one want's to be shure more rigorous proofs are needed. 
@@ -20,26 +20,19 @@ When constructing a greedy algorithm one often starts by finding some part of th
 \\For the third candidate the idea was to use the extra enviromental information about the non visible areas and somehow apply this to a simple greedy cost function. By designating costs to each feasible tile it would be easy to make a greedy choice. By construction each hunter can in general move to at most four tiles or stand still. Thus by giving each of these five alternatives a value that quantifies how good the move is we'll find the best over all strategy of the team. With this setup the objective function for each itteration is to maximize the sum of the tile-values that each pursuer moves into. So, how does one quantify what  a good tile is? The obvious answers such as field of vision and state are, by them self, insufficent information for a good algorithm. But by using the dynamic information of the areas, resulting from the pursuers vision, we can find more parameters to quantify the best move. In order for the pursuer team to spread out and cooperate we designate a unique area for each pursuer to approach. This is done by adding a value to the tiles that give the shortest path for a specific pursuer to approach its designated boundry. Furthermore we add a value to all moveable tiles depending on their unique guarding properties of priorized areas. The algorithm will now make good tactical descisions, given that the added values are correctly adjusted. 
 \\
 \\This last candidate is was used as a basis for the final algorithm.To arrive at the algorithm presented in section 3 several examples has been tested manualy on random enviroments. In the manual execution the aim was to delete all human intuition from the algorithm and strictly quantify the valuation of the tiles with simple numbers or questions, suitable for a computer. A more in depth explanation of the algorithm is given in the next section.
-%fram hit har jag kollat....
+
+
+\pagebreak
 \subsection{The greedy algorithm for our problem}
 In this section the final greedy algorithm will be explained in detail, step by step. Before the algorithm is started a prefunction is executed to find all static information on the enviroment. Since these static conditions only need to be evaluated once, and can be evaluated at any time they are not an interesting part of the algorithm itself but will be described in the section 4.1.4 concerning the implementation.
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=\textwidth]{chapter_4_methods/greedy_uml3.jpg}
+	\includegraphics[width=\textwidth]{chapter_4_methods/greedy_uml4}
   	\caption[Flow chart of greedy algorithm]
   	{Flow chart of greedy algorithm}
 \end{figure}
 
 The algorithm is written in an itterative way, and a overview is given by the flow chart in figure 4.1. In each itteration the algorithm finds and executes the best move for each pursuer. Each step will now be described in detail.
-%\begin{wrapfigure}{r}{0.4\textwidth}
-%\centering
-%\includegraphics[width=0.4\textwidth]{chapter_4_methods/Example_enviroment1.jpg}
-%\caption{Text wrap around figure}
-%\noindent
-%\hrulefill
-%\label{test}
-%\end{wrapfigure} 
-
 \begin{enumerate}
 \item{} The input for each itteration is the path taken so far. For the first itteration this corresponds only to the starting positions of the pursuers.
 \item{} At the beginning of each itteration a decision is made whether to make another itteration or not. An itteration should be executed if the enviroment is not all secured and if the breaking conditions are not met. The breaking conditions are given by the main program running the algorithm, so that if no solution can be found the algorithm will abort in due time.   
@@ -55,10 +48,10 @@ A boundry to an area is by construction seen by some pursuer. If the area can be
 \item{} In this step a table of possible choices for the pursuers is created. As mentioned above the secured areas should not be a part of the table. The extended boundries are to be used when measuring the shortest distance to a boundry for a pursuer. This is because our aim is to \emph{see} the area, and the extended boundries usually provides shorter distances for the pursuers.
 \item{} Given the table created we now want to choose as many elements as there are columns, since the columns corresponds to pursuers. The choice is to be made in such a way that there is at most one element chosen from each row and column and so that the sum of the chosen elements is minimized. Also there is a constraint that the rows corresponding to areas that can be fully seen from their boundries must be chosen if possible. A chosen element $c_{i,j}$ corresponds to designating the area of row i to the pursuer of column j. If there are more pursuers than areas, an area can be designate to more than one pursuer but all areas must be designated to at least one pursuer. 
 \item{} Given the designation made in the previous step, for each pursuer there is at least one path of shortest distance to the designated boundry. For each pursuer,  add a value $\alpha$ to the tiles being the first step of the paths with the shortest possible distance to the designated boundry.
+\item{} Each pursuer has at most five feasible tiles that it can move to. For each one of these tiles, add a value $\gamma$ for every boundry tile to a secured area that is uniquely seen by this pursuer.
 \item{} For each pursuer:
 \begin{itemize}
 \item{} Add a value $\beta$ the tile being closest to any contamined area. 
-\item{} Add a value $\gamma$ to the tiles where the boundries that are uniquely seen by this pursuer can still be seen. Here the secured areas are to be considered as well.
 \item{} Add a value $\delta$ to the tiles where the boundries to areas that are secured, or that can be seen from its boundries, are still seen by the pursuer.
 \item{} Add a value $\epsilon$ to the tiles where the pursuers has the largest field of vision.
 \end{itemize}

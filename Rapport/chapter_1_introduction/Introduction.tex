@@ -2,22 +2,7 @@
 
 \section{Objective}
 
-The aim of this paper is to construct heuristic algorithms that solve the  pursuit \& evasion problem for a two dimensional polygonal environment. The origninal pursuit \& evasion problem is fully formulated in section 1.4.4. Informally it can be formulated as``given an static environment with obstacles, and a specific number of pursuers, ensure that an evader cannot exist within the environment''. An algorithm providing an optimal solution already exists \cite{paper2}. In practice this algorithm is not very applicable though, since even for small areas the time complexity is considerable. This is where heuristic methods could provide interesting results. By sacrificing the optimality, our aim is to use heuristic methods to try and find a sufficiently good solution within a reasonable computational time.
- %ta bort organisation?? upplägget står ändå i innehållsförteckningen....
-\section{Organization of the report}
-\begin{description}
-\item Chapter 2 contains a detailed formulation of the problem and are approach to it.
-\item Chapter 3 explains the simulation environment we built.
-\item Chapter 4 contains a description of the algorithms we decided to use.
-\item Chapter 5 contains the results of our simulations.
-\item Chapter 6 contains a discussion of our results and a comparison.
-\item Chapter 7 contains conclusions of our work.
-\end{description}
-%ta bort? vi har ändå inte något att säga, annat än att vi bygger vidare på boolean control, men det framgår av referns-användandet...
-\section{Related work}
-
-Our work is based on the work of papers \cite{paper1}-\cite{paper3}.
-
+The aim of this paper is to construct heuristic algorithms that solve the  pursuit \& evasion problem for a two dimensional polygonal environment. The origninal pursuit \& evasion problem is fully formulated in chapter two. Informally it can be formulated as``given an static environment with obstacles, and a specific number of pursuers, ensure that an evader cannot exist within the environment''. An algorithm providing an optimal solution already exists \cite{paper2}. In practice this algorithm is not very applicable though, since even for small areas the time complexity is considerable. This is where heuristic methods could provide interesting results. By sacrificing the optimality, our aim is to use heuristic methods to try and find a sufficiently good solution within a reasonable computational time. Appart from the previous work of Johan Thunberg \cite{paper2}, we have not found any related work where heuristics is applied to the problem. 
 \section{Background}
 
 \subsection{What is optimization?}
@@ -47,13 +32,8 @@ Within the class NP there are a few subclasses one of them are called NP-hard
 Related work has stated that the problem studied in this report are in fact of the class NP-hard \cite{paper1}, % Is it paper one?
 and hence the chances of finding an algorithm that produces an optimal solution in polynomial time are greatly reduced. As stated above it is still an open question whether such algorithms actually exist for NP problems. 
 
-\subsection{(the need for) A near optimal solution.}
-As mentioned in \cite{paper1} the problem under consideration is at least NP-hard. The consequences of thie is that the chances of finding an optimal solution within reasonable computional time are seen to be very low. Thus we are imposed to sacrifice optimality, in order to gain computational effictivity. This sacrifice opens a large spectrum of possible approaches to the problem.
-
- \subsection {Pursuit \& evasion problem with multiple pursuers.}
-Following the previous work of Johan Thunberg \cite{paper1}, the pursuers and evader are modeled as points moving in the polygonal free space, F . Let  $e(\tau )$ denote the position of the evader at time $\tau \geq 0$. It is assumed that $e : \lbrack 0, \infty) \to F$ is continuous, and that the evader is able to move arbitrarily fast. The initial position e(0) and path e is not known to the pursuers. At each time instant, F is partitioned into two subsets, the cleared and the contaminated, where the latter might contain the evader and the former might not. Given N pursuers, let $p_i (\tau ) : \lbrack 0, \infty) \to F$ denote the position of the i:th pursuer, and $P = \lbrace p_1 , . . . , p_N \rbrace$ be the motion strategy of the whole group of pursuers. Let V (q) denote the set of all points that are visible from $q \subset F$ , i.e., the line segment joining q and any point in V (q) is contained in F .\\
-\\
-\textbf{The original Problem (Pursuit Evasion).} \emph{ Given an evader, a set of N pursuers and a polygonal free space F , ﬁnd a solution strategy P such that for every continuos function $e : \lbrack 0, \infty) \to F$ there exists a time $\tau$ and an i such that $e(\tau ) \subset V (p_i (\tau ))$, i.e., the pursuer will always be seen by some evader, regardless of its path. }
+\subsection{A near optimal solution.}
+As mentioned in \cite{paper1} the problem under consideration is at least NP-hard. The consequences of this is that the chances of finding an optimal solution within reasonable computional time are seen to be very low. Thus we are imposed to sacrifice optimality, in order to gain computational effictivity. This sacrifice opens a large spectrum of possible approaches to the problem.
 
 
 \subsection{Heuristic methods}

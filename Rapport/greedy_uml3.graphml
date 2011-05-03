@@ -15,134 +15,120 @@
   <graph edgedefault="directed" id="G">
     <data key="d7"/>
     <node id="n0">
-      <data key="d5"/>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.start1">
-          <y:Geometry height="99.125" width="192.06249999999955" x="-7386.03125" y="-7639.5625"/>
+          <y:Geometry height="99.125" width="203.89021588299101" x="-9657.169652277" y="-10284.763914379313"/>
           <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="46.3984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="167.546875" x="12.2578125" y="26.36328125">START
-(1) Input: Starting positions 
-or the path so far.</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="163.75" x="20.070107941495735" y="33.4296875">START
+(1) Input: Starting positions</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
     <node id="n1">
-      <data key="d5"/>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.decision">
-          <y:Geometry height="61.0" width="192.0624999999991" x="-7146.031249999999" y="-7620.5"/>
+          <y:Geometry height="99.125" width="203.89021588299056" x="-9657.169652277" y="-10104.763914379313"/>
           <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="133.591796875" x="29.23535156249909" y="21.43359375">(2) Run conditions ok?</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="133.591796875" x="35.149209503995735" y="40.49609375">(2) Run conditions ok?</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
     <node id="n2">
-      <data key="d5"/>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
-          <y:Geometry height="53.30957031249818" width="391.9791666666679" x="-6888.8125" y="-7676.654785156249"/>
+          <y:Geometry height="63.71773857123435" width="391.97916666666697" x="-9274.69027248104" y="-10088.615008129313"/>
           <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="46.3984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="115.287109375" x="138.34602864583394" y="3.4555664062490905">Break, we're either 
-done or cant't 
-find a solution</y:NodeLabel>
-        </y:GenericNode>
-      </data>
-    </node>
-    <node id="n3">
-      <data key="d5"/>
-      <data key="d6">
-        <y:GenericNode configuration="com.yworks.flowchart.process">
-          <y:Geometry height="54.062499999999545" width="391.97916666666697" x="-6888.812499999999" y="-7557.259296874996"/>
-          <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
-          <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="134.86328125" x="128.55794270833394" y="10.8984375">(3) Find the shared 
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="134.86328125" x="128.55794270833394" y="15.726056785617402">(3) Find the shared 
 vision of the pursuers.</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
-    <node id="n4">
-      <data key="d5"/>
+    <node id="n3">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
-          <y:Geometry height="54.0625" width="391.97916666666686" x="-6888.8125" y="-7464.853046874996"/>
+          <y:Geometry height="60.49140054171221" width="391.9791666666687" x="-9274.69027248104" y="-9994.883777660563"/>
           <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="46.3984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="224.458984375" x="83.76009114583303" y="3.83203125">(4) Find all unseen areas.
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="46.3984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="224.458984375" x="83.76009114583394" y="7.046481520856105">(4) Find all unseen areas.
 Evaluate their priority, boundries and 
 possible extension of boundries.</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
-    <node id="n5">
-      <data key="d5"/>
+    <node id="n4">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
-          <y:Geometry height="84.68457031249909" width="391.97916666666674" x="-6888.8125" y="-7372.446796874996"/>
+          <y:Geometry height="89.36013434283541" width="391.97916666666856" x="-9274.69027248104" y="-9904.976822622644"/>
           <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="60.53125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="296.265625" x="47.85677083333303" y="12.07666015624909">(5) Create a table where each column corresponds
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="60.53125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="296.265625" x="47.85677083333394" y="14.41444217141725">(5) Create a table where each column corresponds
 to a pursuer and each row corresponds to 
 a specific area. Each element c_ij is the shortest
 distance for pursuer j to a boundry of area i.</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
-    <node id="n6">
-      <data key="d5"/>
+    <node id="n5">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
-          <y:Geometry height="84.68457031249909" width="391.9791666666672" x="-7350.180208333334" y="-7482.342285156249"/>
+          <y:Geometry height="89.36013434283541" width="391.9791666666672" x="-9274.69027248104" y="-9785.61668827981"/>
           <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="60.53125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="377.60546875" x="7.18684895833394" y="12.07666015624909">(6) Solve the assignment problem to designate a unique area to 
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="60.53125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="377.60546875" x="7.18684895833394" y="14.41444217141725">(6) Solve the assignment problem to designate a unique area to 
 each hunter so that the sum of the distances is minimized. 
 The constraints are that priorized areas must be chosen if 
 possible and each designation must be unique.</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
-    <node id="n7">
-      <data key="d5"/>
+    <node id="n6">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
-          <y:Geometry height="47.0" width="391.97916666666686" x="-7350.180208333333" y="-7364.762226562497"/>
+          <y:Geometry height="47.0" width="391.9791666666687" x="-9274.69027248104" y="-9666.256553936975"/>
           <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="342.7421875" x="24.61848958333303" y="7.3671875">(7) Add a value alpha to the tiles corresponding to the 
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="342.7421875" x="24.61848958333394" y="7.3671875">(7) Add a value alpha to the tiles corresponding to the 
 first step in the shortest paths to the designated boundry.</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
-    <node id="n8">
-      <data key="d5"/>
+    <node id="n7">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
-          <y:Geometry height="117.19726562499909" width="382.60416666666686" x="-7792.502083333333" y="-7434.959492187496"/>
+          <y:Geometry height="117.19726562499909" width="382.60416666666686" x="-10181.302083333334" y="-9818.940068359374"/>
           <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="102.9296875" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="334.8203125" x="23.89192708333303" y="7.1337890625">(8) For each pursuer:
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="74.6640625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="334.8203125" x="23.89192708333303" y="21.2666015625">(9) For each pursuer:
 -Add a value beta to the tile closest to any boundry.
--Add a value gamma to the tiles where the pursuer still
-  sees boundries that are uniquely seen by this pursuer.
 -Add a value delta to the tiles where the pursuer does
   not let go of areas with high priority.
 -Add a value epsilon to the tiles with the greatest vision.</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
-    <node id="n9">
-      <data key="d5"/>
+    <node id="n8">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
-          <y:Geometry height="84.68457031249909" width="382.60416666666686" x="-7792.502083333333" y="-7549.644062499995"/>
+          <y:Geometry height="84.68457031249909" width="382.60416666666686" x="-10181.302083333334" y="-9942.34228515625"/>
           <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="46.3984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="378.77734375" x="1.9134114583330302" y="19.14306640625">(9) Move each hunter to the moveable tile with the largest value 
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="46.3984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="386.365234375" x="-1.8805338541669698" y="19.14306640624909">(10) Move each hunter to the moveable tile with the largest value 
 (make a greedy choice), if there are several equivalent options 
 choose the one furthest away from all other pursuers.</y:NodeLabel>
+        </y:GenericNode>
+      </data>
+    </node>
+    <node id="n9">
+      <data key="d6">
+        <y:GenericNode configuration="com.yworks.flowchart.process">
+          <y:Geometry height="60.44484374999911" width="382.60416666666697" x="-10181.302083333334" y="-10041.504775390624"/>
+          <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="240.44921875" x="71.07747395833394" y="14.089609374999782">(11) Update the states of the enviroment
+and save the path taken so far.</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
@@ -150,30 +136,29 @@ choose the one furthest away from all other pursuers.</y:NodeLabel>
       <data key="d5"/>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
-          <y:Geometry height="60.44484374999911" width="382.60416666666697" x="-7792.502083333333" y="-7650.222421875"/>
+          <y:Geometry height="52.48624879740055" width="382.60416666666697" x="-10181.302083333334" y="-9671.742802734376"/>
           <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="240.44921875" x="71.07747395833303" y="14.089609374999782">(10) Update the states of the enviroment
-and save the path taken so far.</y:NodeLabel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="46.3984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="379.146484375" x="1.7288411458339397" y="3.043905648699365">(8) For each tile moveable by a pursuer:
+Add a value gamma for each boundry tile to a secured area that 
+is uniquely seen from the tile under consideration.</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
-    <edge id="e0" source="n1" target="n2">
-      <data key="d9"/>
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="161.01041666666697" ty="0.0">
-            <y:Point x="-7050.0" y="-7650.0"/>
-          </y:Path>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="six_pos" modelPosition="head" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="20.236328125" x="65.9130859375" y="-49.634765625">No</y:EdgeLabel>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
+    <node id="n11">
+      <data key="d5"/>
+      <data key="d6">
+        <y:GenericNode configuration="com.yworks.flowchart.start1">
+          <y:Geometry height="84.6845703125" width="203.89021588299147" x="-9657.169652277" y="-9927.569252797513"/>
+          <y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="46.3984375" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="127.12890625" x="38.380654816495735" y="19.14306640625">Stop
+We're either done or 
+can't  find a solution.</y:NodeLabel>
+        </y:GenericNode>
       </data>
-    </edge>
-    <edge id="e1" source="n8" target="n9">
-      <data key="d9"/>
+    </node>
+    <edge id="e0" source="n7" target="n8">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="15.451777343746471"/>
@@ -183,28 +168,31 @@ and save the path taken so far.</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e2" source="n1" target="n3">
-      <data key="d9"/>
+    <edge id="e1" source="n1" target="n2">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="160.89524999999867" ty="0.22804687499592546">
-            <y:Point x="-7050.0" y="-7530.0"/>
-          </y:Path>
+          <y:Path sx="101.9259046605469" sy="0.0" tx="160.89524999999952" ty="1.5547244643821614"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="six_pos" modelPosition="head" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="24.279296875" x="63.8916015625" y="9.369140625">Yes</y:EdgeLabel>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="six_pos" modelPosition="head" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="24.279296875" x="77.14112212497639" y="-20.133055004313064">Yes</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e2" source="n2" target="n3">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="27.070831127085334" tx="0.0" ty="7.88311975402306"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
     <edge id="e3" source="n3" target="n4">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="22.96875" tx="0.0" ty="0.0">
-            <y:Point x="-6692.822916666666" y="-7468.188017578121"/>
-            <y:Point x="-6692.822916666667" y="-7468.188017578121"/>
-          </y:Path>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="-20.60608092451536"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
@@ -212,10 +200,9 @@ and save the path taken so far.</y:NodeLabel>
       </data>
     </edge>
     <edge id="e4" source="n4" target="n5">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="-44.241865366762156"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
@@ -223,21 +210,26 @@ and save the path taken so far.</y:NodeLabel>
       </data>
     </edge>
     <edge id="e5" source="n5" target="n6">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="2.07065426731965" ty="0.18141882578674995">
-            <y:Point x="-6930.0" y="-7330.104511718746"/>
-            <y:Point x="-6930.0" y="-7439.818581174213"/>
-          </y:Path>
+          <y:Path sx="0.0" sy="3.4943105910670313" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e6" source="n6" target="n7">
-      <data key="d9"/>
+    <edge id="e6" source="n10" target="n7">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-4.57538865267075" sy="-10.415370712045963" tx="-4.575388652669972" ty="52.28369140625"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e7" source="n8" target="n9">
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
@@ -247,56 +239,46 @@ and save the path taken so far.</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e7" source="n7" target="n8">
-      <data key="d9"/>
+    <edge id="e8" source="n9" target="n1">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="-7154.190625" y="-7290.0"/>
-            <y:Point x="-7601.2" y="-7290.0"/>
+          <y:Path sx="0.0" sy="-30.0" tx="-101.9259046605469" ty="0.0">
+            <y:Point x="-9990.0" y="-10055.201414379313"/>
           </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="six_pos" modelPosition="head" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="167.986328125" x="77.85950979900008" y="-33.806883129313064">Return the path taken so far</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e9" source="n0" target="n1">
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="-18.170039062502838"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e8" source="n9" target="n10">
-      <data key="d9"/>
+    <edge id="e10" source="n6" target="n10">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="-7601.2" y="-7566.450888671873"/>
-            <y:Point x="-7601.199999999999" y="-7566.450888671873"/>
-          </y:Path>
+          <y:Path sx="0.0" sy="0.0" tx="6.35673996811056" ty="2.743124398701184"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e9" source="n10" target="n0">
-      <data key="d9"/>
+    <edge id="e11" source="n1" target="n11">
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
-            <y:Point x="-7601.199999999999" y="-7680.0"/>
-            <y:Point x="-7290.0" y="-7680.0"/>
-          </y:Path>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="six_pos" modelPosition="head" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="167.986328125" x="71.60703125000055" y="-49.927734375">Return the path taken so far</y:EdgeLabel>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e10" source="n0" target="n1">
-      <data key="d9"/>
-      <data key="d10">
-        <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="0.0" tx="-44.33333333333303" ty="0.0"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="20.236328125" x="2.000065039495894" y="29.940838286587677">No</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
