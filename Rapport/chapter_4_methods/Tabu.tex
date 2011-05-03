@@ -26,25 +26,21 @@ Feasible solution = a set of moves that have not yet solved the problem, or have
 
 
 \subsection{Development process of the Tabu search algorithm}
-The developement process of the tabu search algorithm will here be formulated and the choices taken along the road expland. One of the features of this project is that it had a strict deadline. This forced the process in a direction so that the ideas needed to be somewhat easy to implement. \\
+The developement process of the tabu search algorithm for our problem will here be described in detail. One of the restrictions of this project was that it had a time shortage due to a deadline. Because of this the alternatives that were easiest to implement was usually prefered. The development process originated from a general flowchart of the algorithm, given in figure 4.2. By following the flow chart, in step one we arrive at the first issue to resolve. The issue of whether to construct a set of feasible solutions, or one single feasible solution at a time. Since the genetic algorithm already had implemented a way of constructing sets of feasible solutions, it was decided to construct one feasible solution at a time.\\
 \\
-Let's start by analysing the random generating of moves a.k.a. feasible solution, see step 1 in figur [flowchart]. The first crossroad was encountered when the decission of generating one feasible solution at a time was taken, instead of generating a set of feasible solutions. The reason behind this choice was that the genetic algorithm already had gone down the path of generating a set of feasible solutions \footnote{ refering to poppulation se sechten???}, since diversity was desired.\\
-\\The second crossroad, on the subject of generating moves, was whether to generate one move or a series of moves to generate a new feasible solution. 
-
-This decission was harder to make, since both alternatives seemed to yield highly promising but very different algorithms. The implementation of making a series of moves would be an intermediate between the two choices of the first crossroad. And the result would be a receding horizon [referens johan papper] approach where one had to either:
+Two alternatives on how to construct this single feasible solution was considered. Either by generating the feasible solution one pursuer step at a time, or by a series of steps. It was decided to construct the feasible solution with one pursuer step at a time. This was a hard decission to make, since both alternatives seemed to yield highly promising but very different algorithms. The implementation of making a series of moves would result in a receding horizon approach, where one had to either  
 \begin{itemize}
-\item[-]{}Produce a large set of series of moves to later sort by fitness, then choose one to check against the tabu list and aspiration critera.
+\item[-]{}Produce a large set of series of moves. Sort these by fitness, then choose one to check against the tabu list and aspiration critera.
 \item[-]{}Generate a single series of moves to check against the tabu list and aspiration critera.
 \end{itemize}
-
-Both alternatives would probably have yielded promising algorithms. But the fact that the tabu list and aspiration critera then would have needed abilities of a more analysing type implied that it would be more difficult to implement. This resulted in that this path was scraped. This meant that the one move one feasible solution approach came out ahead.\\
+The implementation of this approach would require that the tabu list and aspiration critera had abilities of a more analysing type. This implied that it would be very difficult to implement within the given time.\\
 \\
 This settled we can now move forward to view the ideas of the tabu list. In the beginning of the development the ideas flourished. Seven different rules where evaluated:
 \begin{enumerate}
 \item{}For one feasible solution save the past X number of moves for each pursuer and render these moves tabu to be returned to.
 \item{}Do not allow moves that results in X number of lost secured areas.
-\item{}Make geometricaly based tabus for critical areas:
-\subitem{} Regions of corridor like characteristics would not be needed to be walked down if a pursuer saw its end point or if one had a region with an obstacle that one could walk around. Regions with an obstacle of that kind would need two pursuers to be secured, thus it would be tabu to go about and try to secure it alone. And finaly if one hade a tree like corridor system, going about to solve it would only be allowed with the right amount of pursuers.
+\item{}Make geometricaly based tabus for critical areas:\vspace{0,1cm}\\
+Regions of corridor like characteristics would not be needed to be walked down if a pursuer saw its end point or if one had a region with an obstacle that one could walk around. Regions with an obstacle of that kind would need two pursuers to be secured, thus it would be tabu to go about and try to secure it alone. And finaly if one hade a tree like corridor system, going about to solve it would only be allowed with the right amount of pursuers.
 \item{} Work togheter:
 \subitem{} Somewhat similar to tabu rule (3), but with the addon that two pursuers never really need to see each other only share vissible areas. This is  a more general rule that would need to be weighted in the aspriation criteria.
 \item{} High valued areas:
