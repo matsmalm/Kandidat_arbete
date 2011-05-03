@@ -1,14 +1,24 @@
 \chapter{Results}
-The algorithms were run on iMac's with 2.66GHz Intel Core2Duo and 4GB of RAM. Each machine was given an environment of a specified size.\footnote{Environments of size 5x5, 10x10, 15x15, 20x20, 25x25 and 30x30 were used}\\
+The algorithms were run on iMac's with 2.66GHz Intel Core2Duo and 4GB of RAM. Each machine was given an environment of a specified size.\footnote{Environments of size 5x5, 10x10, 15x15, 20x20, 25x25 and 30x30 were used}. The data acquired is summarized in table \ref{SimData}.
 %% Tables with data
+\begin{table}[t!hb]
+\begin{tabular}{| c | r | r | r | r | r | r | }
+\hline
+\input{chapter_5_results/Data.tex} 
+\hline
+\end{tabular}
+\label{SimData}
+\caption{Data from simulations}
+\end{table}
 %% End of tables
-The data acquired shows that:
+\\ From the data we can see the following:
 \begin{itemize}
 \item{The results were dependent on parameter values.}
-\item{Environments of size 5x5 were solved with equally good quality for both the tabu search and the genetic algorithm, however tabu search were faster in finding a solution.}
-\item{Environments of size 10x10 and 25\% obstacle density were not always solved by the algorithms with less than 4 pursuers.}
-\item{When tabu search finds a solution, it is often of better quality than the genetic algorithm.}
-\item{For environments of size 10x10 and larger, the genetic algorithm finds a solution more often than tabu search.}
+\item{For environments of size 5x5 were solved with good quality for both the tabu search and the genetic algorithm, however tabu search were faster in finding a solution.}
+\item{Environments of size 10x10 and larger were not always solved with less than 4 pursuers.}
+\item{When tabu search found a solution, it was often of better quality than the genetic algorithm.}
+\item{For environments of size 10x10 and larger, the genetic algorithm found a solution more often than tabu search.}
+\item{For environments of size 10x10 and larger, the quality of the solution, if found, varied in steps and computation time.}
 \end{itemize}
 
 %%Statistics, tables and a description of the tables. Also motivation to why we have chosen these tables etc.\\\\ %%Results for MILP\footnote{Mixed Integer Linear Programming, see \cite{paper3}} evaluation could also be added here.\\\\
