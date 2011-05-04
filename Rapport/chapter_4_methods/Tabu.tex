@@ -96,11 +96,12 @@ Parameter values (1) and (2) are related in such a way so that (2) ensures that 
 Parameter value (4b) and (4c) aims to avoid the algorithm from being to hasty in returning a final solution. This is usually encountered in less difficult enviroments. The Max\_allowed\_steps and Restart\_the\_algorithm\_X\_times tries to tackle the problem of finding the first complete solution. The computational time, and the probability of finding any solution at all, strongly depends on this relation. As discussed lastly in section 4.2.3 the algorithms' computational time will be affected if the first complete solution is found at a late stage in the search. By increasing (3c) the probability of finding any solution should increase. Though this will affect the computational time in a negative way. Both parameter value (3a) and (3b) are to ensure that the algorithm terminates when the search space has been throughly examined in promising areas.
 Parameter (3b) is also an indicator of that the the search has converged to a final solution.\\
 \\
-nedan skall renskrivas men essensen ar dar:\\
-obius shortcommings in the algorithem:
+The implementation of algorithms was made piece by piece. Two of these pieces had known obvious shortcomings. Shortcomings that at the time of implementation were ignored, and due to the lack of time never were treated. These are\\
 \begin{enumerate}
-\item{} cant linger in a tile
-\item{} lage nuber of presuers semi freeses the algorithem.
+\item{} A pursuer can’t linger in a tile. \vspace{0,1cm}\\
+ An effect of Tabu rule save\_past\_X\_number\_of\_moves.
+\item{} large number of precious semi freezes the algorithm\footnote{ The number of large has not been investigated but for 20 pursuers things went south }. \vspace{0,1cm}\\
+Also an effect of Tabu rule save\_past\_X\_number\_of\_moves.
 \end{enumerate} 
-
+The belief is that both these shortcomings could have been dealt with.
 
