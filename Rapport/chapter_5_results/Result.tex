@@ -1,5 +1,8 @@
 \chapter{Results}
-The algorithms were run on iMac's with 2.66GHz Intel Core2Duo and 4GB of RAM. Each machine was given an environment of a specified size.\footnote{Environments of size 5x5, 10x10, 15x15 and 20x20 were used}. The data acquired is summarized in table \ref{SimData}.
+The algorithms were run on iMac's with 2.66GHz Intel Core2Duo and 4GB of RAM. Each machine was given an environment of a specified size\footnote{Environments of size 5x5, 10x10, 15x15 and 20x20 were used}, where the density of obstacles was either 25\% or 40\%. Each computer was given 10 random generated environments of a given size and two different starting positions for each environment.\\*
+Each algorithm was given a maximum step length for each pursuer to take, which was set by a parameter value that was deemed to be sufficiently long to find a solution. For 5x5 a maximum of 50 steps was used, for 10x10 150 steps, for 15x15 300 steps and for 20x20 600 steps. The algorithm was then to find a solution of as few steps as possible.\\*
+When none of the algorithms could find a solution within the given maximum steps no further attempts of finding a solution  with fewer pursuers and the same starting positions were made for either of the algorithms.\\
+In table \ref{SimData} the data acquired is summarized. The "Average step difference" is the difference in steps used for the genetic algorithm and the tabu search algorithm divided by the number of successful runs for that environment and amount of pursuers, where only cases when both algorithms succeeded were counted. The "Average time" is the time for each run divided by the number of runs, where both successful and unsuccessful runs were counted.
 %% Tables with data
 \begin{table}[t!hb]
 \begin{tabular}{| c | r | r | r | r | r | r | r | r | }
@@ -11,7 +14,7 @@ The algorithms were run on iMac's with 2.66GHz Intel Core2Duo and 4GB of RAM. Ea
 \label{SimData}
 \end{table}
 %% End of tables
-\\ From the simulations the following observations were made:
+\newpage From the simulations the following observations were made:
 \begin{itemize}
 \item{The results were dependent on parameter values.}
 \item{For environments of size 5x5 were solved with good quality for both the tabu search and the genetic algorithm, however tabu search were faster in finding a solution.}
