@@ -13,15 +13,11 @@ To read environments from files makes the simulation environment usable for many
 	%graph-approach var bra ide?
 	%applicerbar pga filskrivning
 \section{Analysis of the simulations}
-%discussion/analys av kördata
-	%styrkor och svagheter hos de implementerade
-		%varför dessa egenskaper?
-		%hur ser vi dessa egenskaper ur mätdata?
-		
-\\First off it should be noted that when varying the size of the enviroment certain parameters of the algorithms had to be adjusted. For enviroments of intermediate size a correct adjustment of parameters yielded solutions of significantly higher quality. For larger enviroments it was necessary in order to attain any solution at all. We found no analytical way of adjusting the parameters. A good understanding of the implementation in combination with intuition and testing usually solved the issue. This does not exclude the possibility that there might be a more descisive approach. In fact, based mainly on our intuition, it is most probable.\\
-\\As seen in the table \ref{SimData}, given in the previous section, for small enviroments both algorithms efficiently provides solutions of high quality, even with a small amount of pursuers. The optimality of the solutions is not proven, but it's likely that the provided solutions in most cases are optimal. This assumtion is motivated by the fact that the quality of the solutions rarely differs and the path length is typicaly only a few steps long. It should be noted that the average computational time for these solutions is 3 milliseconds for the tabu search algorithm and 37 milliseconds for the genetic algorithm. These are highly efficient results compared to related work \cite{paper1}.\\
-\\As the size of the enviroments is increased the solutions are less probable to be optimal. This assumption is motivated by the fact that the quality of the solutions now vary strongly. Also the computational time severely increases with the size of the enviroment. An interesting observation though is to compare how the average computational time for the two algorithms changes as the difficulty increases. The tabu search algorithm is highly efficient if it is able to find a first complete solution. But when running on the bigger areas the average time diverges. On the other hand the genetic algorithm provides reasonable average computational times, and is more reliable to find some solution even for difficult enviroments.
-		
+First off it should be noted that when varying the size of the enviroment certain parameters of the algorithms had to be adjusted. For enviroments of intermediate size a correct adjustment of parameters yielded solutions of significantly higher quality. For larger enviroments it was necessary in order to attain any solution at all. We found no analytical way of adjusting the parameters. A good understanding of the implementation in combination with intuition and testing usually solved the issue. This does not exclude the possibility that there might be a more descisive approach. In fact, based mainly on our intuition, it is most probable.\\
+\\As seen in the table \ref{SimData}, given in the previous chapter, for small enviroments both algorithms efficiently provides solutions of high quality, even with a small amount of pursuers. The optimality of the solutions on the randomly generated enviroments is not proven, but it's likely that the provided solutions in most cases are optimal. This assumtion is motivated by the fact that the quality of the solutions rarely differs and the path length is typicaly only a few steps long. It should be noted that the average computational time for these solutions is 3 milliseconds for the tabu search algorithm and 37 milliseconds for the genetic algorithm. These are highly efficient results compared to related work \cite{paper1}.\\%nämn och jämför manhattan resultat
+\\When the size of the enviroment is increased the solutions found are less probable to be optimal. This assumption is motivated by the fact that the quality of the solutions now vary strongly. Also the computational time severely increases with the size of the enviroment. An interesting observation though is to compare how the average computational time for the two algorithms changes as the difficulty increases. The tabu search algorithm is highly efficient if it is able to find a first complete solution. But when running on the bigger areas the average time diverges. On the other hand the genetic algorithm provides reasonable average computational times, and is more reliable to find some solution even for difficult enviroments.\\
+\\By combining an indepth understanding of the implementation with the data aquired the following conclusions, and fundamental differences, can be made on the implementation of the algorithms. The tabu algortithm is strongly dependent on finding a complete solution of sufficient quality, in order to be efficient. The reason behind this is that a maximum step length is set dynamicaly by the complete solution found, and tiles not visited in this solution are rendered tabu. Thus, with a complete solution of bad quality there are still a vast amount of aternative paths to consider, which in turn affects the efficency.\\
+\\The genetic algorithm does not have the same dependency of finding a complete solution, due to its reproduction properties. This motivates the more robust results on efficency for larger areas, compared to the tabu algorithm. 		
 \section{Starting positions}
 %lösningskvalitet starkt beroende av startpositioner.
 	%formulera tydligt vilka startförhållanden som avses i problemställning hos framtida arbeten.
@@ -39,12 +35,7 @@ To read environments from files makes the simulation environment usable for many
 		%förbättra simuleringsmiljön
 		%hybridmetoder
 		%implementera greedy, motviera varför.
-
-
-
-%ordning:
-
-
+		%om man kunde visa att en optimal lösning kan formuleras som superposition av dellösningar skulle algorithmerna kunna ändras i grunden och bli extremty mycket effektivare.
 
 
 
