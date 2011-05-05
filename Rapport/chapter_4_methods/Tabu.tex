@@ -64,6 +64,7 @@ There are two elements in the algorithm that affect the convergence. These are t
 \includegraphics[width=0.75\textwidth,height=0.70\textheight]{chapter_4_methods/ny_Tabu}
 \caption[Final algorithm flow chart of tabu algorithm]
 {Final algorithm flow chart of tabu algorithm}
+\label{t2}
 \end{figure}
 
 The figure \ref{t2} will now be described in detail.
@@ -88,13 +89,10 @@ Meaning check tabu rule (1), (2) and (5)
 \end{enumerate}
 \end{enumerate}
 \item{} if yes in step 4 or no in step 4a the tabu list, the aspiration criteria and the stopping criteria accordingly. Move to 1
-\item{} the stopping criteria. Has it been reached \vspace{0,1cm}\\
+\item{} The stopping criteria. Has it been reached. If no move to 1. \vspace{0,1cm}\\
 Here an evaluation is made whether the algorithm is to be set to cycle through iteration or not. Or if it is to restart with a completely new feasible solution or not. 
-Or lastly if the algorithm is to restart with a completely new feasible solution but save the information from tabu rule (5) or not. The last part her was the incorporation of the ``go again criteria’’.
-\begin{enumerate}
-\item{} if no move to 1
- \begin{enumerate}
-\item{} if yes in 6 terminated the algorithm
+Or lastly if the algorithm is to restart with a completely new feasible solution but save the information from tabu rule (5) or not. The last part her was the incorporation of the ``go again criteria''.
+\item{} if yes in 6 terminate the algorithm
 \end{enumerate}
 
 \subsection{Implementation of the Tabu search algorithm}
