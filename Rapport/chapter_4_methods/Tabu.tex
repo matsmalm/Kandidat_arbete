@@ -55,18 +55,47 @@ Which in turn means that step 5 in figure [4.2] needs a fitness calculation func
 \\A comment on tabu rule (5) is that when this rule first was implemented the idea was that X number of past complete solutions were analysed to check which areas had been walked upon at least once, and render the rest tabu. The problem was however that this wasn't strict enough, so X was set to one. Which in turn led to a new problem. The problem that arouse was that the algorithm now, under certain circumstances, was too hasty in returning a final solution. This was partially solved by a new stopping criteria and a ``go about it again'' criteria.\\
 \\The final version of the algorithm can be viewed in figure [4.3 ] and is also presented in the next section.
 \subsection{The Tabu search algorithm for our problem}
-In figur [4.2] and the previous section a general step by step explanation was made of the tabu search algorithm. In figur [4.3] a modified version can be viewed, intended to illustrate the final algorithm. Observe that some functions from to the general algorithm have been removed.\\
+In figure\ref{t1} and the previous section a general step by step explanation was made of the tabu search algorithm. In figure \ref{t2}a modified version can be viewed, intended to illustrate the final algorithm. A step by step explanation will be made of figure \ref{t2}. Observe that some functions from to the general algorithm have been removed.\\
+
+There are two elements in the algorithm that affect the convergence. These are the tabu rule (5) and the Best-solution-found-so-far criteria. The tabu rule (5) is explained in the previous section. The Best-solution-found-so-far criteria prohibits the algorithm from searching for solutions longer than the best length found so far. It should be noted that both convergence helping elements depend on the existence of a complete solution. This means that if the algorithm is unlucky in finding the first complete solution, the computational time will rise accordingly. As a side note, this considerable insufficiency might have been avoided with the more advanced aspiration criteria, discussed in section 4.2.2.
 
 \begin{figure}[!h]
-	\centering
-	\includegraphics[width=0.75\textwidth,height=0.70\textheight]{chapter_4_methods/ny_Tabu}
-  	\caption[Final algorithm flow chart of tabu algorithm]
-  	{Final algorithm flow chart of tabu algorithm}
-	\label{t2}
+\centering
+\includegraphics[width=0.75\textwidth,height=0.70\textheight]{chapter_4_methods/ny_Tabu}
+\caption[Final algorithm flow chart of tabu algorithm]
+{Final algorithm flow chart of tabu algorithm}
 \end{figure}
 
-
-There are two elements in the algorithm that affect the convergens. These are the tabu rule (5) and the Best-solution-found-so-far criteria. The tabu rule (5) is explained in the previous section. The Best-solution-found-so-far criteria prohibits the algorithm from searching for solutions longer than the best length found so far. It should be noted that both convergens helping elements depend on the existence of a complete solution. This means that if the algorithm is unlucky in finding the first complete solution, the computational time will rise acordingly. As a side note, this considerable insufficiency migth have been avoided with the more advanced aspiration critera, discussed in section 4.2.2.
+The figure \ref{t2} will now be described in detail.
+\begin{enumerate}
+\item{}Obtaining feasible solution by going one step with each pursuer randomly. \vspace{0,1cm}\\ 
+The input of step 1 is the path taken so far. For the first iteration, or if a completely new feasible solution is to be created, this corresponds only to the starting positions of the pursuers. 
+\item{} is it a new best complete solution.
+\begin{enumerate}
+\item{} if yes the complete solution is saved. An update of the tabu list, the aspiration criteria and the stopping criteria is made accordingly. Then move to 6
+\end{enumerate}
+\item{} is it an incomplete solution.
+\begin{enumerate}
+\item{} if yes update the tabu list, the aspiration criteria and the stopping criteria accordingly. Then move back to 1 \vspace{0,1cm}\\
+To note her is the change from the general flowchart in figure \ref{t1} to the less sophisticated algorithm. 
+\end{enumerate}
+\item{} check the feasible solution against the tabu list, is the feasible solution tabu. \vspace{0,1cm}\\
+Meaning check tabu rule (1), (2) and (5)
+\begin{enumerate}
+\item{} if yes the feasible solution is analyzed in the aspiration criteria, whether if the tabu list is to be overrided.
+ \begin{enumerate}
+\item{} if no, update the tabu list, the aspiration criteria and the stopping criteria accordingly. Then move to 6
+\end{enumerate}
+\end{enumerate}
+\item{} if yes in step 4 or no in step 4a the tabu list, the aspiration criteria and the stopping criteria accordingly. Move to 1
+\item{} the stopping criteria. Has it been reached \vspace{0,1cm}\\
+Here an evaluation is made whether the algorithm is to be set to cycle through iteration or not. Or if it is to restart with a completely new feasible solution or not. 
+Or lastly if the algorithm is to restart with a completely new feasible solution but save the information from tabu rule (5) or not. The last part her was the incorporation of the ``go again criteria’’.
+\begin{enumerate}
+\item{} if no move to 1
+ \begin{enumerate}
+\item{} if yes in 6 terminated the algorithm
+\end{enumerate}
 
 \subsection{Implementation of the Tabu search algorithm}
 In this section two important aspects of the implementation will be discussed. These two are the meaning of the parameter values and obvious shortcomings in the algorithm. With the implementation, a series of parameter values arouse. The parameter values can be divided into four diferent categories.
