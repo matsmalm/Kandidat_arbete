@@ -1,18 +1,59 @@
 \chapter{Results}
-The algorithms were run on iMac's with 2.66GHz Intel Core2Duo and 4GB of RAM. Each machine was given an environment of a specified size\footnote{Environments of size 5x5, 10x10, 15x15 and 20x20 were used}, where the density of obstacles was either 25\% or 40\%. Each computer was given 10 random generated environments of a given size and two different starting positions for each environment.\\*
-Each algorithm was given a maximum step length for each pursuer to take, which was set by a parameter value that was deemed to be sufficiently long to find a solution. For 5x5 a maximum of 50 steps was used, for 10x10 150 steps, for 15x15 300 steps and for 20x20 600 steps. The algorithm was then to find a solution of as few steps as possible.\\*
-When none of the algorithms could find a solution within the given maximum steps no further attempts of finding a solution  with fewer pursuers and the same starting positions were made for either of the algorithms.\\
-In table \ref{SimData} the data acquired is summarized. The "Average step difference" is the difference in steps used for the genetic algorithm and the tabu search algorithm divided by the number of successful runs for that environment and amount of pursuers, where only cases when both algorithms succeeded were counted. The "Average time" is the time for each run divided by the number of runs, where both successful and unsuccessful runs were counted.
+The algorithms were run on iMac's with 2.66GHz Intel Core2Duo and 4GB of RAM. Each machine was given environments of a specified size\footnote{Environments of size 5x5, 9x9, 10x10, 15x15 and 20x20 were used}, where the density of obstacles was either 25\% or 40\%. Figure \ref{Envs} shows examples of environments of size 10x10 with (a) 25\% obstacle density and (b) 40\% density that were used.\\*
+Except from the Manhattan\footnote{A special symmetric environment, see \cite{paper1}} grid each machine was given 10 random generated environments of equal size and two different random starting positions for each environment. Each algorithm was given a set of parameters that were tuned in order to find a solution with two pursuers, however each environment was run for 5-2 pursuers. The algorithms were also given a maximum number of steps for each pursuer to take, long enough to find a solution.\\
+The algorithms were then to find a solution of as few steps as possible for a given number of pursuers. If neither of the algorithms were able to find a solution within the given maximum steps no further attempts of finding a solution with the same or fewer pursuers and the same starting positions were made for either of the algorithms.\\
+In table \ref{SimData} the data acquired is summarized.\\*
+The "Average step difference" is given by the difference in steps used for the genetic algorithm and tabu search algorithm in successful cases, divided by the number of successful runs for the given environment and number of pursuers.\\*
+The "Average time" is the time for each run divided by the number of runs, where both successful and unsuccessful runs were counted.
 %% Tables with data
+\begin{center}
 \begin{table}[t!hb]
+\noindent\makebox[\textwidth]{%
 \begin{tabular}{| c | r | r | r | r | r | r | r | r | }
 \hline
 \input{chapter_5_results/Data.tex} 
 \hline
-\end{tabular}
+\end{tabular} }
 \caption{Data from simulations}
 \label{SimData}
 \end{table}
+\end{center}
+%% 
+%% Environments
+\begin{figure}[t!hb]
+\begin{center}
+(a)\\*
+\begin{tabular}{| p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | }
+\hline
+\input{chapter_5_results/Environments-10x10-25-1.tex} 
+\hline
+\end{tabular}
+\hspace{0.5cm}
+\begin{tabular}{| p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | }
+\hline
+\input{chapter_5_results/Environments-10x10-25-2.tex} 
+\hline
+\end{tabular}
+\end{center}
+\vspace{0.05cm}
+\begin{center}
+(b)\\*
+\begin{tabular}{| p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | }
+\hline
+\input{chapter_5_results/Environments-10x10-40-1.tex} 
+\hline
+\end{tabular}
+\hspace{0.5cm}
+\begin{tabular}{| p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | }
+\hline
+\input{chapter_5_results/Environments-10x10-40-2.tex} 
+\hline
+\end{tabular}
+\end{center}
+\caption{Environments used}
+\label{Envs}
+\end{figure}
+%% End of environments
 %% End of tables
 \newpage From the simulations the following observations were made:
 \begin{itemize}
