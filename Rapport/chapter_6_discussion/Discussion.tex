@@ -3,10 +3,13 @@
 This chapter contains analysis of the data collected when running the algorithms and conclusions made during the process.
 
 \section{The simulation}
-The simulation environment developed was usable, but is not without limitations.\\
-As the simulation environment can not merge tiles into one node, something that could be usable for certain geometries such as hallways, the memory usage is proportional to the number of tiles.\\
-The graph approach meant that no more nodes than necessary was examined in each step.\\
-To read environments from files makes the simulation environment usable for many kinds of environments. New environments could either be generated or added by hand.\\
+The simulation environment developed was usable, but is not without limitations some advantages and disadvantages are listed below.
+\begin{itemize}
+\item{} As the simulation environment can not merge tiles into one node, something that could be usable for certain geometries such as hallways, the memory usage is proportional to the number of tiles.
+\item{} Using a graph means that existing algorithms that are already written for graphs%such as?
+can be used, which facilitates implementation. During implementation it is also possible for the nodes to contain a collection information.
+\item{} The decision to read environments from files makes the simulation environment usable for many kinds of environments. New environments could easily either be generated or added by hand.
+\end{itemize}
 %utvärdera fördelar och nackdelar som simuleringsmiljön besitter.
 	%förklara visions tillkortakommande
 	%kan inte mergea, kräver mycker minne
