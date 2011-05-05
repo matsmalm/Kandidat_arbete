@@ -1,8 +1,6 @@
 \chapter{Discussion}
 
-This chapter contains analysis of the data collected when running the algorithms and conclusions made during the process.
-
-
+This chapter contains analysis of the data collected when running the algorithms and conclusions made during the work process.
 
 \section{The simulation}
 %utvärdera fördelar och nackdelar som simuleringsmiljön besitter.
@@ -22,6 +20,8 @@ First off it should be noted that when varying the size of the enviroment certai
 	%vi har slumpstart, varför? vad kan vi se?
 	%bedöm kvalitet på given lösning utifrån omständigheter.
 	
+One of our intentions with this report was to compare 
+
 \section{When do the algorithms fail?}	
 %när skiter det sig och varför?
 
@@ -34,22 +34,13 @@ First off it should be noted that when varying the size of the enviroment certai
 		%hybridmetoder
 		%implementera greedy, motviera varför.
 		%om man kunde visa att en optimal lösning kan formuleras som superposition av dellösningar skulle algorithmerna kunna ändras i grunden och bli extremty mycket effektivare.
+Improvement on the implementations of the algorithms and the simulation enviroment is probable to give more reliable and promising results. Due to the short amount of time given for a project of this size many short cuts were made intentionally. Another interesting suggestion is to combine the algorithms and create a hybrid method. \\
+\\Since the algorithms constructed in this paper are considered to be very efficient for smaller problems it is suggested to investigate whether an global optimal solution could be attained by solving local subproblems.
 
 
 
-%gammal skit:
-%the quality 
-%\\På grund av tidsbrist han vi inte göra rigorösa tester. Variation av parametervärden förändrade resultaten så en konsekvent jämförelse var svår att genomföra.
 
 
-%\\5x5-områden löses med bra kvalitet av bägge algoritmer, men tabu får snabbare en lösning. inget kan bevisas rörande optimalitet, men resultaten varier inte mellan algoritmerna.
 
-%\\För 10x10 med ett fåtal jagare och 25\% täthet löser tabu endast problemet i ett fåtal fall. Genetic hittar oftare en lösning, men ej alltid. Genetic hade endast 75\% konvergens och borde således kunna få bättre lösningar. Om tabu hittar en lösning verkar den hitta en bättre lösning än genetisk. Parametervärden är viktiga för att hitta en lösning, samt kvalitén på lösningen.
 
-%\\För 15x15 finner genetisk oftare en lösning, men tabu ger bättre resultat OM resultat hittas. Körtiden för tabu ökar, och passerar i genomsnitt körtiden för genetic(Om en lösning hittas av tabu så kör algoritmen en längre tid, givet att första lösningen är av dålig kvalitet) . Inga lösningar för under 4 jagare hittas för 40\% täthet. Körtiden för tabu ökar.
-
-%\\För manhattan (med hårdkodade startpositioner)  är Tabu lite snabbare
-
-%\\Större områden kräver väldigt mycket tid för att lösas, vilket medförde att parametervärdena på genetisk fick sänkas för att simuleringarna skulle hina köras. Detta medförde sämre kvalité på lösningar som fanns. För större tider bör genetisk algoritm ge lösningar även på större områden.
-
-%\\Mutationerna i den genetiska algoritmen medför att även om en initial komplett lösning ej hittas så kan den påträffas under körningen.
+		
