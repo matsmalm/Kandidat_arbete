@@ -1,11 +1,13 @@
 \chapter{Results}
-The algorithms were run on iMac's with 2.66GHz Intel Core2Duo and 4GB of RAM. Each machine was given environments of a specified size\footnote{Environments of size 5x5, 9x9, 10x10, 15x15 and 20x20 were used}, where the density of obstacles was either 25\% or 40\%. Figure \ref{Envs} shows examples of environments of size 10x10 with (a) 25\% obstacle density and (b) 40\% density that were used.\\*
-Except from the Manhattan\footnote{A special symmetric environment, see \cite{paper1}} grid each machine was given 10 random generated environments of equal size and two different random starting positions for each environment. Each algorithm was given a set of parameters that were tuned in order to find a solution with two pursuers, however each environment was run for 5-2 pursuers. The algorithms were also given a maximum number of steps for each pursuer to take, long enough to find a solution.\\
-The algorithms were then to find a solution of as few steps as possible for a given number of pursuers. If neither of the algorithms were able to find a solution within the given maximum steps no further attempts of finding a solution with the same or fewer pursuers and the same starting positions were made for either of the algorithms.\\
-In table \ref{SimData} the data acquired is summarized.\\*
-The "Average step difference" is given by the difference in steps used for the genetic algorithm and tabu search algorithm in successful cases, divided by the number of successful runs for the given environment and number of pursuers.\\*
-The "Average time" is the time for each run divided by the number of runs, where both successful and unsuccessful runs were counted.
+The algorithms were run on iMac's with 2.66GHz Intel Core2Duo and 4GB of RAM. Each machine was given environments of a specified size\footnote{Environments of size 5x5, 9x9, 10x10, 15x15 and 20x20 were used}, where the density of obstacles was either 25\% or 40\%. Figure \ref{Envs} shows examples of environments of size 10x10 with (a) 25\% obstacle density and (b) 40\% density that were used.\\
+\\For the random enviroment simulations each machine was given 10 randomly generated enviroments of equal size. Five starting positions were generated, twice for each enviroment. To decrease the amount of pursuers the starting positions lastly generated were omitted. Each setup of starting positions, number of pursuers and enviroment was run with the same conditions four times. Each algorithm was given a set of parameters that were tuned in order to find a solution with two pursuers, however each environment was run with 5 to 2 pursuers. The algorithms were also given a maximum number of steps allowed for each pursuer to take, set to be long enough to find a solution.The algorithms were then to find a solution of as few steps as possible for a given number of pursuers. If for a given amount of pursuers neither of the algorithms were able to find a solution within the maximum steps allowed, no further attempts of finding a solution with these conditions were made. Neither were any furhter attempts made for fewer pursuers on these conditions. In table \ref{SimData} the data acquired is summarized.\\
+\\For the Manhattan\footnote{A special symmetric environment, see \cite{paper1}} grid the simulation conditions were different. \\
+%fyll ut med hur!!!
+
+%\\In table \ref{SimData} the "Average step difference" is given by the difference in steps used for the genetic algorithm and tabu search algorithm in successful cases, divided by the number of successful runs for the given environment and number of pursuers. The "Average time" is the time for each run divided by the number of runs, where both successful and unsuccessful runs were counted.
 %% Tables with data
+In table \ref{SimData} the "Average step difference" describes the difference in path length of complete solutions. This value is attained by subtracting the sum of all complete path lengths of the tabu algorithm from the sum of all complete path lengths of the genetic algorithm and divide this by the number of successfull runs for the given enviroment. The "Average time" is the time for each run divided by the number of runs, where both successful and unsuccessful runs were counted.
+
 \begin{center}
 \begin{table}[t!hb]
 \noindent\makebox[\textwidth]{%
@@ -57,6 +59,7 @@ The "Average time" is the time for each run divided by the number of runs, where
 %% End of tables
 \newpage From the simulations the following observations were made:
 \begin{itemize}
+\item{For enviroments of size 15x15 and larger the amount RAM memory used was significant.}
 \item{The results were dependent on parameter values.}
 \item{For environments of size 5x5 were solved with good quality for both the tabu search and the genetic algorithm, however tabu search were faster in finding a solution.}
 \item{Environments of size 10x10 and larger were not always solved with less than 4 pursuers.}
