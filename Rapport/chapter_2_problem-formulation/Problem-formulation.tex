@@ -1,36 +1,49 @@
 \chapter{Problem formulation}
-%%describe feasible enviroment? referenced to from chapter 3
+%%describe feasible environment? referenced to from chapter 3
 
-This paper is an extension of the paper ``A Boolean Control Network Approach to Pursuit Evasion Problems in Polygonal Enviroments'' \cite{paper1}. Our main purpose is to use three conceptualy different heuristic methods to try and construct algorithms that efficiently solves the problem stated in the section below. We will also try to implement these algorithms in ANSI C to evaluate the quality and efficency of the algorithms. The efficency is quantified as the runtime needed for the algorithm to construct a solution. The quality of the solution is quantified in terms of path length. We will also discuss how the efficency and quality of the solutions depend on the enviroment's size and the number of pursuers.
+This paper is an extension of the paper ``A Boolean Control Network Approach to Pursuit Evasion Problems in Polygonal Environments''\cite{paper1}. Our main purpose is to use three conceptually different heuristic methods to try to construct algorithms that efficiently solves the problem stated in the section below. We will also try to implement these algorithms in ANSI C to evaluate the quality and efficiency of the algorithms. The efficiency is quantified as the runtime needed for the algorithm to construct a solution. The quality of the solution is quantified in terms of path length. We will also discuss how the efficiency and quality of the solutions depend on the size of the environment and the number of pursuers.
 \section {The Pursuit \& evasion problem with multiple pursuers.}
-Following the previous work of Johan Thunberg \cite{paper1}, the pursuers and evader are modeled as points moving in the polygonal free space, F . Let  $e(\tau )$ denote the position of the evader at time $\tau \geq 0$. It is assumed that $e : \lbrack 0, \infty) \to F$ is continuous, and that the evader is able to move arbitrarily fast. The initial position e(0) and path e is not known to the pursuers. At each time instant, F is partitioned into two subsets, the cleared and the contaminated, where the latter might contain the evader and the former might not. Given N pursuers, let $p_i (\tau ) : \lbrack 0, \infty) \to F$ denote the position of the i:th pursuer, and $P = \lbrace p_1 , . . . , p_N \rbrace$ be the motion strategy of the whole group of pursuers. Let V (q) denote the set of all points that are visible from $q \subset F$ , i.e., the line segment joining q and any point in V (q) is contained in F .\\
+Following the previous work of Johan Thunberg  et. al.\cite{paper1}, the pursuers and the evader are modelled as points moving in the polygonal free space, F . Let  $e(\tau )$ denote the position of the evader at time $\tau \geq 0$. It is assumed that $e : \lbrack 0, \infty) \to F$ is continuous, and that the evader is able to move arbitrarily fast. The initial position e(0) and path e is not known to the pursuers. At each time instant, F is partitioned into two subsets, the cleared and the contaminated, where the latter might contain the evader and the former might not. Given N pursuers, let $p_i (\tau ) : \lbrack 0, \infty) \to F$ denote the position of the i:th pursuer, and $P = \lbrace p_1 , . . . , p_N \rbrace$ be the motion strategy of the whole group of pursuers. Let V (q) denote the set of all points that are visible from $q \subset F$ , i.e., the line segment joining q and any point in V (q) is contained in F .\\
 \\
-\textbf{The original Problem (Pursuit Evasion).} \emph{ Given an evader, a set of N pursuers and a polygonal free space F , Þnd a solution strategy P such that for every continuos function $e : \lbrack 0, \infty) \to F$ there exists a time $\tau$ and an i such that $e(\tau ) \subset V (p_i (\tau ))$, i.e., the pursuer will always be seen by some evader, regardless of its path. }
+\textbf{The original Problem (Pursuit Evasion).} \emph{ Given an evader, a set of N pursuers and a polygonal free space F , Þnd a solution strategy P such that for every continuous function $e : \lbrack 0, \infty) \to F$ there exists a time $\tau$ and an i such that $e(\tau ) \subset V (p_i (\tau ))$, i.e., the pursuer will always be seen by some evader, regardless of its path. }
 
 \section{Discretized problem}
-
+Notations from \cite{paper1} is used.
+\begin{description}
+\item[Tile]A tile is...
+\item[Feasible solution]A feasible solution is...
+\item[Complete solution]A complete solution...
+\item[Incomplete solution]A incomplete solution...
+\item[Path]A path is...
+\item[Secured]A secured...
+\item[Area]An area is...
+\item[Pursuer]A pursuer...
+\end{description}
 \section{The problem formulation of this paper}
 Given the original pursuit \& evasion problem presented in the previous chapter, section 1.4.4. Our aim is to:
 \begin{enumerate}
-\item[-] Construct three heuristic algorithms that solves the problem.
-\item[-] Try to implement the algorithms and evaluate their efficency and the quality of the solutions presented.
-\item[-] If the implementation succeeds. Collect data on the implemented algorithms' results and discuss whether any new conclusions can be made on how to approach the original problem.
+\item[-] Construct three heuristic algorithms that solve the problem.
+\item[-] Implement the algorithms and evaluate their efficiency and the quality of the solutions presented.
+\item[-] Collect data from the results of implemented algorithms' and discuss whether any new conclusions can be made on how to approach the original problem.
 \end{enumerate}
 
 \section{Approach}
-The work can be divided into six subtasks, each will be discussed in more detail below. The subtasks are:
+The work will be divided into six sequentially performed subtasks, each will be discussed in more detail below. The subtasks are:
 \begin{enumerate}
-\item[-] Find three relevant heuristic methods for our problem and do an indepth research on them.
+\item[-] Find three relevant heuristic methods for our problem and do an in-depth research on them.
 \item[-] With the chosen heuristic methods, construct three algorithms that solves the given problem.
-\item[-] Create an simulation enviroment for the algoithms.
+\item[-] Create an simulation environment for the algorithms.
 \item[-] Implement the algorithms.
 \item[-] Run the algorithms to collect adequate data.
 \item[-] Evaluate the data and draw conclusions.
 \end{enumerate}
 
-As mentioned in chapter one, section 1.4.5. there are a vast amount of different heuristics. In this report we decided to use the heuristic concepts from greedy methods, tabu search and genetic programming to construct the algorithms. Greedy methods are local and deterministic in their approach. Both tabu search and genetic algorithms are stocastic and global in their approach, but they differ significantly in how they examine and construct feasible solutions. We have intentionally chosen our methods so that each method strongly differs in its characteristics from the other two. The reason for this descision was that we wanted to see if some conclusion could be made about if any specific characteristics would be favorable for solving our problem.\\
-\\The subtask to construct the algorithms is selfexplanatory in what it means. More information about the process is given in chapter four.\\
-\\Since the problem is NP-hard and the algorithms are heuristic the need for an simulation enviroment is obvious. All implementations are made in ANSI C, due to computational efficency. The requirements on the simulation enviroment is to construct random feasible enviroments of specified size for the problem, run all algorithms on the enviroment and print the results into a file. A more indepth description of how the simulation enviroment is implemented can be read in chapter three.\\
-\\The subtask of implementing the algorithms is also self explanatory in what it means. More information about the implementation of the algorithms is found in chapter four.\\
-\\Once all the implementations are done, simulations will be executed to collect data. The output data collected is runtime and solution path from each algorithm. Also the enviroments' size, density and number of pursuers is known for each execution. The results are presented and discussed in chapter five and six.
- 
+As mentioned in Chapter 1, Section 1.4.5. there are a vast amount of different heuristics. In this report we decided to use the heuristic concepts from greedy methods, tabu search and genetic programming to construct the algorithms. Greedy methods are local and deterministic in their approach. Both tabu search and genetic algorithms are stochastic and global in their approach, but they differ significantly in how they examine and construct feasible solutions. We have intentionally chosen our methods so that each method strongly differs in its characteristics from the other two. The reason for this decision was that we wanted to see if some conclusion could be made about if any specific characteristics would be favourable for solving our problem.\\
+\\
+The subtask to construct the algorithms is self-explanatory in what it means. More information about the process is given in chapter four.\\
+\\
+Since the problem is NP-hard and the algorithms are heuristic the need for a simulation environment is obvious. All implementations are made in ANSI C \cite{C-bok}, due to computational efficiency. The requirements on the simulation environment is that it should be possible to construct random feasible environments of specified size for the problem, run all algorithms on the environment and print the results into a file. A more in-depth description of how the simulation environment is implemented can be read in chapter three.\\
+\\
+The subtask of implementing the algorithms is also self explanatory in what it means. More information about the implementation of the algorithms is found in chapter four.\\
+\\
+Once all the implementations are done, simulations will be executed to collect data. The output data from the algorithm is runtime and solution paths for the pursuers. Also the environments' size, density and number of pursuers is known for each execution. The results are presented and discussed in chapter five and six.
