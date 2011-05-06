@@ -7,26 +7,27 @@ Following the previous work of Johan Thunberg  et. al.\cite{paper1}, the pursuer
 \\
 \textbf{The original Problem (Pursuit Evasion).} \emph{ Given an evader, a set of N pursuers and a polygonal free space F , Þnd a solution strategy P such that for every continuous function $e : \lbrack 0, \infty) \to F$ there exists a time $\tau$ and an i such that $e(\tau ) \subset V (p_i (\tau ))$, i.e., the pursuer will always be seen by some evader, regardless of its path. }
 
-\section{Discretized problem}
-Notations from \cite{paper1} is used.
+\section{Discretized problem}\label{discretizedproblem}
+The discretized problem from \cite{paper1} is considered, in which the pursuit evasion problem is modelled as a Boolean Control Network. In that problem the target is to maximize the number of nodes that are guaranteed not to contain an evader, that is the number of nodes in state 3 (see notations below).\\
+\\
+In this report we will use the following notations:
 \begin{description}
-\item[Tile]A tile is...
-\item[Feasible solution]A feasible solution is...
-\item[Complete solution]A complete solution...
-\item[Incomplete solution]A incomplete solution...
-\item[Path]A path is...
-\item[Secured]A secured...
-\item[Area]An area is...
-\item[Pursuer]A pursuer...
+\item[Tile] A region in \cite{paper1} will be called a tile, which corresponds to a node in the Boolean Control Network.
+\item[Area]An area is a set of tiles.
+\item[State]A state describes the condition for a node in the Boolean Control Network. State 1 corresponds to a node that contains a pursuer. State 2 to a node that is directly visible for a pursuer, state 3 to a node that is guaranteed not to contain an evader and state 4 to a node that may contain an evader.
+\item[Feasible solution]A feasible solution is a sequence of nodes in the Boolean Control Network that has been in state 1.
+\item[Complete solution]A complete solution is a feasible solution that sets all nodes in the Boolean Control Network to state 4.
+\item[Incomplete solution]An incomplete solution is a feasible solution that contains nodes in the Boolean Control network which are in state 4.
+\item[Path]A path is a sequence of nodes in the Boolean Control Network.
+\item[Secured]A secured tile corresponds to a node in state 1,2 or 3.
 \end{description}
 \section{The problem formulation of this paper}
-Given the original pursuit \& evasion problem presented in the previous chapter, section 1.4.4. Our aim is to:
+Given the discretized pursuit \& evasion problem presented in Section \ref{discretizedproblem}, our aim is to:
 \begin{enumerate}
 \item[-] Construct three heuristic algorithms that solve the problem.
 \item[-] Implement the algorithms and evaluate their efficiency and the quality of the solutions presented.
 \item[-] Collect data from the results of implemented algorithms' and discuss whether any new conclusions can be made on how to approach the original problem.
 \end{enumerate}
-
 \section{Approach}
 The work will be divided into six sequentially performed subtasks, each will be discussed in more detail below. The subtasks are:
 \begin{enumerate}

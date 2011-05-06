@@ -13,11 +13,12 @@ The decision to read environments from files makes the simulation environment us
 	%graph-approach var bra ide?
 	%applicerbar pga filskrivning
 \section{Analysis of the simulations}
-First off it should be noted that when varying the size of the enviroment certain parameters of the algorithms had to be adjusted. For enviroments of intermediate size a correct adjustment of parameters yielded solutions of significantly higher quality. For larger enviroments it was necessary in order to attain any solution at all. We found no analytical way of adjusting the parameters. A good understanding of the implementation in combination with intuition and testing usually solved the issue. This does not exclude the possibility that there might be a more descisive approach. In fact, based mainly on our intuition, it is most probable.\\
-\\As seen in the table \ref{SimData}, given in the previous chapter, for small enviroments both algorithms efficiently provides solutions of high quality, even with a small amount of pursuers. The optimality of the solutions on the randomly generated enviroments is not proven, but it's likely that the provided solutions in most cases are optimal. This assumtion is motivated by the fact that the quality of the solutions rarely differs and the path length is typicaly only a few steps long. It should be noted that the average computational time for these solutions is 3 milliseconds for the tabu search algorithm and 37 milliseconds for the genetic algorithm. These are highly efficient results compared to related work \cite{paper1}.\\%nämn och jämför manhattan resultat
-\\When the size of the enviroment is increased the solutions found are less probable to be optimal. This assumption is motivated by the fact that the quality of the solutions now vary strongly. Also the computational time severely increases with the size of the enviroment. An interesting observation though is to compare how the average computational time for the two algorithms changes as the difficulty increases. The tabu search algorithm is highly efficient if it is able to find a first complete solution. But when running on the bigger areas the average time diverges. On the other hand the genetic algorithm provides reasonable average computational times, and is more reliable to find some solution even for difficult enviroments.\\
-\\By combining an indepth understanding of the implementation with the data aquired the following conclusions, and fundamental differences, can be made on the implementation of the algorithms. The tabu algortithm is strongly dependent on finding a complete solution of sufficient quality, in order to be efficient. The reason behind this is that a maximum step length is set dynamicaly by the complete solution found, and tiles not visited in this solution are rendered tabu. Thus, with a complete solution of bad quality there are still a vast amount of aternative paths to consider, which in turn affects the efficency.\\
-\\The genetic algorithm does not have the same dependency of finding a complete solution, due to its reproduction properties. This motivates the more robust results on efficency for larger areas, compared to the tabu algorithm. 		
+First off it should be noted that when varying the size of the environment certain parameters of the algorithms had to be adjusted. For environments of intermediate size a correct adjustment of parameters yielded solutions of significantly higher quality. For larger environments it was necessary in order to attain any solution at all. We found no analytical way of adjusting the parameters. A good understanding of the implementation in combination with intuition and testing usually solved the issue. This does not exclude the possibility that there might be a more decisive approach. In fact, based mainly on our intuition, it is most probable.\\
+\\As seen in the table \ref{SimData}, given in the previous chapter, for small environments both algorithms efficiently provides solutions of high quality, even with a small amount of pursuers. The optimality of the solutions on the randomly generated environments is not proven, but it's likely that the provided solutions in most cases are optimal. This assumption is motivated by the fact that the quality of the solutions rarely differs and the path length is typically only a few steps long. It should be noted that the average computational time for these solutions is 3 milliseconds for the tabu search algorithm and 37 milliseconds for the genetic algorithm. These are highly efficient results compared to related work \cite{paper1}.\\%nämn och jämför manhattan resultat
+\\When the size of the enviroment is increased the solutions found are less probable to be optimal. This assumption is motivated by the fact that the quality of the solutions now vary strongly. Also the computational time severely increases with the size of the environment. An interesting observation though is to compare how the average computational time for the two algorithms changes as the difficulty increases. The tabu search algorithm is highly efficient if it is able to find a first complete solution. But when running on the bigger areas the average time diverges. On the other hand the genetic algorithm provides reasonable average computational times, and is more reliable to find some solution even for difficult environments.\\
+\\By combining an in-depth understanding of the implementation with the data acquired the following conclusions, and fundamental differences, can be made on the implementation of the algorithms. The tabu algorithm is strongly dependent on finding a complete solution of sufficient quality, in order to be efficient. The reason behind this is that a maximum step length is set dynamically by the complete solution found, and tiles not visited in this solution are rendered tabu. Thus, with a complete solution of bad quality there are still a vast amount of alternative paths to consider, which in turn affects the efficiency.\\
+\\The genetic algorithm does not have the same dependency of finding a complete solution, due to its reproduction properties. This motivates the more robust results on efficiency for larger areas, compared to the tabu algorithm. 
+%%		
 \section{Starting positions}
 %lösningskvalitet starkt beroende av startpositioner.
 	%formulera tydligt vilka startförhållanden som avses i problemställning hos framtida arbeten.
@@ -25,9 +26,25 @@ First off it should be noted that when varying the size of the enviroment certai
 	%bedöm kvalitet på given lösning utifrån omständigheter.
 	
 One of our intentions with this report was to compare 
+\section{Analysis}
+%när skiter det sig och varför? Samt analys av enskilda algoritmerna.
+An analysis of each algorithm,  evaluation of why it did or did not work. \par
 
-\section{When do the algorithms fail?}	
-%när skiter det sig och varför?
+\subsection{Genetic}
+
+\subsection{Greedy}
+Although the greedy algorithm was not fully implemented it was manually tested on several environments. There are two situations where the algorithm is known not to perform at its best. The first situation is when the environment is extremely symmetrical. If this is the case the cost function will give equal values to several tiles and some pursuers will be given several equal alternatives. There is no handling for these events and the algorithm will probably freeze. The second situation is when two or more pursuers start at the same tile. This will result in that in every iteration they have the exact same conditions, thus they will make identical decisions and move as one single pursuer until their shared vision divides the environment into enough areas to be designated. When there are enough areas to be designated the pursuers will be forced to split up and go separate ways. This is also a problem due to symmetry in some sense.
+
+\subsection{Tabu}
+
+%% Identify good solving aspects
+\subsection{Aspects for identifying good solutions}
+Identify the general good solving aspects. such as:\\
+\begin{itemize}
+\item Starting positions
+\item Easier to start with a solution, possibly a bad one, and improve. rather than two empty hands.
+\item An promising approach is to find information on the environment that is not obviously provided. for instance reducing the amount of tiles. setting priority depending on the geometry. reading dynamical information out of previous iterations or current conditions. etc.
+\end{itemize}
 
 \section{Future work}
 %future work:
@@ -38,13 +55,5 @@ One of our intentions with this report was to compare
 		%hybridmetoder
 		%implementera greedy, motviera varför.
 		%om man kunde visa att en optimal lösning kan formuleras som superposition av dellösningar skulle algorithmerna kunna ändras i grunden och bli extremty mycket effektivare.
-Improvement on the implementations of the algorithms and the simulation enviroment is probable to give more reliable and promising results. Due to the short amount of time given for a project of this size many short cuts were made intentionally. Another interesting suggestion is to combine the algorithms and create a hybrid method. \\
-\\Since the algorithms constructed in this paper are considered to be very efficient for smaller problems it is suggested to investigate whether an global optimal solution could be attained by solving local subproblems.
-
-
-
-
-
-
-
-		
+Improvement on the implementations of the algorithms and the simulation environment is probable to give more reliable and promising results. Due to the short amount of time given for a project of this size many short cuts were made intentionally. Another interesting suggestion is to combine the algorithms and create a hybrid method. \\
+\\Since the algorithms constructed in this paper are considered to be very efficient for smaller problems it is suggested to investigate whether an global optimal solution could be attained by solving local sub-problems.
