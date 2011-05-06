@@ -24,30 +24,24 @@ In this report we will use the following notations:
 \item[Incomplete solution]An incomplete solution is a feasible solution such that there exists nodes in the Boolean Control network which are in state 4 when the trajectories given by the solution is followed.
 \end{description}
 
-\section{The problem formulation of this paper}
-Given the discretized pursuit and evasion problem presented in Section \ref{discretizedproblem}, our aim is to:
+\section{The problem formulation of this report}\label{ourproblemformulation}
+Given the discretized pursuit and evasion problem presented in Section \ref{discretizedproblem}, the aim of this report is to:
 \begin{enumerate}
 \item[-] Construct three heuristic algorithms that solve the problem.
 \item[-] Implement the algorithms and evaluate their efficiency and the quality of the solutions presented.
 \item[-] Collect data from the results of implemented algorithms' and discuss whether any new conclusions can be made on how to approach the original problem.
 \end{enumerate}
+%%
 \section{Approach}
-The work will be divided into six sequentially performed subtasks, each will be discussed in more detail below. The subtasks are:
+The approach to the aim of the report given in Section \ref{ourproblemformulation} is the following:
 \begin{enumerate}
 \item[-] Find three relevant heuristic methods for our problem and do an in-depth research on them.
-\item[-] With the chosen heuristic methods, construct three algorithms that solves the given problem.
-\item[-] Create an simulation environment for the algorithms.
+\item[-] From the methods chosen, construct three algorithms that solves the problem formulated in Section.
+\item[-] Create a simulation environment for the algorithms.
+\par{To be able to compare the heuristic methods a simulation environment is to be constructed. It is required to construct random feasible environments of specified size, run the algorithms and print the results into a file.}
 \item[-] Implement the algorithms.
 \item[-] Run the algorithms to collect adequate data.
+\par{The collected data for each algorithm is the runtime and solution paths for the pursuers. To be able to compare data, the size of the environment, obstacle density and the number of pursuers is also to be collected.}
 \item[-] Evaluate the data and draw conclusions.
 \end{enumerate}
-
-As mentioned in Chapter 1, Section 1.4.5. there are a vast amount of different heuristics. In this report we decided to use the heuristic concepts from greedy methods, tabu search and genetic programming to construct the algorithms. Greedy methods are local and deterministic in their approach. Both tabu search and genetic algorithms are stochastic and global in their approach, but they differ significantly in how they examine and construct feasible solutions. We have intentionally chosen our methods so that each method strongly differs in its characteristics from the other two. The reason for this decision was that we wanted to see if some conclusion could be made about if any specific characteristics would be favourable for solving our problem.\\
-\\
-The subtask to construct the algorithms is self-explanatory in what it means. More information about the process is given in chapter four.\\
-\\
-Since the problem is NP-hard and the algorithms are heuristic the need for a simulation environment is obvious. All implementations are made in ANSI C \cite{C-bok}, due to computational efficiency. The requirements on the simulation environment is that it should be possible to construct random feasible environments of specified size for the problem, run all algorithms on the environment and print the results into a file. A more in-depth description of how the simulation environment is implemented can be read in chapter three.\\
-\\
-The subtask of implementing the algorithms is also self explanatory in what it means. More information about the implementation of the algorithms is found in chapter four.\\
-\\
-Once all the implementations are done, simulations will be executed to collect data. The output data from the algorithm is runtime and solution paths for the pursuers. Also the environments' size, density and number of pursuers is known for each execution. The results are presented and discussed in chapter five and six.
+All implementations are to be made in ANSI C \cite{C-bok}, due to computational efficiency.
