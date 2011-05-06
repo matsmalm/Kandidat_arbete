@@ -1,8 +1,8 @@
 \chapter{Simulation Environment}
-%The chapter gives a description of the simulation environment we have created. Presenting how we created it, why we needed to create it and motivation of the choices made. First we give an short overview of the parts that are in the enviroment, and a definition of in/out data. Motivating all our choices made concerning limitations in the enviroment, and also describing positive features of our enviroment.\\
-In order to attain the data needed for a comparison of our different algorithms it was necessary to construct a good testing environment. We decided to create this environment by the use of two separate parts. One part is called the "Map generator". This part creates a map of the environment, tests the feasibility and prints feasible environments to an output file. The other part is called the "Network generator". This part reads an environment from a file, creates a graph network to the corresponding map and gives each node in the network its relevant information.\\
+In order to attain the data needed for a comparison of the algorithms that were to be developed, it was necessary to construct a testing environment. It was decided to create this environment by the use of two separate parts. One part is called the "Map Generator". This part creates a map of the environment, tests the feasibility and prints feasible environments to an output file. The other part is called the "Network Generator". This part reads an environment from a file, creates a graph network to the corresponding map and gives each node in the network its relevant information.
+%
 \section{Map generator}
-The Map Generator (MG) creates random feasible environments. A feasible environment is described more in detail in Section 2.2, but in short one could say that an environment is feasible if its corresponding graph is simply connected and can be divided into a finite set of convex regions. Given the desired size and the density (percentage of obstacles per total area) as inputs, the MG creates a square shaped feasible environment with randomly placed obstacles and saves the map in an external file. For simplicity we have chosen to construct environments consisting only of square regions. %rectilinear/orthogonal?
+The Map Generator (MG) creates random feasible environments. A feasible environment is described more in detail in Section \ref{discretizedproblem}, but in short one could say that an environment is feasible if its corresponding graph is simply connected and can be divided into a finite set of convex regions. Given the desired size and the density (percentage of obstacles per total area) as inputs, the MG creates a square shaped feasible environment with randomly placed obstacles and saves the map in an external file. For simplicity we have chosen to construct environments consisting only of square regions. %rectilinear/orthogonal?
 We suggest that this does not result in a loss of generality since any feasible environment can be approximated arbitrarily good by a sufficiently fine meshing of squares. \\ % NO?! May be objections to this, only 4 neighbours for each node...
 \\We will now show in a more detailed manner how the MG works. First we present some pseudo code describing the algorithm and then some in depth comments to the code.\\
 \\\noindent\emph{Pseudo-code, Map Generator:}
@@ -30,7 +30,6 @@ The steps of the pseudocode is described in more detail below.
 \item CreateMatrix(int arg) creates a matrix of dimensions $(Size \times Size)$ with every element equal to one, which corresponds to a tile that a pursuer or evader can be located on.
 \item PlaceObstacle(int A, int Obstacle) takes the input matrix A and using a randomizing function rand() places zeros in the matrix. The zeros corresponds to obstacles, e.g. tiles that can not be seen through and is not possible for a pursuer or an evader to be located on.
 \item The function Test (int A) tests if all the elements containing a 1 in the given matrix A can be connected. If A is connected the environment is feasible and the function returns TRUE, if not it returns FALSE. First Test() finds the first element in A equal to one, starting from the upper left corner going to the right. Then it performs a breadth first algorithm to test if all tiles can be found from the starting point. If so, the environment is connected, and thus feasible.
-%When such element has been found its index is pushed on a stack. Next we enter a loop that runs for as long as the stack is not empty. First it pops an index from the stack and checks if this index has been accounted for (e.g. if it lies within a vector C). If not accounted for, all the neighbor elements that are equal to one has their index pushed on the stack. Lastly the poped index is put into C, since it has been accounted for. The algorithm starts over by poping a new index and rerunning the loop. 
 \end{itemize}
 \section{Network generator}
 The Network Generator (NG) generates a node network from an environment matrix. Each node contains data of its adjacent nodes, all the nodes visible from it and its current state. The input to NG is an environment matrix.\\
@@ -51,14 +50,4 @@ We will now describe the steps and the functions in the pseudo code above in mor
 \item createNodeMatrix() sets B to a matrix of the same dimensions as A, where each element is of the data type Node.
 \item setMove() creates pointers from the current node N to all feasible vertically and horizontally adjacent nodes.
 \item setVision() creates a list of pointers to all visible nodes in B from the current node N. A node B is visible to N if both B and N can be contained inside a rectangle that does not contain non-feasible region.
-%\begin{description}
-%  \item[First] \hfill \\
-%  The first item
-%  \item[Second] \hfill \\
-%  The second item
-%  \item[Third] \hfill \\
-%  The third etc \ldots
-%\end{description}
-
-%Visible Nodes is each node that can be connected to N by a straight line without passing through a non-feasible Node. The visible nodes are decided by first calculating Umax and Dmax which is the number of columns between N and the first non-feasible Node upwards and downwards in the same row, and Lmax and Rmax which is the number of rows between N and the first non-feasible Node in the same column as N. Each Node up to Lmax columns to the left of N and Rmax columns to the right of N is visible. For each of these Nodes every Node that is feasible and in the same column, at most Umax rows above or the first non-feasible Node, whichever comes first, and at most Dmax rows below or the first non-feasible Node, is visible. Umax and Dmax is re-calculated for every column to the left and to the right of N, and is the minimum of the number of the current Nodes Umax and Umax for the previous Node in the same row, with the same applying for Dmax.
 \end{itemize}
