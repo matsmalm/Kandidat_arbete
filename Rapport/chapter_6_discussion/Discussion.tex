@@ -28,10 +28,11 @@ First off it should be noted that when varying the size of the environment certa
 %One of our intentions with this report was to compare 
 \section{Analysis}
 %n�r skiter det sig och varf�r? Samt analys av enskilda algoritmerna.
-An analysis of each algorithm,  evaluation of why it did or did not work. \par
+A short analysis of each algorithm,  evaluation of why it did or did not work.
 
 \subsection{Genetic}
-
+The genetic algorithm ran a vast number of times for different environments, and found a solution for most environments that it was given. The quality of the solutions did however vary, as can be seen in Table \ref{SimData}. The reason for the variation in number of required steps compared to the tabu algorithm is most probably premature convergence. As the crossover operator implemented was simple, with only swapping paths of the pursuers, it was not possible to explore a vast number of feasible solutions. An attempt to decrease the effect of this was made by the increase in rate of mutations.\\
+As the algorithm does not consider the environment, it should not have problem with the shape of the environment. With the implementation of crossover that is used, the algorithm is required to have a high rate of mutations. A large number of pursuers should however be more advantageous for the algorithm, as there are more ways to combine paths of the pursuers.
 \subsection{Greedy}
 Although the greedy algorithm was not fully implemented it was manually tested on several environments. There are two situations where the algorithm is known not to perform at its best. The first situation is when the environment is extremely symmetrical. If this is the case the cost function will give equal values to several tiles and some pursuers will be given several equal alternatives. There is no handling for these events and the algorithm will probably freeze. The second situation is when two or more pursuers start at the same tile. This will result in that in every iteration they have the exact same conditions, thus they will make identical decisions and move as one single pursuer until their shared vision divides the environment into enough areas to be designated. When there are enough areas to be designated the pursuers will be forced to split up and go separate ways. This is also a problem due to symmetry in some sense.
 
@@ -40,7 +41,7 @@ The tabu algorithm went through many simulations, and performed relatively well.
 
 %% Identify good solving aspects
 \subsection{Aspects for identifying good solutions}
-Identify the general good solving aspects. such as:\\
+Identify the general good solving aspects. such as:
 \begin{itemize}
 \item Starting positions
 \item Easier to start with a solution, possibly a bad one, and improve. rather than two empty hands.
