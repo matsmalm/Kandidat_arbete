@@ -6,9 +6,9 @@ The algorithms were run on iMac's with 2.66GHz Intel Core2Duo and 4GB of RAM. Ea
 %fyll ut med hur!!!
 %\\In table \ref{SimData} the "Average step difference" is given by the difference in steps used for the genetic algorithm and tabu search algorithm in successful cases, divided by the number of successful runs for the given environment and number of pursuers. The "Average time" is the time for each run divided by the number of runs, where both successful and unsuccessful runs were counted.
 %% Tables with data
-In Table \ref{SimData} the ``Average step difference'' describes the difference in \emph{path} length of complete solutions. This value is attained by subtracting the sum of the length of all \emph{complete solutions} of the tabu search algorithm from the sum of the length of all \emph{complete solutions} of the genetic algorithm and divide this by the number of successful runs for the given environment. The ``Average time'' is the time for each run divided by the number of runs, where both successful and unsuccessful runs were counted.
+In Table \ref{SimData} the ``Average step difference'' describes the difference in \emph{path} length of complete solutions. This value is attained by subtracting the sum of the length of all \emph{complete solutions} of the tabu search algorithm from the sum of the length of all \emph{complete solutions} of the genetic algorithm and divide this by the number of successful runs for the given environment. The ``Average time'' is the time for each run divided by the number of runs, where both successful and unsuccessful runs were counted.\vfill{}
 \begin{center}
-\begin{table}[t!hb]
+\begin{table}[t]
 \noindent\makebox[\textwidth]{%
 \begin{tabular}{| c | r | r | r | r | r | r | r | r | r | r | }
 \hline
@@ -21,7 +21,7 @@ In Table \ref{SimData} the ``Average step difference'' describes the difference 
 \end{center}
 %% 
 %% Environments
-\begin{figure}[t!hb]
+\begin{figure}[!hb]
 \begin{center}
 \begin{tabular}{| p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | p{0.1cm} | }
 \hline
@@ -56,7 +56,8 @@ In Table \ref{SimData} the ``Average step difference'' describes the difference 
 \end{figure}
 %% End of environments
 %% End of tables
-\newpage From the simulations the following observations were made:
+\pagebreak
+From the simulations the following observations were made:
 \begin{itemize}
 \item{For environments of size 15x15 and larger the amount of RAM used was significant.}
 \item{The results were dependent on parameter values.}
