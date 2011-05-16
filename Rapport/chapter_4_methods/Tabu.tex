@@ -1,5 +1,5 @@
 \pagebreak
-\section{The Tabu search method}
+\section{The tabu search method}
 \subsection{Description of Tabu search methods}
 Tabu search is a heuristic optimization method designed to find the global optimum. The algorithm has the ability to climb out of a local minimum, and then explore other parts of the domain. There are several methods on how this ability can be acquired. Tabu search uses a so-called tabu list, intended to make already visited areas in the domain forbidden ``tabu'' \cite{Glover1} \cite{Glover3} \cite{Glover4}. Tabu search algorithms are based on certain conceptual building blocks and basic ideas. Most of them are easy to understand but widely varying in difficulty to implement. If well implemented they will give you a highly sophisticated search algorithm. \\
 \\The main building block is the tabu list. The tabu list gives the algorithm the ability to render certain regions or moves tabu. The tabus can be created based on the information at hand, both for a given moment and from prior experiences of the search \cite{canada}. The essential problem when constructing tabu search algorithms is about to formulate intelligent rules, that will determine is a specific move should be tabu or not.\\
@@ -24,7 +24,7 @@ This insight might seem somewhat naive at first sight, but if implemented in a g
 	\label{t1}
 \end{figure}
 
-\subsection{Development process of the Tabu search algorithm}
+\subsection{Development process of the tabu search algorithm}
 The development process of the tabu search algorithm for our problem will here be described in detail. Due to lack of time of this the alternatives that were easiest to implement was usually preferred. The development process originated from a general flowchart of the algorithm \cite{canada} \cite{Glover2}, given in figure \ref{t1}. By following the flow chart, in step one we arrive at the first issue to resolve. The issue of whether to construct a set of feasible solutions, or one single feasible solution at a time. Since the genetic algorithm already had implemented a way of constructing sets of feasible solutions, it was decided to construct one feasible solution at a time.\\
 \\
 Two alternatives on how to construct this single feasible solution was considered. Either by generating the feasible solution one pursuer step at a time, or by a series of steps. It was decided to construct the feasible solution with one pursuer step at a time. This was a hard decision to make, since both alternatives seemed to yield highly promising but very different algorithms. The implementation of making a series of moves would result in a receding horizon approach, where one had to either  
@@ -54,7 +54,7 @@ All these tabu rules are to be ranked and given a priority level that would be u
 Which in turn means that step 5 in figure \ref{t1} needs a fitness calculation function that would depend on the tile visited and the shape of the feasible solution. Unfortunately this aspiration criteria would be difficult to implement. Thus this advanced aspiration criteria was rejected for a simpler one. In the end the more simple aspiration criteria only came to be a worst case handling, to avoid the algorithm from freezing. This also means that tabu rules (3), (4), (6) and (7) no longer could be implemented. Tabu rule (5) got simplified to: tiles not visited where set to be tabu.\\
 \\A comment on tabu rule (5) is that when this rule first was implemented the idea was that X number of past complete solutions were analysed to check which areas had been walked upon at least once, and render the rest tabu. The problem was however that this wasn't strict enough, so X was set to one. Which in turn led to a new problem. The problem that arouse was that the algorithm now, under certain circumstances, was too hasty in returning a final solution, meaning that the final solution was of poor quality. This was partially solved by a new stopping criteria and a ``go about it again'' criteria.\\
 \\The final version of the algorithm can be viewed in figure \ref{t2} and is also presented in the next section.
-\subsection{The Tabu search algorithm for our problem}
+\subsection{The Ttabu search algorithm for our problem}
 In figure \ref{t1} and the previous section a general step by step explanation was made of the tabu search algorithm. In figure \ref{t2}a modified version can be viewed, intended to illustrate the final algorithm. A step by step explanation will be made of figure \ref{t2}. Observe that some functions from to the general algorithm have been removed.\\
 
 There are two elements in the algorithm that affect the convergence. These are the tabu rule (5) and the Best-solution-found-so-far criteria. The tabu rule (5) is explained in the previous section. The Best-solution-found-so-far criteria prohibits the algorithm from searching for solutions longer than the best length found so far. It should be noted that both convergence helping elements depend on the existence of a complete solution. This means that if the algorithm is unlucky in finding the first complete solution, the computational time will rise accordingly. As a side note, this considerable insufficiency might have been avoided with the more advanced aspiration criteria, discussed in section 4.2.2.
@@ -95,7 +95,7 @@ Or lastly if the algorithm is to restart with a completely new feasible solution
 \item{} if yes in 6 terminate the algorithm
 \end{enumerate}
 
-\subsection{Implementation of the Tabu search algorithm}
+\subsection{Implementation of the tabu search algorithm}
 In this section two important aspects of the implementation will be discussed. These two are the meaning of the parameter values and obvious shortcomings in the algorithm. With the implementation, a series of parameter values arouse. The parameter values can be divided into four different categories.
 \begin{enumerate}
 \item{} Tabu rule values:
