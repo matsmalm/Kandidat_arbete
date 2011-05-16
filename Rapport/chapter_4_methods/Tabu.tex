@@ -37,7 +37,7 @@ The implementation of this approach would require that the tabu list and aspirat
 \begin{enumerate}
 \item{}For one \emph{feasible solution} save the past M number of moves for each pursuer and render these moves tabu to be returned to.
 \item{}Do not allow moves that results in N number of lost \emph{secured} \emph{tiles}.
-\item{}Make geometricaly based tabus for critical \emph{areas} and \emph{tiles}:\vspace{0,1cm}\\
+\item{}Make geometrically based tabus for critical \emph{areas} and \emph{tiles}:\vspace{0,1cm}\\
 A corridor where the end point can be seen should not be walked down by a pursuer. Also, a \emph{area} with an obstacle that can be circulated would need two pursuers to be \emph{secured}. Thus it would be tabu to go about and try to \emph{secure} it alone. And finally if one had a tree like corridor system, going about to solve it would only be allowed with the right amount of pursuers.
 \item{} Work together rule: \vspace{0,1cm}\\
 Two pursuers never really need to see each other, only share visible \emph{areas}. Since this rule is general in its formulation it should be called upon in the aspiration criteria.
