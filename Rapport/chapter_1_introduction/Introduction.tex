@@ -1,22 +1,17 @@
 \chapter{Introduction}
 
 \section{Objective}
-The aim of this report is to construct heuristic algorithms that solve the pursuit and evasion problem in two dimensional polygonal environments. The original pursuit and evasion problem is fully formulated in chapter two. Informally it can be formulated as ``given an environment with static obstacles, and a specific number of pursuers, construct a search strategy for the group of pursuers such that the evader is guaranteed to be seen''. In \cite{paper3} a framework is presented for solving the problem. In this framework a method is provided for finding the optimal solution. In practice this algorithm is not very applicable though, since even for small areas the computational time is large. This motivates the introduction of heuristic methods. By sacrificing optimality, our aim is to use heuristic methods to find sufficiently good solutions within a reasonable computational time. These methods have, to the best of the authors' knowledge not been used in this context before.
+The aim of this report is to construct heuristic algorithms that solve the pursuit and evasion problem in two dimensional polygonal environments. The original pursuit and evasion problem is fully formulated in chapter two. Informally it can be formulated as ``given an environment with static obstacles, and a specific number of pursuers, construct a search strategy for the group of pursuers such that the evader is guaranteed to be seen''. In \cite{paper3} a framework is presented for solving the problem. In this framework a method is provided for finding the optimal solution. In practice this algorithm is not very applicable though, since even for small areas the computational time is considerable. This motivates the introduction of heuristic methods. By sacrificing optimality, our aim is to use heuristic methods to find sufficiently good solutions within a reasonable computational time. These methods have, to the best of the authors' knowledge not been used in this context before.
 %%
 \section{Background}
-\subsection{What is optimization?}
+\subsection{What is optimization}
 The aim of optimization is to find the best available value of an objective function, given a defined domain. % Refer to other literature?
 The mathematical theory of optimization offers a variety of methods to solve a wide range of problems. To approach these problems and find a solution, it is important to identify the characteristics of the problem considered. Relevant distinctions can be made by studying the problem's complexity. Complexity is strongly related to the computational time. There are many different complexity classes of problems, but two of the most fundamental are the P and NP.
 
-subsection{P \& NP problems.}
+\subsection{P and NP problems}
 %skriva om hela sektionen??
-The distinction between these two reveals the difficulty of our problem. This will only be a brief description, for a more detailed and interesting description please see \cite{NP}.\\
-Informally one can say that P are problems that are easy, and NP are problems that are difficult. In NP there is a subclass called NP-complete.\\
-NP-complete are the hardest problems in NP\cite{adk19}. Such a problem is NP-hard and in NP.
-NP-hard are problems that are At least as hard as the hardest problems in NP. But such problems need not be in NP\cite{adk19}.\\
-Related work has stated that the problem studied in this report are in fact of the class NP-hard \cite{paper1}.\\ % Is it paper one?
-The consequence of the problem being NP-hard is that one can not construct analytic algorithms that provides an optimal solution in a reasonable amount of time.
-
+The distinction between these two reveals the difficulty of our problem. This will only be a brief description, for a more detailed description see \cite{NP}.\\
+Informally one can say that P are problems that are easy, and NP are problems that are difficult. In NP there is a subclass called NP-complete. NP-complete are the hardest problems in NP\cite{adk19}. Such a problem is NP-hard and in NP. NP-hard are problems that are at least as hard as the hardest problems in NP. But such problems need not be in NP\cite{adk19}.
 
 %\subsection{P \& NP problems.}
 %skriva om hela sektionen??
@@ -42,25 +37,27 @@ The consequence of the problem being NP-hard is that one can not construct analy
 %and hence the chances of finding an algorithm that produces an optimal solution in polynomial time are greatly reduced. As stated above it is still an open question whether such algorithms %actually exist for NP problems.
 %%
 \subsection{A near optimal solution.}
-As mentioned in \cite{paper1} the problem under consideration is at least NP-hard. The consequences of this is that the chances of finding an optimal solution within reasonable computational time are seen to be very low. Thus we are imposed to sacrifice optimality, in order to gain computational efficiency. This sacrifice opens a large spectrum of possible approaches to the problem.
+
+Related work has stated that the problem studied in this report is in fact of the class NP-hard \cite{paper1}.\\ % Is it paper one?
+One consequence of the problem being NP-hard is that one can not construct analytic algorithms that provides an optimal solution within a reasonable amount of time. Thus we are imposed to sacrifice optimality, in order to gain computational efficiency. This sacrifice opens a large spectrum of possible approaches to the problem.
 %%
 \subsection{Heuristic methods}
-Heuristic methods is a branch of methods used in computer science and mathematics. According to \cite{heuristics} ``A heuristic search method can be seen [35] as a procedure taking advantage of the problem structure in order to identify a good solution within a reasonable amount of computing time.''
-In general, heuristic methods is not proved to provide optimal solutions.\\*% Reference?
+Heuristic methods is a branch of methods used in computer science and mathematics. According to Ferland et. al. \cite{heuristics} ``A heuristic search method can be seen as a procedure taking advantage of the problem structure in order to identify a good solution within a reasonable amount of computing time.''
+In general, heuristic methods is not guaranteed to provide optimal solutions.\\*% Reference?
 \\*
 In some specific situations, it can be proven that the solution of a certain heuristic algorithms is optimal% Reference?
 . There is no general way of proving whether a heuristic algorithm provides an optimal solution. Despite this fact, heuristic methods often provide extremely efficient and relevant algorithms. Very often they greatly reduce the computational time needed to find a solution. There are several occasions where a heuristic method is preferred to an analytic method. Examples are:
 \begin{itemize}
 \item When there is no known algorithm for solving a specific problem, a heuristic is the only way to approach a solution.
-\item An algorithm can sometimes be difficult to implement. Heuristics can sometimes be used instead because they are easy to implement and known to produce good results.
-\item When the problem is too difficult to solve efficiently and quickly with analytical methods. A heuristic method could overcome that and give an acceptable but probably not optimal solution.
+\item An algorithm can sometimes be difficult to implement. Heuristics can often be used instead as they are easier to implement and known to produce good results.
+\item When the problem is too difficult to solve efficiently and quickly with analytical methods. A heuristic method could overcome that and give an acceptable but not necessarily optimal solution.
 \end{itemize}
 
 The last example corresponds to the problem considered in this report.
 \section{Outline of the report}
-In chapter 2 the pursuit and evasion problem is fully explained, and also how we intend to approach the problem to find a solution. Some keywords in the report are presented here, thus it is suggested to browse this chapter even if the reader is familiar with the problem.\\
-\\In chapter 4 and chapter 3 the process of constructing and implementing the algorithms and the simulations is described. Given that the reader is familiar with the problem presented, these chapters can be read separately.\\
-\\In chapter 6 the results of the work is evaluated and discussed. To follow this discusion it is not vital to have read about the process on forehand, though it is suggested that the figures \ref{GeneticFlowChart-algorithm}, \ref{flowchart greedy} and \ref{t2} are viewed and understood before reading this chapter.
+In Chapter 2 the pursuit and evasion problem is fully explained, and also how we intend to approach the problem to find a solution. Some keywords in the report are presented here, thus it is suggested to browse this chapter even if the reader is familiar with the problem.\\
+\\In Chapter 4 and Chapter 3 the process of constructing and implementing the algorithms and the simulations is described. Given that the reader is familiar with the problem presented, these chapters can be read separately.\\
+\\In chapter 6 the results of the work is evaluated and discussed. To follow this discusion it is not vital to have read about the process on forehand, though it is suggested that the Figures \ref{GeneticFlowChart-algorithm}, \ref{flowchart greedy} and \ref{t2} are viewed and understood before reading this chapter.
 
 
 
