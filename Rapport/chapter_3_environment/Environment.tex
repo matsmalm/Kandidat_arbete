@@ -1,10 +1,10 @@
 \chapter{Simulation environment}
-In order to attain the data needed for a comparison of the algorithms that were to be developed, it was necessary to construct a testing environment. It was decided to create this environment by the use of two separate parts. One part is called the "Map Generator". This part creates a map of the environment, tests the feasibility and prints feasible environments to an output file. The other part is called the "Network Generator". This part reads an environment from a file, creates a graph network to the corresponding map and gives each node in the network its relevant information.
+In order to attain the data needed for a comparison of the algorithms that were to be developed, it was necessary to construct a testing environment. It was decided to create this environment by the use of two separate parts. One part is called the ``Map Generator''. This part creates a map of the environment, tests the feasibility and prints feasible environments to an output file. The other part is called the ``Network Generator''. This part reads an environment from a file, creates a graph network to the corresponding map and gives each node in the network its relevant information.
 %
 \section{Map generator}
-The Map Generator (MG) creates random feasible environments. A feasible environment is described more in detail in Section \ref{discretizedproblem}, but in short one could say that an environment is feasible if its corresponding graph is simply connected and can be divided into a finite set of convex regions. Given the desired size and the density (percentage of obstacles per total area) as inputs, the MG creates a square shaped feasible environment with randomly placed obstacles and saves the map in an external file. For simplicity we have chosen to construct environments consisting only of square regions. %rectilinear/orthogonal?
+The Map Generator (MG) creates random feasible environments. An environment is feasible if its corresponding graph is simply connected and can be divided into a finite set of \emph{tiles} regions. Given the desired size and the density (percentage of obstacles per total area) as inputs, the MG creates a square shaped feasible environment with randomly placed obstacles and saves the map in an external file. For simplicity we have chosen to construct environments consisting only of square \emph{tiles}. %rectilinear/orthogonal?
 We suggest that this does not result in a loss of generality since any feasible environment can be approximated arbitrarily good by a sufficiently fine meshing of squares. \\ % NO?! May be objections to this, only 4 neighbours for each node...
-\\We will now show in a more detailed manner how the MG works. First we present some pseudo code describing the algorithm and then some in depth comments to the code.\\
+\\We will now show in a more detailed manner how the MG works. First we present some pseudo-code describing the algorithm and then some in depth comments to the code.\\
 \\\noindent\emph{Pseudo-code, Map Generator:}
 \begin{verbatim}
 1   input variables:
@@ -13,9 +13,9 @@ We suggest that this does not result in a loss of generality since any feasible 
 4   Obstacle; //  Specifies the number of obstacles in percent, e.g. 
     number of obstacles per total area of A.
 5   while ( i < NumberOfEnv ){
-6       A = CreateMatrix( Size); // Create a matrix A of dimensions Size*Size
-7       PlaceObstacle( A, Obstacle); // Place obstacles in the matrix A
-8      if (Test( A)=TRUE){  // If the environment is feasible
+6       A = CreateMatrix(Size); // Create a matrix A of dimensions Size*Size
+7       PlaceObstacle(A, Obstacle); // Place obstacles in the matrix A
+8      if (Test(A)=TRUE){  // If the environment is feasible
 9           fprintf( fileOK, "\n \n");
 10        i++;
 11     }else{
@@ -27,12 +27,12 @@ The steps of the pseudocode is described in more detail below.
 \begin{itemize}
 \item First we introduce the needed variables to define how many and what kind of environments to create. 
 \item The algorithm starts off by entering a while loop running until the loops content has created the desired amount of feasible environments. 
-\item CreateMatrix(int arg) creates a matrix of dimensions $(Size \times Size)$ with every element equal to one, which corresponds to a tile that a pursuer or evader can be located on.
-\item PlaceObstacle(int A, int Obstacle) takes the input matrix A and using a randomizing function rand() places zeros in the matrix. The zeros corresponds to obstacles, e.g. tiles that can not be seen through and is not possible for a pursuer or an evader to be located on.
-\item The function Test (int A) tests if all the elements containing a 1 in the given matrix A can be connected. If A is connected the environment is feasible and the function returns TRUE, if not it returns FALSE. First Test() finds the first element in A equal to one, starting from the upper left corner going to the right. Then it performs a breadth first algorithm to test if all tiles can be found from the starting point. If so, the environment is connected, and thus feasible.
+\item CreateMatrix(Size) creates a matrix of dimensions (Size $\times$ Size) with every element equal to one, which corresponds to a \emph{tiles} that a pursuer or evader can be located on.
+\item PlaceObstacle(A, Obstacle) takes the input matrix A and using a randomizing function rand() places zeros in the matrix. The zeros corresponds to obstacles, e.g. \emph{tiles} that can not be seen through and is not possible for a pursuer or an evader to be located on.
+\item The function Test (A) tests if all the elements containing a 1 in the given matrix A can be connected. If A is connected the environment is feasible and the function returns TRUE, if not it returns FALSE. First Test() finds the first element in A equal to one, starting from the upper left corner going to the right. Then it performs a breadth first algorithm to test if all \emph{tiles} can be found from the starting point. If so, the environment is connected, and thus feasible.
 \end{itemize}
 \section{Network generator}
-The Network Generator (NG) generates a node network from an environment matrix. Each node contains data of its adjacent nodes, all the nodes visible from it and its current state. The input to NG is an environment matrix.\\
+The Network Generator (NG) generates a node network from an environment matrix. Each node contains data of its adjacent nodes, all the nodes visible from it and its current \emph{state}. The input to NG is an environment matrix.\\
 \\
 \noindent \emph{Pseudo-code, Network Generator:}
 \begin{verbatim}

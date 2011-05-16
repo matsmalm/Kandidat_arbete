@@ -2,10 +2,10 @@
 %%describe feasible environment? referenced to from chapter 3
 
 This paper is an extension of the paper ``A Boolean Control Network Approach to Pursuit Evasion Problems in Polygonal Environments''\cite{paper1}. Our main purpose is to use three conceptually different heuristic methods to try to construct algorithms that efficiently solves the problem stated in the section below. We will also try to implement these algorithms in ANSI C to evaluate the quality and efficiency of the algorithms. The efficiency is quantified as the runtime needed for the algorithm to construct a solution. The quality of the solution is quantified in terms of path length. We will also discuss how the efficiency and quality of the solutions depend on the size of the environment and the number of pursuers.
-\section {The pursuit and evasion problem with multiple pursuers.}
+\section {The pursuit and evasion problem with multiple pursuers}
 Following the previous work of Johan Thunberg  et. al.\cite{paper1}, the pursuers and the evader are modelled as points moving in the polygonal free space, F . Let  $e(\tau )$ denote the position of the evader at time $\tau \geq 0$. It is assumed that $e : \lbrack 0, \infty) \to F$ is continuous, and that the evader is able to move arbitrarily fast. The initial position e(0) and path e is not known to the pursuers. At each time instant, F is partitioned into two subsets, the cleared and the contaminated, where the latter might contain the evader and the former might not. Given N pursuers, let $p_i (\tau ) : \lbrack 0, \infty) \to F$ denote the position of the i:th pursuer, and $P = \lbrace p_1 , . . . , p_N \rbrace$ be the motion strategy of the whole group of pursuers. Let V (q) denote the set of all points that are visible from $q \subset F$ , i.e., the line segment joining q and any point in V (q) is contained in F .\\
 \\
-\textbf{The original Problem (Pursuit Evasion).} \emph{ Given an evader, a set of N pursuers and a polygonal free space F, find a solution strategy P such that for every continuous function $e : \lbrack 0, \infty) \to F$ there exists a time $\tau$ and an i such that $e(\tau ) \subset V (p_i (\tau ))$, i.e., the pursuer will always be seen by some evader, regardless of its path. }
+\textbf{The Original Problem (Pursuit Evasion)} \emph{ Given an evader, a set of N pursuers and a polygonal free space F, find a solution strategy P such that for every continuous function $e : \lbrack 0, \infty) \to F$ there exists a time $\tau$ and an i such that $e(\tau ) \subset V (p_i (\tau ))$, i.e., the pursuer will always be seen by some evader, regardless of its path. }
 
 \section{Discretized problem}\label{discretizedproblem}
 The discretized problem from \cite{paper1} is considered, in which the pursuit evasion problem is modelled as a Boolean Control Network. In that problem the target is to maximize the number of nodes that are guaranteed not to contain an evader, that is the number of nodes in state 3 (see notations below).\\
@@ -13,15 +13,15 @@ The discretized problem from \cite{paper1} is considered, in which the pursuit e
 In this report we will use the following notations:
 % mats onskade andringar har som jag nu inte mins
 \begin{description}
-\item[Tile] A region in \cite{paper1} will be called a tile, which corresponds to a node in the Boolean Control Network.
-\item[Area]An area is a set of tiles.
-\item[Interior tiles] All tiles that are part of an area are called interior tiles to that area.
-\item[Path]A path is a sequence of connected nodes in the Boolean Control Network.
-\item[State]A state describes the condition for a node in the Boolean Control Network. State 1 corresponds to a node that contains a pursuer. State 2 to a node that is directly visible for a pursuer, state 3 to a node that is guaranteed not to contain an evader and state 4 to a node that may contain an evader.
-\item[Secured]A secured tile corresponds to a node in state 1,2 or 3.
-\item[Feasible solution]A feasible solution is a set of paths in the Boolean Control Network such that for every path each tile part of the path has been in state 1 in sequence.
-\item[Complete solution]A complete solution is a feasible solution such that every node in the Boolean Control Network is secured when the trajectories given by the solution is followed.
-\item[Incomplete solution]An incomplete solution is a feasible solution such that there exists nodes in the Boolean Control network which are in state 4 when the trajectories given by the solution is followed.
+\item[Tile]A region in \cite{paper1} will be called a \emph{tile}, which corresponds to a node in the Boolean Control Network.
+\item[Area]An \emph{area} is a set of \emph{tiles}.
+\item[Interior tiles]All \emph{tiles} that are part of an \emph{area} are called \emph{interior tiles} to that \emph{area}.
+\item[Path]A \emph{path} is a sequence of connected nodes in the Boolean Control Network.
+\item[State]A \emph{state} describes the condition for a node in the Boolean Control Network. \emph{State} 1 corresponds to a node that contains a pursuer. \emph{State} 2 to a node that is directly visible for a pursuer, \emph{state} 3 to a node that is guaranteed not to contain an evader and \emph{state} 4 to a node that may contain an evader.
+\item[Secured]A \emph{secured} \emph{tile} corresponds to a \emph{node} in \emph{state} 1,2 or 3.
+\item[Feasible solution]A \emph{feasible solution} is a set of \emph{paths} in the Boolean Control Network such that for every \emph{path} each \emph{tile} part of the \emph{path} has been in \emph{state} 1 in sequence.
+\item[Complete solution]A \emph{complete solution} is a \emph{feasible solution} such that every node in the Boolean Control Network is secured when the trajectories given by the solution is followed.
+\item[Incomplete solution]\emph{An incomplete solution} is a \emph{feasible solution} such that there exists nodes in the Boolean Control network which are in \emph{state} 4 when the trajectories given by the solution is followed.
 \end{description}
 
 \section{The problem formulation of this report}\label{ourproblemformulation}
@@ -36,9 +36,9 @@ Given the discretized pursuit and evasion problem presented in Section \ref{disc
 The approach to the aim of the report given in Section \ref{ourproblemformulation} is the following:
 \begin{enumerate}
 \item[-] Find three relevant heuristic methods for our problem and do an in-depth research on them.
-\item[-] From the methods chosen, construct three algorithms that solves the problem formulated in Section.
+\item[-] From the methods chosen, construct three algorithms that solves the problem formulated in Section \ref{discretizedproblem}.
 \item[-] Create a simulation environment for the algorithms.
-\par{To be able to compare the heuristic methods a simulation environment is to be constructed. It is required to construct random feasible environments of specified size, run the algorithms and print the results into a file.}
+\par{To be able to compare the heuristic methods a simulation environment is to be constructed. It is required that the simulation environment can to construct random feasible environments of specified size, run the algorithms and print the results into a file.}
 \item[-] Implement the algorithms.
 \item[-] Run the algorithms to collect adequate data.
 \par{The collected data for each algorithm is the runtime and solution paths for the pursuers. To be able to compare data, the size of the environment, obstacle density and the number of pursuers is also to be collected.}
