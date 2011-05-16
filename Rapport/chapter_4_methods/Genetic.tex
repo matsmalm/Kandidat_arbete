@@ -80,9 +80,9 @@ In comparison Equation \eqref{fitness2} gives a more fit individual a higher fit
 %% Selection
 For selection, Random, Tournament  and Fitness Proportionate Selection were considered, all three in combination with Elite Selection. Random selection was considered the easiest to implement and was used to create a first working version of a GA, but it was replaced with Tournament selection as it gives a more fit individual an advantage. In the final version a Fitness Proportionate Selection was used, which gives more fit solutions an even greater advantage and thereby helps the population converge even faster. Elite Selection was used to make sure the two best solutions were not lost between generations.\\\\
 %% Crossover
-To make the crossover operation easy to implement, a version of n-point crossover was used. One path from each pursuer was used alternating from each parent.\\\\
+To make the crossover operation easy to implement, a version of n-point crossover was used. One \emph{path} from each pursuer was used alternating from each parent.\\\\
 %% Mutation
-Due to the integer encoding, and node network representation, mutation by 'bit-flip' was not easily implemented. Instead a gene was selected by a random function, and thereafter a random point of the gene is chosen to be replaced. To make sure the partly modified gene corresponds to a feasible path in the environment the gene is altered from the selected part of the gene until the end of the gene.\\\\
+Due to the integer encoding, and node network representation, mutation by 'bit-flip' was not easily implemented. Instead a gene was selected by a random function, and thereafter a random point of the gene is chosen to be replaced. To make sure the partly modified gene corresponds to a feasible \emph{path} in the environment the gene is altered from the selected part of the gene until the end of the gene.\\\\
 %% Replacement
 To make sure the overall fitness of the population increased, a weak parent replacement was used.\\\\
 %% Parameters
