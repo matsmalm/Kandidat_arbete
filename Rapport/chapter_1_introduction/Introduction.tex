@@ -1,7 +1,7 @@
 \chapter{Introduction}
 
 \section{Objective}
-The aim of this report is to construct heuristic algorithms that solve the pursuit and evasion problem in two dimensional polygonal environments. The original pursuit and evasion problem is fully formulated in chapter two. Informally it can be formulated as ``given an environment with static obstacles, and a specific number of pursuers, construct a search strategy for the group of pursuers such that the evader is guaranteed to be seen''. In \cite{paper3} a framework is presented for solving the problem. In this framework a method is provided for finding the optimal solution. In practice this algorithm is not very applicable though, since even for small areas the computational time is considerable. This motivates the introduction of heuristic methods. By sacrificing optimality, our aim is to use heuristic methods to find sufficiently good solutions within a reasonable computational time. These methods have, to the best of the authors' knowledge not been used in this context before.
+The aim of this report is to construct heuristic algorithms that solve the pursuit and evasion problem in two dimensional polygonal environments. The original pursuit and evasion problem is fully formulated in chapter two. Informally it can be formulated as ``given an environment with static obstacles, and a specific number of pursuers, construct a search strategy for the group of pursuers such that the evader is guaranteed to be seen''. In \cite{paper3} a framework is presented for solving the problem. In this framework a method is provided for finding the optimal solution. In practice this algorithm is not very applicable though, since even for small enviroments the computational time is considerable. This motivates the introduction of heuristic methods. By sacrificing optimality, our aim is to use heuristic methods to find sufficiently good solutions within a reasonable computational time. These methods have, to the best of the authors' knowledge not been used in this context before.
 %%
 \section{Background}
 \subsection{What is optimization}
@@ -37,14 +37,13 @@ Informally one can say that P are problems that are easy, and NP are problems th
 %%
 \subsection{A near optimal solution.}
 Related work has stated that the problem studied in this report is in fact of the class NP-hard \cite{paper1}.\\ % Is it paper one?
-One consequence of the problem being NP-hard is that one can not construct analytic algorithms that provides an optimal solution within a reasonable amount of time. \cite{paper1} Thus we are imposed to sacrifice optimality, in order to gain computational efficiency. This sacrifice opens a large spectrum of possible approaches to the problem.
+One consequence of the problem being NP-hard is that one can not construct analytic algorithms that provides an optimal solution within a reasonable amount of time \cite{adk19}. Thus we are imposed to sacrifice optimality, in order to gain computational efficiency. This sacrifice opens a large spectrum of possible approaches to the problem.
 %%
 \subsection{Heuristic methods}
-Heuristic methods is a branch of methods used in computer science and mathematics. According to Ferland et. al. \cite{heuristics} ``A heuristic search method can be seen as a procedure taking advantage of the problem structure in order to identify a good solution within a reasonable amount of computing time.''
-In general, heuristic methods is not guaranteed to provide optimal solutions.\\*% Reference?
+Heuristic methods is a branch of methods used in computer science and mathematics. According to Ferland et. al. \cite{heuristics} ``A heuristic search method can be seen as a procedure taking advantage of the problem structure in order to identify a good solution within a reasonable amount of computing time.''\\*% Reference?
 \\*
-In some specific situations, it can be proven that the solution of a certain heuristic algorithms is optimal% Reference?
-. There is no general way of proving whether a heuristic algorithm provides an optimal solution. Despite this fact, heuristic methods often provide extremely efficient and relevant algorithms. Very often they greatly reduce the computational time needed to find a solution. There are several occasions where a heuristic method is preferred to an analytic method. Examples are:
+In general heuristic methods are not guaranteed to provide optimal solutions. In some specific situations though, it can be proven that the solution of a certain heuristic algorithm is optimal% Reference?
+. Despite this concern of optimality, heuristic methods often provide extremely efficient and relevant algorithms. Very often they greatly reduce the computational time needed to find a solution. There are several occasions where a heuristic method is preferred to an analytic method. Examples are:
 \begin{itemize}
 \item When there is no known algorithm for solving a specific problem, a heuristic is the only way to approach a solution.
 \item An algorithm can sometimes be difficult to implement. Heuristics can often be used instead as they are easier to implement and known to produce good results.
@@ -55,7 +54,7 @@ The last example corresponds to the problem considered in this report.
 \section{Outline of the report}
 In Chapter 2 the pursuit and evasion problem is fully explained, and also how we intend to approach the problem to find a solution. Some keywords in the report are presented here, thus it is suggested to browse this chapter even if the reader is familiar with the problem.\\
 \\In Chapter 4 and Chapter 3 the process of constructing and implementing the algorithms and the simulations is described. Given that the reader is familiar with the problem presented, these chapters can be read separately.\\
-\\In chapter 6 the results of the work is evaluated and discussed. To follow this discusion it is not vital to have read about the process on forehand, though it is suggested that the Figures \ref{GeneticFlowChart-algorithm}, \ref{flowchart greedy} and \ref{t2} are viewed and understood before reading this chapter.
+\\In Chapter 6 the results of the work is evaluated and discussed. To follow this discusion it is not vital to have read about the process on forehand, though it is suggested that the Figures \ref{GeneticFlowChart-algorithm}, \ref{flowchart greedy} and \ref{t2} are viewed and understood before reading this chapter.
 
 
 

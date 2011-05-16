@@ -49,5 +49,5 @@ We will now describe the steps and the functions in the pseudo code above in mor
 \item A Node is a data structure that contains a name, pointers to all adjacent Nodes and pointers to all Nodes that can be seen by the actual Node.
 \item createNodeMatrix() sets B to a matrix of the same dimensions as A, where each element is of the data type Node.
 \item setMove() creates pointers from the current node N to all feasible vertically and horizontally adjacent nodes.
-\item setVision() creates a list of pointers to all visible nodes in B from the current node N. A node B is visible to N if both B and N can be contained inside a rectangle that does not contain non-feasible region.
+\item setVision() creates a list of pointers to all visible nodes in B from the current node N. A node B is visible to N if both B and N can be contained inside a rectangle that does not contain non-feasible \emph{tile}.
 \end{itemize}

@@ -3,7 +3,7 @@
 \subsection{Description of genetic algorithms}
 Genetic algorithms, or GA's, are based on the idea of evolution, that the most suited individuals tend to live longer and reproduce. A population is simulated in an artificial world using a combination of reproduction, gene crossover and mutation, with a given goal to achieve. The population consists of individuals, each representing a \emph{feasible  solution}. Each individual contains two forms of a solution, ``the \textit{chromosome}, which is the raw 'genetic' information (\textit{genotype}) that the GA deals with, and the \textit{phenotype} which is the expression of the chromosome in the terms of the model...''\cite{GAHandbook1}. % p. 34, Section 1.6
 A chromosome contains one or more genes, which is a ``representation of a single factor value for a control factor''\cite{GAHandbook1}. %p. 34, Section 1.6
-During each generation in a GA reproduction is performed to create new individuals, called children.\\\\
+ During each generation in a GA reproduction is performed to create new individuals, called children.\\\\
 %% Simulate / evaluate
 Due to the need to simulate the population and evaluate individuals, often multiple times, GA's are not well suited for all kind of problems. When there exists an analytical solution it may be better to use that. %% Because of?
 If however the problem can be simulated both problems without analytical solutions and problem with complicated analytical solution can be handled by GA's.\\\\
@@ -12,7 +12,7 @@ There are different ways to implement genetic algorithms, with variations in how
 %% Initial population
 The first step is to obtain an initial population, either by an existing set of solutions or by creation.\\\\
 %% Evaluation / Fitness function
-To be able to compare individuals, and later determine if the goal is achieved, the individuals had to be evaluated. For that purpose a fitness function is used, which is to calculate a score for an individual depending on how well it fulfils the given goal.\label{fitnessf}
+To be able to compare individuals, and later determine if the goal is achieved, the individuals has to be evaluated. For that purpose a fitness function is used, which is to calculate a score for an individual depending on how well it fulfils the given goal.\label{fitnessf}
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=\textwidth]{chapter_4_methods/GeneticFlowChart-Generic}
@@ -25,7 +25,7 @@ To be able to compare individuals, and later determine if the goal is achieved, 
 %% Selection (parents)
 There are different methods to select individuals for reproduction, of which five are Fitness Proportionate Selection, Random Selection, Fit-Fit, Tournament selection and Elite selection.
 \begin{itemize}
-\item In Fitness Proportionate Selection, the probability of choosing a more fit individual is higher than to select a less fit individual. One often used method is Roulette Selection.%More info?
+\item In Fitness Proportionate Selection, the probability of choosing a more fit individual is higher than to select a less fit individual. One often used method based on this is Roulette Selection.%More info?
 \item In Random Selection, the probability to be selected is equal for all individuals. 
 \item With Fit-Fit, at each step the two most fit individuals are selected, but the same individual can not be chosen more than once at each selection procedure.
 \item Tournament selection chooses a number of individuals stochastically, and then take the best of them.
@@ -35,7 +35,7 @@ There are different methods to select individuals for reproduction, of which fiv
 For Crossover there are also different methods, such as n-point crossover and uniform crossover.
 \begin{itemize}
 \item In n-point crossover, the parent's chromosomes are cut into n+1 fragments from which the children receives chromosomes. The n stands for the number of fragments to be created, and the child receives chromosomes alternating between the parents, so that the first child gets the first fragment from the first parent, the second segment from the second parent, the third segment from the first parent and so on. The second child gets the first fragment from the second parent, the second fragment from the first parent, and so on.
-\item In uniform crossover, ``Given two parent chromosomes of length 1, each parent copies 1/2 genes to each child, with the selection of the genes being chosen independently.''\cite{GAHandbook1}.
+\item In uniform crossover, ``Given two parent chromosomes of length 1, each parent copies 1/2 genes to each child, with the selection of the genes being chosen independently.'' \cite{GAHandbook1}.
 \end{itemize}
 %% Mutation
 Mutation is important in GA's since it makes sure that solutions that are not possible to find by combining individuals in the initial population can be found. It corresponds to the variance in nature when genes are copied.\\\\ % Ref
