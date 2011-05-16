@@ -1,9 +1,9 @@
 \pagebreak
 \section{The tabu search method}
 \subsection{Description of Tabu search methods}
-Tabu search is a heuristic optimization method designed to find the global optimum. The algorithm has the ability to climb out of a local minimum, and then explore other parts of the domain. There are several methods on how this ability can be acquired. Tabu search uses a so-called tabu list, intended to make already visited regions in the domain forbidden ``tabu'' . Tabu search algorithms are based on certain conceptual building blocks and basic ideas \cite{Glover1} \cite{Glover3} \cite{Glover4}. Most of them are easy to understand but widely varying in difficulty to implement. If well implemented they will give you a highly sophisticated search algorithm \cite{canada} \cite{Glover2}. \\
+Tabu search is a heuristic optimization method designed to find the global optimum. The algorithm has the ability to climb out of a local minimum, and then explore other parts of the domain. There are several methods on how this ability can be acquired. Tabu search uses a so-called tabu list, intended to make already visited regions in the domain forbidden ``tabu''. Tabu search algorithms are based on certain conceptual building blocks and basic ideas \cite{Glover1} \cite{Glover3} \cite{Glover4}. Most of them are easy to understand but widely varying in difficulty to implement. If well implemented they will give you a highly sophisticated search algorithm \cite{canada} \cite{Glover2}. \\
 \\The main building block is the tabu list. The tabu list gives the algorithm the ability to render certain regions or moves tabu. The tabus can be created based on the information at hand, both for a given moment and from prior experiences of the search \cite{canada}. The essential problem when constructing tabu search algorithms is about to formulate intelligent rules, that will determine if a specific move should be tabu or not.\\
-\\Another important building block is the tabu overriding mechanism, in literature this is usually named as the aspiration criteria . The aspiration criteria checks whether a certain move should be approved, even if it initially was set to be tabu \cite{canada} \cite{Glover2}. \\
+\\Another important building block is the tabu overriding mechanism, in literature this is usually named as the aspiration criteria . The aspiration criteria checks whether a certain move should be approved, even if it initially was set to be tabu \cite{canada} \cite{Glover2}.\\
 \\With these two building blocks one can construct almost any type of logical structure. This makes the tabu search method highly implementable and adaptive. The tabu search method is stochastic, meaning that the tabu list and aspiration criteria only deals with randomly selected solutions. This means that the current solution is not necessarily a good one. One of the strengths of the tabu search algorithms is that \emph{any solution produced tells something about the problem at hand, independent of the solutions' quality.} In practice this means that a bad solution also yields important information.  Or, to quote Thomas Edison 
 \begin{quotation}
 \emph{``I have not failed 1,000 times.  I have
@@ -20,7 +20,7 @@ This insight might seem somewhat naive at first sight, but if implemented in a g
 	\centering
 	\includegraphics[width=0.75\textwidth,height=0.70\textheight]{chapter_4_methods/ny_generel}
   	\caption[Generic flow chart of tabu algorithm]
-  	{Flow chart of tabu algorithm}
+  	{Flow chart of tabu algorithm.}
 	\label{t1}
 \end{figure}
 
@@ -42,28 +42,27 @@ A corridor where the end point can be seen should not be walked down by a pursue
 \item{} Work together rule: \vspace{0,1cm}\\
 Two pursuers never really need to see each other, only share visible \emph{areas}. Since this rule is general in its formulation it should be called upon in the aspiration criteria.
 \item{} High valued areas rule: \vspace{0,1cm}\\
-\emph{Tiles} visited in a \emph{complete solution} should be given a value bonus. Or implemented differently, tiles not visited could be set to be tabu. This is an attempt to incorporate the idea of getting information even from bad, but \emph{complete, solution}.
+\emph{Tiles} visited in a \emph{complete solution} should be given a value bonus. Or implemented differently, \emph{tiles} not visited could be set to be tabu. This is an attempt to incorporate the idea of getting information even from bad, but \emph{complete, solutions}.
 \item{} Low valued \emph{areas} rule: \vspace{0,1cm}\\
-Some \emph{tiles}, that are part of an \emph{incomplete solution} are probable to be of low interest. Hence these tiles could be given a penalty.
+Some \emph{tiles}, that are part of an \emph{incomplete solution} are probable to be of low interest. Hence these \emph{tiles} could be given a penalty.
 \item{} Treading in \emph{secured} \emph{areas} is not probable to yield promising results. Thus this should be given a penalty, or not allowed.
 \end{enumerate}
 
 All these tabu rules are to be ranked and given a priority level that would be used in the aspiration criteria. Also many of the tabu rules listed above needed some sort of worst case scenario handling, in order to avoid that the algorithm would freeze.\\
 \\We will now discuss the aspiration criteria. As understood from the tabu rules presented above a lot is to be incorporated in the aspiration criteria. It needs to have the ability of checking whether a \emph{tile} is of high or low value. Which in turn means that step 5 in Figure \ref{t1} needs a fitness calculation function that would depend on the \emph{tile} visited and the shape of the \emph{feasible solution}. Unfortunately this aspiration criteria would be difficult to implement. Thus this advanced aspiration criteria was rejected for a simpler one. In the end the more simple aspiration criteria, only came to be a worst case handling, to avoid the algorithm from freezing. This also means that tabu rules (3), (4), (6) and (7) no longer could be implemented. Tabu rule (5) got simplified to: \emph{tiles} not visited where set to be tabu.\\
 \\A comment on tabu rule (5) is that when this rule was first implemented, the idea was that X number of past \emph{complete solutions} were analysed to check which \emph{tiles} had been walked upon at least once, and render the rest tabu. The problem was however that this wasn't strict enough, so X was set to one. Which in turn led to a new problem. The problem that arouse was that the algorithm now, under certain circumstances, was too hasty in returning a final solution, meaning that the final solution was of poor quality. This was partially solved by a new stopping criteria and a ``go about it again'' criteria.\\
-\\The final version of the algorithm can be viewed in figure \ref{t2} and is also presented in Section ref{opt}.
+\\The final version of the algorithm can be viewed in Figure \ref{t2} and is also presented in Section \ref{opt}.
 \subsection{The tabu search algorithm for our problem}\label{opt}
-In figure \ref{t1} and in section \ref{DpT} a general step by step explanation was made of the tabu search algorithm. In figure \ref{t2} a modified version can be viewed, intended to illustrate the final algorithm. A step by step explanation will be made of figure \ref{t2} below. Observe that some functions from to the general algorithm have been removed.\\
-
-There are two elements in the algorithm that affect the convergence. These are the tabu rule (5) and the Best-solution-found-so-far criteria. The tabu rule (5) is explained in the previous section. The Best-solution-found-so-far criteria prohibits the algorithm from searching for solutions longer than the best length found so far. It should be noted that both convergence helping elements depend on the existence of a \emph{complete solution}. This means that if the algorithm is unlucky in finding the first \emph{complete solution}, the computational time will rise accordingly. As a side note, this considerable insufficiency might have been avoided with the more advanced aspiration criteria, discussed in Section \ref{DpT}.\\
+In Figure \ref{t1} and in Section \ref{DpT} a general step by step explanation was made of the tabu search algorithm. In Figure \ref{t2} a modified version can be viewed, intended to illustrate the final algorithm. A step by step explanation will be made of Figure \ref{t2} below. Observe that some functions from to the general algorithm have been removed.\\
+\\There are two elements in the algorithm that affect the convergence. These are the tabu rule (5) and the Best-solution-found-so-far criteria. The tabu rule (5) is explained in the previous section. The Best-solution-found-so-far criteria prohibits the algorithm from searching for solutions longer than the best length found so far. It should be noted that both convergence helping elements depend on the existence of a \emph{complete solution}. This means that if the algorithm is unlucky in finding the first \emph{complete solution}, the computational time will rise accordingly. As a side note, this considerable insufficiency might have been avoided with the more advanced aspiration criteria, discussed in Section \ref{DpT}.\\
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.75\textwidth,height=0.70\textheight]{chapter_4_methods/ny_Tabu}
 \caption[Final algorithm flow chart of tabu algorithm]
-{Final algorithm flow chart of tabu algorithm}
+{Final algorithm flow chart of tabu algorithm.}
 \label{t2}
 \end{figure}
-\\The figure \ref{t2} will now be described in detail.
+\\The Figure \ref{t2} will now be described in detail.
 \begin{enumerate}
 \item{}Obtaining \emph{feasible solution} by going one step with each pursuer randomly. \vspace{0,1cm}\\ 
 The input of step 1 is the \emph{path} taken so far. For the first iteration, or if a completely new \emph{feasible solution} is to be created, this corresponds only to the starting positions of the pursuers. 
@@ -74,7 +73,7 @@ The input of step 1 is the \emph{path} taken so far. For the first iteration, or
 \item{} Is it an \emph{incomplete solution}.
 \begin{enumerate}
 \item{} If yes update the tabu list, the aspiration criteria and the stopping criteria accordingly. Then move back to 1. \vspace{0,1cm}\\
-To note her is the change from the general flowchart in figure \ref{t1} to the less sophisticated algorithm. 
+To note here is the change from the general flowchart in Figure \ref{t1} to the less sophisticated algorithm. 
 \end{enumerate}
 \item{} Check the \emph{feasible solution} against the tabu list, is the \emph{feasible solution} tabu. \vspace{0,1cm}\\
 Meaning check tabu rule (1), (2) and (5).
@@ -119,7 +118,7 @@ In this section two important aspects of the implementation will be discussed. T
 \end{enumerate} 
 As can be seen in the list above some of the parameters have strong relations to each other. These relations will now be explained. \\
 Parameter values (1) and (2) are related in such a way so that (2) ensures that (1) does not make the algorithm freeze. \\
-Parameter value (4b) and (4c) aims to avoid the algorithm from being to hasty in returning a final solution. This is usually encountered in less difficult environments. The Max\_allowed\_steps and Restart\_the\_algorithm\_P\_times tries to tackle the problem of finding the first \emph{complete solution}. The computational time, and the probability of finding any solution at all, strongly depends on this relation. As discussed lastly in Section ref{DpT} the algorithms' computational time will be affected if the first \emph{complete solution} is found at a late stage in the search. By increasing (3c) the probability of finding any solution should increase. Though this will affect the computational time in a negative way. Both parameter value (3a) and (3b) are to ensure that the algorithm terminates when the search space has been thoroughly examined in promising areas.
+Parameter value (4b) and (4c) aims to avoid the algorithm from being to hasty in returning a final solution. This is usually encountered in less difficult environments. The Max\_allowed\_steps and Restart\_the\_algorithm\_P\_times tries to tackle the problem of finding the first \emph{complete solution}. The computational time, and the probability of finding any solution at all, strongly depends on this relation. As discussed lastly in Section \ref{DpT} the algorithms' computational time will be affected if the first \emph{complete solution} is found at a late stage in the search. By increasing (3c) the probability of finding any solution should increase. Though this will affect the computational time in a negative way. Both parameter value (3a) and (3b) are to ensure that the algorithm terminates when the search space has been thoroughly examined in promising areas.
 Parameter (3b) is also an indicator of that the the search has converged to a final solution.\\
 \\
 The implementation of algorithms were made piece by piece. Two of these pieces had known obvious shortcomings. Shortcomings that at the time of implementation, were ignored, and due to the lack of time, never were treated. These are\\
